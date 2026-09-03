@@ -100,7 +100,12 @@ class _CameraPageState extends State<CameraPage> {
                     onTap: _isRecording ? _stopRecording : null,
                     child: Stack(
                       children: [
-                        Center(child: CameraPreview(_controller!)),
+                        Center(
+                          child: Transform.scale(
+                            scaleX: -1,
+                            child: CameraPreview(_controller!),
+                          ),
+                        ),
 
                         if (_countdown > 0)
                           Center(
