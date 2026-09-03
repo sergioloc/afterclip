@@ -150,7 +150,7 @@ class _CameraPageState extends State<CameraPage> {
                               style: const TextStyle(
                                 fontSize: 96,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Colors.red,
                               ),
                             ),
                           ),
