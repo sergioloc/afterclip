@@ -49,5 +49,7 @@
 	<string>AfterClip necesita acceso a tu cámara para grabar videos</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>AfterClip necesita acceso a tu micrófono para grabar audio en los videos</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>AfterClip necesita acceso a tu galería para guardar los videos descargados</string>
 </dict>
 </plist>

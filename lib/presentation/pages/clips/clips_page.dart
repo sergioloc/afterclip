@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import '../../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../../data/repositories/clip_repository_impl.dart';
+import '../../../../data/services/gallery_service.dart';
 import '../../../../domain/entities/clip.dart';
 import '../../../../domain/usecases/get_all_clips_usecase.dart';
 
@@ -142,6 +143,33 @@ class _ClipsPageState extends State<ClipsPage> {
     await _loadClips();
   }
 
+  final _galleryService = GalleryService();
+
+  Future<void> _downloadClip(Clip clip) async {
+    try {
+      await _galleryService.saveVideo(clip.filePath);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Video guardado en la galería'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('GalleryService saveVideo error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error al guardar el video'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,6 +237,14 @@ class _ClipsPageState extends State<ClipsPage> {
                               color: Colors.red),
                           onPressed: () => _deleteClip(clip),
                         ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.download_outlined,
+                          color: isBlocked ? Colors.white24 : Colors.white,
+                        ),
+                        onPressed:
+                            isBlocked ? null : () => _downloadClip(clip),
+                      ),
                       IconButton(
                         icon: Icon(
                           Icons.play_circle_outline,
