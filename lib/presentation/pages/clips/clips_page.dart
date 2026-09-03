@@ -125,7 +125,15 @@ class _ClipsPageState extends State<ClipsPage> {
               _unlocked ? Icons.lock_open : Icons.lock,
               color: _unlocked ? Colors.green : Colors.white,
             ),
-            onPressed: _promptForPin,
+            onPressed: _unlocked
+                ? () {
+                    setState(() {
+                      _unlocked = false;
+                      _loading = true;
+                    });
+                    _loadClips();
+                  }
+                : _promptForPin,
           ),
         ],
       ),
