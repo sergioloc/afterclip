@@ -112,6 +112,41 @@ class _ClipsPageState extends State<ClipsPage> {
     );
   }
 
+  Future<void> _deleteClip(Clip clip) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Borrar clip',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          '¿Seguro que quieres borrar este clip?',
+          style: const TextStyle(color: Colors.white),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar', style: TextStyle(color: Colors.white54)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Borrar', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    final repository = ClipRepositoryImpl(ClipLocalDatasource());
+    await repository.deleteClip(clip.id);
+
+    setState(() => _loading = true);
+    await _loadClips();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,8 +200,33 @@ class _ClipsPageState extends State<ClipsPage> {
                           'Disponible en ${_formatCountdown(clip.timeUntilAvailable)}',
                           style: const TextStyle(color: Colors.orange),
                         ),
-                  trailing: const Icon(Icons.play_circle_outline,
-                      color: Colors.white),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_unlocked)
+                        IconButton(
+                          icon: const Icon(Icons.delete_outline,
+                              color: Colors.red),
+                          onPressed: () => _deleteClip(clip),
+                        ),
+                      IconButton(
+                        icon: const Icon(Icons.play_circle_outline,
+                            color: Colors.white),
+                        onPressed: () {
+                          if (clip.isAvailable || _unlocked) {
+                            _playClip(clip);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Clip aún no disponible (24h)'),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                   onTap: () {
                     if (clip.isAvailable || _unlocked) {
                       _playClip(clip);

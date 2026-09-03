@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
               height: 56,
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.black,
+                color: Colors.transparent,
               ),
               child: const Icon(
                 Icons.movie_outlined,
