@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 import '../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
 import '../../../domain/repositories/clip_repository.dart';
@@ -24,7 +25,16 @@ class _CameraPageState extends State<CameraPage> {
   void initState() {
     super.initState();
     _clipRepository = ClipRepositoryImpl(ClipLocalDatasource());
+    _setMaxBrightness();
     _initCamera();
+  }
+
+  Future<void> _setMaxBrightness() async {
+    await ScreenBrightness.instance.setScreenBrightness(1.0);
+  }
+
+  Future<void> _resetBrightness() async {
+    await ScreenBrightness.instance.resetScreenBrightness();
   }
 
   Future<void> _initCamera() async {
@@ -72,6 +82,8 @@ class _CameraPageState extends State<CameraPage> {
       await _clipRepository!.saveClip(file.path);
     }
 
+    await _resetBrightness();
+
     if (mounted) {
       Navigator.pop(context);
     }
@@ -81,6 +93,7 @@ class _CameraPageState extends State<CameraPage> {
   void dispose() {
     _countdownTimer?.cancel();
     _controller?.dispose();
+    _resetBrightness();
     super.dispose();
   }
 
