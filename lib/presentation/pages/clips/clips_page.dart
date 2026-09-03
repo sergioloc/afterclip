@@ -5,7 +5,6 @@ import '../../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../../data/repositories/clip_repository_impl.dart';
 import '../../../../domain/entities/clip.dart';
 import '../../../../domain/usecases/get_all_clips_usecase.dart';
-import '../../../../domain/usecases/get_available_clips_usecase.dart';
 
 class ClipsPage extends StatefulWidget {
   const ClipsPage({super.key});
@@ -17,7 +16,6 @@ class ClipsPage extends StatefulWidget {
 class _ClipsPageState extends State<ClipsPage> {
   static const String _secretPin = '1996';
 
-  late final GetAvailableClipsUseCase _getAvailableClipsUseCase;
   late final GetAllClipsUseCase _getAllClipsUseCase;
   List<Clip> _clips = [];
   bool _loading = true;
@@ -27,15 +25,12 @@ class _ClipsPageState extends State<ClipsPage> {
   void initState() {
     super.initState();
     final repository = ClipRepositoryImpl(ClipLocalDatasource());
-    _getAvailableClipsUseCase = GetAvailableClipsUseCase(repository);
     _getAllClipsUseCase = GetAllClipsUseCase(repository);
     _loadClips();
   }
 
   Future<void> _loadClips() async {
-    final clips = _unlocked
-        ? await _getAllClipsUseCase.execute()
-        : await _getAvailableClipsUseCase.execute();
+    final clips = await _getAllClipsUseCase.execute();
     if (mounted) {
       setState(() {
         _clips = clips;
@@ -175,12 +170,10 @@ class _ClipsPageState extends State<ClipsPage> {
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : _clips.isEmpty
-          ? Center(
+          ? const Center(
               child: Text(
-                _unlocked
-                    ? 'No hay clips grabados'
-                    : 'Aún no tienes clips disponibles.\nVuelve en 24 horas.',
-                style: const TextStyle(color: Colors.white),
+                'No hay clips grabados',
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             )
@@ -188,11 +181,18 @@ class _ClipsPageState extends State<ClipsPage> {
               itemCount: _clips.length,
               itemBuilder: (context, index) {
                 final clip = _clips[index];
+                final isBlocked = !clip.isAvailable && !_unlocked;
                 return ListTile(
-                  leading: const Icon(Icons.movie, color: Colors.white),
+                  enabled: !isBlocked,
+                  leading: Icon(
+                    Icons.movie,
+                    color: isBlocked ? Colors.white24 : Colors.white,
+                  ),
                   title: Text(
                     _formatDate(clip.createdAt),
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: isBlocked ? Colors.white24 : Colors.white,
+                    ),
                   ),
                   subtitle: clip.isAvailable
                       ? null
@@ -210,35 +210,15 @@ class _ClipsPageState extends State<ClipsPage> {
                           onPressed: () => _deleteClip(clip),
                         ),
                       IconButton(
-                        icon: const Icon(Icons.play_circle_outline,
-                            color: Colors.white),
-                        onPressed: () {
-                          if (clip.isAvailable || _unlocked) {
-                            _playClip(clip);
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Clip aún no disponible (24h)'),
-                                backgroundColor: Colors.orange,
-                              ),
-                            );
-                          }
-                        },
+                        icon: Icon(
+                          Icons.play_circle_outline,
+                          color: isBlocked ? Colors.white24 : Colors.white,
+                        ),
+                        onPressed: isBlocked ? null : () => _playClip(clip),
                       ),
                     ],
                   ),
-                  onTap: () {
-                    if (clip.isAvailable || _unlocked) {
-                      _playClip(clip);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Clip aún no disponible (24h)'),
-                          backgroundColor: Colors.orange,
-                        ),
-                      );
-                    }
-                  },
+                  onTap: isBlocked ? null : () => _playClip(clip),
                 );
               },
             ),
