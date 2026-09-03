@@ -226,7 +226,7 @@ class _ClipsPageState extends State<ClipsPage> {
                       ? null
                       : Text(
                           'Disponible en ${_formatCountdown(clip.timeUntilAvailable)}',
-                          style: const TextStyle(color: Colors.orange),
+                          style: const TextStyle(color: Colors.grey),
                         ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -234,7 +234,7 @@ class _ClipsPageState extends State<ClipsPage> {
                       if (_unlocked)
                         IconButton(
                           icon: const Icon(Icons.delete_outline,
-                              color: Colors.red),
+                              color: Colors.white),
                           onPressed: () => _deleteClip(clip),
                         ),
                       IconButton(
@@ -244,13 +244,6 @@ class _ClipsPageState extends State<ClipsPage> {
                         ),
                         onPressed:
                             isBlocked ? null : () => _downloadClip(clip),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.play_circle_outline,
-                          color: isBlocked ? Colors.white24 : Colors.white,
-                        ),
-                        onPressed: isBlocked ? null : () => _playClip(clip),
                       ),
                     ],
                   ),
