@@ -107,6 +107,8 @@ class _CameraPageState extends State<CameraPage> {
                           ),
                         ),
 
+                        Container(color: Colors.white.withValues(alpha: 0.90)),
+
                         if (_countdown > 0)
                           Center(
                             child: Text(
