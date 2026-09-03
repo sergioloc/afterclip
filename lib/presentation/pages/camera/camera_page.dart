@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 import '../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
+import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/repositories/clip_repository.dart';
 
 class CameraPage extends StatefulWidget {
@@ -20,17 +21,34 @@ class _CameraPageState extends State<CameraPage> {
   int _countdown = 3;
   Timer? _countdownTimer;
   ClipRepository? _clipRepository;
+  final SettingsRepository _settingsRepository = SettingsRepository();
+  double _overlayOpacity = SettingsRepository.defaultOverlayOpacity;
+  double _brightness = SettingsRepository.defaultBrightness;
 
   @override
   void initState() {
     super.initState();
     _clipRepository = ClipRepositoryImpl(ClipLocalDatasource());
-    _setMaxBrightness();
+    _loadSettings();
     _initCamera();
   }
 
-  Future<void> _setMaxBrightness() async {
-    await ScreenBrightness.instance.setScreenBrightness(1.0);
+  Future<void> _loadSettings() async {
+    final results = await Future.wait([
+      _settingsRepository.getOverlayOpacity(),
+      _settingsRepository.getBrightness(),
+    ]);
+    if (mounted) {
+      setState(() {
+        _overlayOpacity = results[0];
+        _brightness = results[1];
+      });
+    }
+    await _setBrightness();
+  }
+
+  Future<void> _setBrightness() async {
+    await ScreenBrightness.instance.setScreenBrightness(_brightness);
   }
 
   Future<void> _resetBrightness() async {
@@ -120,7 +138,10 @@ class _CameraPageState extends State<CameraPage> {
                           ),
                         ),
 
-                        Container(color: Colors.white.withValues(alpha: 0.90)),
+                        if (_overlayOpacity > 0)
+                          Container(
+                            color: Colors.white.withValues(alpha: _overlayOpacity),
+                          ),
 
                         if (_countdown > 0)
                           Center(

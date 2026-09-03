@@ -4,6 +4,7 @@ import '../../../data/repositories/clip_repository_impl.dart';
 import '../../../domain/usecases/get_all_clips_usecase.dart';
 import '../camera/camera_page.dart';
 import '../clips/clips_page.dart';
+import '../settings/settings_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -60,6 +61,31 @@ class _HomePageState extends State<HomePage> {
         ),
         Positioned(
           bottom: 32,
+          left: 24,
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              );
+            },
+            child: Container(
+              width: 56,
+              height: 56,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.black,
+              ),
+              child: const Icon(
+                Icons.settings,
+                color: Colors.white,
+                size: 28,
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 32,
           right: 24,
           child: GestureDetector(
             onTap: _openClips,
@@ -75,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                   _clipCount.toString(),
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 50,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

@@ -15,7 +15,7 @@ class ClipsPage extends StatefulWidget {
 }
 
 class _ClipsPageState extends State<ClipsPage> {
-  static const String _secretPin = '1234';
+  static const String _secretPin = '1996';
 
   late final GetAvailableClipsUseCase _getAvailableClipsUseCase;
   late final GetAllClipsUseCase _getAllClipsUseCase;
