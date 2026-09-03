@@ -51,7 +51,7 @@ class _ClipsPageState extends State<ClipsPage> {
       builder: (context) => AlertDialog(
         backgroundColor: Colors.black,
         title: const Text(
-          'Código secreto',
+          'PIN',
           style: TextStyle(color: Colors.white),
         ),
         content: TextField(
@@ -60,7 +60,7 @@ class _ClipsPageState extends State<ClipsPage> {
           obscureText: true,
           style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(
-            hintText: 'Introduce el código',
+            hintText: '****',
             hintStyle: TextStyle(color: Colors.white54),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.white54),
@@ -95,7 +95,7 @@ class _ClipsPageState extends State<ClipsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Código incorrecto'),
+            content: Text('PIN incorrecto'),
             backgroundColor: Colors.red,
           ),
         );
@@ -123,7 +123,7 @@ class _ClipsPageState extends State<ClipsPage> {
           IconButton(
             icon: Icon(
               _unlocked ? Icons.lock_open : Icons.lock,
-              color: _unlocked ? Colors.green : Colors.white,
+              color: _unlocked ? Colors.green : Colors.black,
             ),
             onPressed: _unlocked
                 ? () {
