@@ -4,6 +4,7 @@ import 'package:video_player/video_player.dart';
 import '../../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../../data/repositories/clip_repository_impl.dart';
 import '../../../../domain/entities/clip.dart';
+import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/get_available_clips_usecase.dart';
 
 class ClipsPage extends StatefulWidget {
@@ -14,25 +15,91 @@ class ClipsPage extends StatefulWidget {
 }
 
 class _ClipsPageState extends State<ClipsPage> {
+  static const String _secretPin = '1234';
+
   late final GetAvailableClipsUseCase _getAvailableClipsUseCase;
+  late final GetAllClipsUseCase _getAllClipsUseCase;
   List<Clip> _clips = [];
   bool _loading = true;
+  bool _unlocked = false;
 
   @override
   void initState() {
     super.initState();
-    _getAvailableClipsUseCase =
-        GetAvailableClipsUseCase(ClipRepositoryImpl(ClipLocalDatasource()));
+    final repository = ClipRepositoryImpl(ClipLocalDatasource());
+    _getAvailableClipsUseCase = GetAvailableClipsUseCase(repository);
+    _getAllClipsUseCase = GetAllClipsUseCase(repository);
     _loadClips();
   }
 
   Future<void> _loadClips() async {
-    final clips = await _getAvailableClipsUseCase.execute();
+    final clips = _unlocked
+        ? await _getAllClipsUseCase.execute()
+        : await _getAvailableClipsUseCase.execute();
     if (mounted) {
       setState(() {
         _clips = clips;
         _loading = false;
       });
+    }
+  }
+
+  Future<void> _promptForPin() async {
+    final controller = TextEditingController();
+    final pin = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.black,
+        title: const Text(
+          'Código secreto',
+          style: TextStyle(color: Colors.white),
+        ),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          obscureText: true,
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+            hintText: 'Introduce el código',
+            hintStyle: TextStyle(color: Colors.white54),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white54),
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar', style: TextStyle(color: Colors.white54)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, controller.text),
+            child: const Text('Aceptar', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (pin == null) return;
+
+    if (pin == _secretPin) {
+      setState(() {
+        _unlocked = true;
+        _loading = true;
+      });
+      await _loadClips();
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Código incorrecto'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -52,14 +119,25 @@ class _ClipsPageState extends State<ClipsPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text('Mis clips'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _unlocked ? Icons.lock_open : Icons.lock,
+              color: _unlocked ? Colors.green : Colors.white,
+            ),
+            onPressed: _promptForPin,
+          ),
+        ],
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : _clips.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
-                'Aún no tienes clips disponibles.\nVuelve en 24 horas.',
-                style: TextStyle(color: Colors.white),
+                _unlocked
+                    ? 'No hay clips grabados'
+                    : 'Aún no tienes clips disponibles.\nVuelve en 24 horas.',
+                style: const TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
             )
@@ -73,9 +151,26 @@ class _ClipsPageState extends State<ClipsPage> {
                     _formatDate(clip.createdAt),
                     style: const TextStyle(color: Colors.white),
                   ),
+                  subtitle: clip.isAvailable
+                      ? null
+                      : Text(
+                          'Disponible en ${_formatCountdown(clip.timeUntilAvailable)}',
+                          style: const TextStyle(color: Colors.orange),
+                        ),
                   trailing: const Icon(Icons.play_circle_outline,
                       color: Colors.white),
-                  onTap: () => _playClip(clip),
+                  onTap: () {
+                    if (clip.isAvailable || _unlocked) {
+                      _playClip(clip);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Clip aún no disponible (24h)'),
+                          backgroundColor: Colors.orange,
+                        ),
+                      );
+                    }
+                  },
                 );
               },
             ),
@@ -89,6 +184,13 @@ class _ClipsPageState extends State<ClipsPage> {
     final hour = date.hour.toString().padLeft(2, '0');
     final minute = date.minute.toString().padLeft(2, '0');
     return '$day/$month/$year - $hour:$minute';
+  }
+
+  String _formatCountdown(Duration duration) {
+    final hours = duration.inHours.toString().padLeft(2, '0');
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
   }
 }
 
