@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import '../../../data/datasource/local/album_local_datasource.dart';
 import '../../../data/datasource/local/clip_local_datasource.dart';
+import '../../../data/repositories/album_repository_impl.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
 import '../../../data/repositories/settings_repository.dart';
+import '../../../domain/entities/album.dart';
 import '../../../domain/entities/energy_saving_mode.dart';
+import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../util/app_colors.dart';
 import '../albums/albums_page.dart';
@@ -21,6 +25,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final SettingsRepository _settingsRepository = SettingsRepository();
   int _clipCount = 0;
+  List<Album> _albums = [];
+  Map<String, int> _albumClipCounts = {};
+  int _albumIndex = 0;
+  String? _selectedAlbumId;
   bool _loading = true;
   EnergySavingMode _mode = EnergySavingMode.off;
 
@@ -33,19 +41,42 @@ class _HomePageState extends State<HomePage> {
   Future<void> _loadPage() async {
     try {
       final mode = await _settingsRepository.getEnergySavingMode();
-      final useCase =
-          GetAllClipsUseCase(ClipRepositoryImpl(ClipLocalDatasource()));
-      final clips = await useCase.execute();
+      final clips = await GetAllClipsUseCase(
+        ClipRepositoryImpl(ClipLocalDatasource()),
+      ).execute();
+      final albums = await GetAllAlbumsUseCase(
+        AlbumRepositoryImpl(AlbumLocalDatasource()),
+      ).execute();
+      final counts = <String, int>{};
+      for (final clip in clips) {
+        final albumId = clip.albumId;
+        if (albumId != null) {
+          counts[albumId] = (counts[albumId] ?? 0) + 1;
+        }
+      }
       if (!mounted) return;
       setState(() {
         _mode = mode;
         _clipCount = clips.length;
+        _albums = albums;
+        _albumClipCounts = counts;
+        _albumIndex = 0;
+        _selectedAlbumId = albums.isEmpty ? null : albums.first.id;
         _loading = false;
       });
     } catch (_) {
       if (!mounted) return;
       setState(() => _loading = false);
     }
+  }
+
+  void _onAlbumChanged(int index) {
+    if (index == _albumIndex) return;
+    setState(() {
+      _albumIndex = index;
+      _selectedAlbumId =
+          _albums.isEmpty ? null : _albums[index].id;
+    });
   }
 
   Future<void> _openSettings() async {
@@ -59,7 +90,9 @@ class _HomePageState extends State<HomePage> {
   void _openCamera() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CameraPage()),
+      MaterialPageRoute(
+        builder: (context) => CameraPage(initialAlbumId: _selectedAlbumId),
+      ),
     );
   }
 
@@ -81,12 +114,20 @@ class _HomePageState extends State<HomePage> {
     return switch (_mode) {
       EnergySavingMode.off => FullHomePage(
           clipCount: clipCount,
+          albums: _albums,
+          albumIndex: _albumIndex,
+          albumClipCounts: _albumClipCounts,
+          onAlbumChanged: _onAlbumChanged,
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
           onOpenAlbums: _openAlbums,
         ),
       EnergySavingMode.on => SavingHomePage(
           clipCount: clipCount,
+          albums: _albums,
+          albumIndex: _albumIndex,
+          albumClipCounts: _albumClipCounts,
+          onAlbumChanged: _onAlbumChanged,
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
           onOpenAlbums: _openAlbums,

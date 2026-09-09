@@ -13,7 +13,9 @@ import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../util/app_colors.dart';
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({super.key});
+  const CameraPage({super.key, this.initialAlbumId});
+
+  final String? initialAlbumId;
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -47,7 +49,10 @@ class _CameraPageState extends State<CameraPage> {
   Future<void> _loadAlbums() async {
     final albums = await _getAllAlbumsUseCase.execute();
     if (mounted) {
-      setState(() => _albums = albums);
+      setState(() {
+        _albums = albums;
+        _selectedAlbumId = widget.initialAlbumId;
+      });
     }
   }
 
