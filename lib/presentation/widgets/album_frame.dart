@@ -63,8 +63,6 @@ class AlbumFrame extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             text!.toUpperCase(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 30,
@@ -83,24 +81,14 @@ class AlbumFrame extends StatelessWidget {
                             border: Border.all(color: textColor),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.photo_library_outlined,
-                                color: textColor,
-                                size: 16,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                '$clipCount',
-                                style: TextStyle(
-                                  color: textColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                          child: Text(
+                            '$clipCount CLIPS',
+                            style: TextStyle(
+                              color: textColor,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                            ),
                           ),
                         ),
                       ],
