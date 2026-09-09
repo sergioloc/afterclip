@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../data/datasource/local/clip_local_datasource.dart';
-import '../../../data/repositories/clip_repository_impl.dart';
-import '../../../domain/usecases/get_all_clips_usecase.dart';
+import '../../../data/repositories/settings_repository.dart';
+import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../util/app_colors.dart';
-import '../../widgets/home_button.dart';
-import '../camera/camera_page.dart';
-import '../clips/clips_page.dart';
 import '../settings/settings_page.dart';
+import 'high_energy_home_page.dart';
+import 'low_energy_home_page.dart';
+import 'medium_energy_home_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,125 +15,44 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _clipCount = 0;
+  final SettingsRepository _settingsRepository = SettingsRepository();
+  EnergySavingMode? _mode;
 
   @override
   void initState() {
     super.initState();
-    _loadClipCount();
+    _loadMode();
   }
 
-  Future<void> _loadClipCount() async {
-    final useCase = GetAllClipsUseCase(
-      ClipRepositoryImpl(ClipLocalDatasource()),
-    );
-    final clips = await useCase.execute();
+  Future<void> _loadMode() async {
+    final mode = await _settingsRepository.getEnergySavingMode();
     if (mounted) {
-      setState(() => _clipCount = clips.length);
+      setState(() => _mode = mode);
     }
   }
 
-  Future<void> _openClips() async {
+  Future<void> _openSettings() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ClipsPage()),
+      MaterialPageRoute(builder: (context) => const SettingsPage()),
     );
-    _loadClipCount();
-  }
-
-  Future<void> _openCamera() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CameraPage()),
-    );
-    await Future.delayed(const Duration(milliseconds: 200));
-    await _loadClipCount();
+    _loadMode();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.black,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // ── Toolbar row with settings ──
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.white.withValues(alpha: 0.15),
-                        width: 1.5,
-                      ),
-                      color: AppColors.white.withValues(alpha: 0.05),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SettingsPage(),
-                          ),
-                        );
-                      },
-                      icon: Icon(
-                        Icons.settings,
-                        color: AppColors.white.withValues(alpha: 0.7),
-                        size: 22,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    final mode = _mode;
+    if (mode == null) {
+      return const Scaffold(backgroundColor: AppColors.black);
+    }
 
-            // ── App title (below toolbar, centered) ──
-            const SizedBox(height: 24),
-            const Text(
-              'AFTERCLIP',
-              style: TextStyle(
-                fontSize: 34,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 6,
-                color: AppColors.white,
-              ),
-            ),
-
-            const Spacer(),
-
-            // ── Record button ──
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: HomeButton(
-                icon: Icons.fiber_manual_record,
-                label: 'Record',
-                filled: true,
-                onTap: _openCamera,
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // ── Album button ──
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: HomeButton(
-                icon: Icons.photo_library_outlined,
-                label: 'Album',
-                badge: _clipCount,
-                onTap: _openClips,
-              ),
-            ),
-
-            const SizedBox(height: 48),
-          ],
-        ),
-      ),
-    );
+    switch (mode) {
+      case EnergySavingMode.low:
+        return LowEnergyHomePage(onOpenSettings: _openSettings);
+      case EnergySavingMode.medium:
+        return MediumEnergyHomePage(onOpenSettings: _openSettings);
+      case EnergySavingMode.high:
+        return HighEnergyHomePage(onOpenSettings: _openSettings);
+    }
   }
 }

@@ -9,6 +9,7 @@ class HomeButton extends StatelessWidget {
     required this.onTap,
     this.filled = false,
     this.badge,
+    this.glow = true,
   });
 
   final IconData icon;
@@ -16,6 +17,7 @@ class HomeButton extends StatelessWidget {
   final VoidCallback onTap;
   final bool filled;
   final int? badge;
+  final bool glow;
 
   static const double _height = 64;
   static const double _radius = 16;
@@ -38,7 +40,7 @@ class HomeButton extends StatelessWidget {
                   color: AppColors.white.withValues(alpha: 0.15),
                   width: 1,
                 ),
-          boxShadow: filled
+          boxShadow: filled && glow
               ? [
                   BoxShadow(
                     color: AppColors.red.withValues(alpha: 0.3),
