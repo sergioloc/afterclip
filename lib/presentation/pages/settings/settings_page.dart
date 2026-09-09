@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../data/repositories/settings_repository.dart';
+import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../util/app_colors.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -15,6 +16,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   double _overlayOpacity = SettingsRepository.defaultOverlayOpacity;
   double _brightness = SettingsRepository.defaultBrightness;
+  EnergySavingMode _energySavingMode =
+      SettingsRepository.defaultEnergySavingMode;
   bool _loading = true;
 
   @override
@@ -25,14 +28,20 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadSettings() async {
     try {
-      final results = await Future.wait([
-        _settingsRepository.getOverlayOpacity(),
-        _settingsRepository.getBrightness(),
-      ]).timeout(const Duration(seconds: 3));
+      final opacity = await _settingsRepository
+          .getOverlayOpacity()
+          .timeout(const Duration(seconds: 3));
+      final brightness = await _settingsRepository
+          .getBrightness()
+          .timeout(const Duration(seconds: 3));
+      final energySavingMode = await _settingsRepository
+          .getEnergySavingMode()
+          .timeout(const Duration(seconds: 3));
       if (!mounted) return;
       setState(() {
-        _overlayOpacity = results[0];
-        _brightness = results[1];
+        _overlayOpacity = opacity;
+        _brightness = brightness;
+        _energySavingMode = energySavingMode;
         _loading = false;
       });
     } catch (e) {
@@ -51,6 +60,11 @@ class _SettingsPageState extends State<SettingsPage> {
     _settingsRepository.setBrightness(value);
   }
 
+  void _saveEnergySavingMode(EnergySavingMode mode) {
+    setState(() => _energySavingMode = mode);
+    _settingsRepository.setEnergySavingMode(mode);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +78,54 @@ class _SettingsPageState extends State<SettingsPage> {
           : ListView(
               padding: const EdgeInsets.all(24),
               children: [
+                _buildSectionHeader('Energía'),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  title: 'Ahorro de energía',
+                  subtitle: 'Nivel de reducción de consumo de batería',
+                  trailing: Text(
+                    _energySavingMode.label,
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      for (final mode in EnergySavingMode.values) ...[
+                        if (mode != EnergySavingMode.values.first)
+                          const SizedBox(width: 8),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => _saveEnergySavingMode(mode),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: _energySavingMode == mode
+                                    ? AppColors.primary
+                                    : AppColors.white10,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  mode.label,
+                                  style: const TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
                 _buildSectionHeader('Flash'),
                 const SizedBox(height: 16),
                 _buildSettingCard(
