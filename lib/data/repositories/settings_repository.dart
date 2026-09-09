@@ -7,7 +7,7 @@ class SettingsRepository {
   static const _energySavingModeKey = 'energy_saving_mode';
   static const double defaultOverlayOpacity = 0.90;
   static const double defaultBrightness = 1.0;
-  static const EnergySavingMode defaultEnergySavingMode = EnergySavingMode.low;
+  static const EnergySavingMode defaultEnergySavingMode = EnergySavingMode.off;
 
   late final SharedPreferencesAsync _prefs;
 

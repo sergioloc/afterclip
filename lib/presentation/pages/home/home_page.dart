@@ -5,7 +5,6 @@ import '../../../util/app_colors.dart';
 import '../settings/settings_page.dart';
 import 'high_energy_home_page.dart';
 import 'low_energy_home_page.dart';
-import 'medium_energy_home_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -47,11 +46,9 @@ class _HomePageState extends State<HomePage> {
     }
 
     switch (mode) {
-      case EnergySavingMode.low:
+      case EnergySavingMode.off:
         return LowEnergyHomePage(onOpenSettings: _openSettings);
-      case EnergySavingMode.medium:
-        return MediumEnergyHomePage(onOpenSettings: _openSettings);
-      case EnergySavingMode.high:
+      case EnergySavingMode.on:
         return HighEnergyHomePage(onOpenSettings: _openSettings);
     }
   }

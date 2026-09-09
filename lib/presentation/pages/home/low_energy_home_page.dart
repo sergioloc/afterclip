@@ -136,16 +136,15 @@ class _LowEnergyHomePageState extends State<LowEnergyHomePage>
                   ),
                 ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 48),
                 _buildTitle(),
                 const SizedBox(height: 4),
                 Text(
                   'CAMARA DESCARTABLE',
                   style: TextStyle(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
                     letterSpacing: 4,
-                    color: AppColors.white.withValues(alpha: 0.4),
+                    color: AppColors.grey,
                   ),
                 ),
 
@@ -178,26 +177,22 @@ class _LowEnergyHomePageState extends State<LowEnergyHomePage>
   }
 
   Widget _buildTitle() {
-    return AnimatedBuilder(
-      animation: _glowController,
-      builder: (context, _) {
-        final v = _glowController.value;
-        return Text(
-          'AFTERCLIP',
-          style: TextStyle(
-            fontSize: 34,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 6,
-            color: AppColors.white,
-            shadows: [
-              Shadow(
-                color: AppColors.red.withValues(alpha: 0.5 + v * 0.3),
-                blurRadius: 20 + v * 10,
-              ),
-            ],
+    return const Text.rich(
+      TextSpan(
+        text: 'After',
+        style: TextStyle(
+          fontFamily: 'Dantene',
+          fontSize: 60,
+          letterSpacing: 4,
+          color: AppColors.white,
+        ),
+        children: [
+          TextSpan(
+            text: 'Clip',
+            style: TextStyle(color: AppColors.primary),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 

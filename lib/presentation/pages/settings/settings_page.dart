@@ -83,14 +83,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 _buildSettingCard(
                   title: 'Ahorro de energía',
                   subtitle: 'Nivel de reducción de consumo de batería',
-                  trailing: Text(
-                    _energySavingMode.label,
-                    style: const TextStyle(
-                      color: AppColors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
                   child: Row(
                     children: [
                       for (final mode in EnergySavingMode.values) ...[
@@ -189,7 +181,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildSettingCard({
     required String title,
     required String subtitle,
-    required Widget trailing,
+    Widget? trailing,
     required Widget child,
   }) {
     return Container(
@@ -226,8 +218,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
               ),
-              const SizedBox(width: 12),
-              trailing,
+              if (trailing != null) ...[
+                const SizedBox(width: 12),
+                trailing,
+              ],
             ],
           ),
           const SizedBox(height: 12),

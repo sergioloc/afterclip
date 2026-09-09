@@ -69,7 +69,7 @@ class _HighEnergyHomePageState extends State<HighEnergyHomePage> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 48),
             _buildTitle(),
 
             const Spacer(),
@@ -116,35 +116,16 @@ class _HighEnergyHomePageState extends State<HighEnergyHomePage> {
   }
 
   Widget _buildTitle() {
-    const fontSize = 34.0;
-    const letterSpacing = 6.0;
-    const fontWeight = FontWeight.w900;
-
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Text(
-          'AFTERCLIP',
-          style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-            letterSpacing: letterSpacing,
-            foreground: Paint()
-              ..style = PaintingStyle.stroke
-              ..strokeWidth = 1.5
-              ..color = AppColors.grey,
-          ),
-        ),
-        Text(
-          'AFTERCLIP',
-          style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-            letterSpacing: letterSpacing,
-            color: AppColors.black,
-          ),
-        ),
-      ],
+    const fontSize = 60.0;
+    const letterSpacing = 4.0;
+    return Text(
+      'AfterClip',
+      style: TextStyle(
+        fontFamily: 'Dantene',
+        fontSize: fontSize,
+        letterSpacing: letterSpacing,
+        color: AppColors.grey,
+      ),
     );
   }
 
