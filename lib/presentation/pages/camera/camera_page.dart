@@ -6,6 +6,7 @@ import '../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/repositories/clip_repository.dart';
+import '../../../util/app_colors.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -118,10 +119,10 @@ class _CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.black,
       body: _initializeControllerFuture == null
           ? const Center(
-              child: CircularProgressIndicator(color: Colors.white),
+              child: CircularProgressIndicator(color: AppColors.white),
             )
           : FutureBuilder<void>(
               future: _initializeControllerFuture,
@@ -140,7 +141,7 @@ class _CameraPageState extends State<CameraPage> {
 
                         if (_overlayOpacity > 0)
                           Container(
-                            color: Colors.white.withValues(alpha: _overlayOpacity),
+                            color: AppColors.white.withValues(alpha: _overlayOpacity),
                           ),
 
                         if (_countdown > 0)
@@ -150,7 +151,7 @@ class _CameraPageState extends State<CameraPage> {
                               style: const TextStyle(
                                 fontSize: 96,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red,
+                                color: AppColors.red,
                               ),
                             ),
                           ),
@@ -166,14 +167,14 @@ class _CameraPageState extends State<CameraPage> {
                                   height: 12,
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.red,
+                                    color: AppColors.red,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 const Text(
                                   'REC',
                                   style: TextStyle(
-                                    color: Colors.red,
+                                    color: AppColors.red,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
@@ -186,7 +187,7 @@ class _CameraPageState extends State<CameraPage> {
                   );
                 } else {
                   return const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
+                    child: CircularProgressIndicator(color: AppColors.white),
                   );
                 }
               },

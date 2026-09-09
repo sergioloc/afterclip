@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
 import '../../../domain/usecases/get_all_clips_usecase.dart';
+import '../../../util/app_colors.dart';
+import '../../widgets/home_button.dart';
 import '../camera/camera_page.dart';
 import '../clips/clips_page.dart';
 import '../settings/settings_page.dart';
@@ -51,65 +53,88 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: _openCamera,
-          child: const Scaffold(
-            backgroundColor: Colors.black,
-          ),
-        ),
-        Positioned(
-          bottom: 32,
-          left: 24,
-          child: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
-              );
-            },
-            child: Container(
-              width: 56,
-              height: 56,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.black,
-              ),
-              child: const Icon(
-                Icons.settings,
-                color: Colors.white,
-                size: 28,
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: 32,
-          right: 24,
-          child: GestureDetector(
-            onTap: _openClips,
-            child: Container(
-              width: 56,
-              height: 56,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.transparent,
-              ),
-              child: Center(
-                child: Text(
-                  _clipCount.toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+    return Scaffold(
+      backgroundColor: AppColors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ── Toolbar row with settings ──
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.white.withValues(alpha: 0.15),
+                        width: 1.5,
+                      ),
+                      color: AppColors.white.withValues(alpha: 0.05),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsPage(),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.settings,
+                        color: AppColors.white.withValues(alpha: 0.7),
+                        size: 22,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
-          ),
+
+            // ── App title (below toolbar, centered) ──
+            const SizedBox(height: 24),
+            const Text(
+              'AFTERCLIP',
+              style: TextStyle(
+                fontSize: 34,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 6,
+                color: AppColors.white,
+              ),
+            ),
+
+            const Spacer(),
+
+            // ── Record button ──
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: HomeButton(
+                icon: Icons.fiber_manual_record,
+                label: 'Record',
+                filled: true,
+                onTap: _openCamera,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // ── Album button ──
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: HomeButton(
+                icon: Icons.photo_library_outlined,
+                label: 'Album',
+                badge: _clipCount,
+                onTap: _openClips,
+              ),
+            ),
+
+            const SizedBox(height: 48),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

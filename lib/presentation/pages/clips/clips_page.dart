@@ -6,6 +6,7 @@ import '../../../../data/repositories/clip_repository_impl.dart';
 import '../../../../data/services/gallery_service.dart';
 import '../../../../domain/entities/clip.dart';
 import '../../../../domain/usecases/get_all_clips_usecase.dart';
+import '../../../../util/app_colors.dart';
 
 class ClipsPage extends StatefulWidget {
   const ClipsPage({super.key});
@@ -45,35 +46,35 @@ class _ClipsPageState extends State<ClipsPage> {
     final pin = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.black,
         title: const Text(
           'PIN',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: AppColors.white),
         ),
         content: TextField(
           controller: controller,
           keyboardType: TextInputType.number,
           obscureText: true,
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: AppColors.white),
           decoration: const InputDecoration(
             hintText: '****',
-            hintStyle: TextStyle(color: Colors.white54),
+            hintStyle: TextStyle(color: AppColors.white54),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.white54),
+              borderSide: BorderSide(color: AppColors.white54),
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.white),
+              borderSide: BorderSide(color: AppColors.white),
             ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar', style: TextStyle(color: Colors.white54)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Aceptar', style: TextStyle(color: Colors.white)),
+            child: const Text('Aceptar', style: TextStyle(color: AppColors.white)),
           ),
         ],
       ),
@@ -92,7 +93,7 @@ class _ClipsPageState extends State<ClipsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('PIN incorrecto'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.red,
           ),
         );
       }
@@ -112,23 +113,23 @@ class _ClipsPageState extends State<ClipsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.black,
         title: const Text(
           'Borrar clip',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: AppColors.white),
         ),
         content: Text(
           '¿Seguro que quieres borrar este clip?',
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: AppColors.white),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: Colors.white54)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Borrar', style: TextStyle(color: Colors.red)),
+            child: const Text('Borrar', style: TextStyle(color: AppColors.red)),
           ),
         ],
       ),
@@ -153,7 +154,7 @@ class _ClipsPageState extends State<ClipsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Video guardado en la galería'),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.green,
           ),
         );
       }
@@ -163,7 +164,7 @@ class _ClipsPageState extends State<ClipsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Error al guardar el video'),
-            backgroundColor: Colors.red,
+            backgroundColor: AppColors.red,
           ),
         );
       }
@@ -173,15 +174,15 @@ class _ClipsPageState extends State<ClipsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.black,
         title: const Text('Mis clips'),
         actions: [
           IconButton(
             icon: Icon(
               _unlocked ? Icons.lock_open : Icons.lock,
-              color: _unlocked ? Colors.green : Colors.black,
+              color: _unlocked ? AppColors.green : AppColors.black,
             ),
             onPressed: _unlocked
                 ? () {
@@ -196,12 +197,12 @@ class _ClipsPageState extends State<ClipsPage> {
         ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: Colors.white))
+          ? const Center(child: CircularProgressIndicator(color: AppColors.white))
           : _clips.isEmpty
           ? const Center(
               child: Text(
                 'No hay clips grabados',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.white),
                 textAlign: TextAlign.center,
               ),
             )
@@ -214,19 +215,19 @@ class _ClipsPageState extends State<ClipsPage> {
                   enabled: !isBlocked,
                   leading: Icon(
                     Icons.movie,
-                    color: isBlocked ? Colors.white24 : Colors.white,
+                    color: isBlocked ? AppColors.white24 : AppColors.white,
                   ),
                   title: Text(
                     _formatDate(clip.createdAt),
                     style: TextStyle(
-                      color: isBlocked ? Colors.white24 : Colors.white,
+                      color: isBlocked ? AppColors.white24 : AppColors.white,
                     ),
                   ),
                   subtitle: clip.isAvailable
                       ? null
                       : Text(
                           'Disponible en ${_formatCountdown(clip.timeUntilAvailable)}',
-                          style: const TextStyle(color: Colors.grey),
+                          style: const TextStyle(color: AppColors.grey),
                         ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -234,13 +235,13 @@ class _ClipsPageState extends State<ClipsPage> {
                       if (_unlocked)
                         IconButton(
                           icon: const Icon(Icons.delete_outline,
-                              color: Colors.white),
+                              color: AppColors.white),
                           onPressed: () => _deleteClip(clip),
                         ),
                       IconButton(
                         icon: Icon(
                           Icons.download_outlined,
-                          color: isBlocked ? Colors.white24 : Colors.white,
+                          color: isBlocked ? AppColors.white24 : AppColors.white,
                         ),
                         onPressed:
                             isBlocked ? null : () => _downloadClip(clip),
@@ -306,7 +307,7 @@ class _ClipPlayerPageState extends State<ClipPlayerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.black,
       body: Center(
         child: _controller.value.isInitialized
             ? InkWell(
@@ -322,7 +323,7 @@ class _ClipPlayerPageState extends State<ClipPlayerPage> {
                   child: VideoPlayer(_controller),
                 ),
               )
-            : const CircularProgressIndicator(color: Colors.white),
+            : const CircularProgressIndicator(color: AppColors.white),
       ),
     );
   }
