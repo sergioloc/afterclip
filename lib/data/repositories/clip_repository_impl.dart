@@ -11,11 +11,12 @@ class ClipRepositoryImpl implements ClipRepository {
   ClipRepositoryImpl(this._localDatasource);
 
   @override
-  Future<Clip> saveClip(String tempFilePath) async {
+  Future<Clip> saveClip(String tempFilePath, {String? albumId}) async {
     final clip = Clip(
       id: _uuid.v4(),
       filePath: tempFilePath,
       createdAt: DateTime.now(),
+      albumId: albumId,
     );
 
     final model = ClipModel.fromEntity(clip);

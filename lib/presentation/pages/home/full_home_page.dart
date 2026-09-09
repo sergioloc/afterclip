@@ -12,13 +12,13 @@ class FullHomePage extends StatelessWidget {
     required this.clipCount,
     required this.onOpenSettings,
     required this.onOpenCamera,
-    required this.onOpenClips,
+    required this.onOpenAlbums,
   });
 
   final int clipCount;
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenCamera;
-  final VoidCallback onOpenClips;
+  final VoidCallback onOpenAlbums;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +71,7 @@ class FullHomePage extends StatelessWidget {
               borderColor: AppColors.white24,
               badgeBackground: AppColors.primary,
               badgeForeground: AppColors.white,
-              onTap: onOpenClips,
+              onTap: onOpenAlbums,
             ),
           ),
           Positioned(

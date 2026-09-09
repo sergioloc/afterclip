@@ -9,7 +9,10 @@ import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../util/app_colors.dart';
 
 class ClipsPage extends StatefulWidget {
-  const ClipsPage({super.key});
+  const ClipsPage({super.key, this.albumId, this.title});
+
+  final String? albumId;
+  final String? title;
 
   @override
   State<ClipsPage> createState() => _ClipsPageState();
@@ -32,7 +35,10 @@ class _ClipsPageState extends State<ClipsPage> {
   }
 
   Future<void> _loadClips() async {
-    final clips = await _getAllClipsUseCase.execute();
+    var clips = await _getAllClipsUseCase.execute();
+    if (widget.albumId != null) {
+      clips = clips.where((c) => c.albumId == widget.albumId).toList();
+    }
     if (mounted) {
       setState(() {
         _clips = clips;
@@ -177,7 +183,7 @@ class _ClipsPageState extends State<ClipsPage> {
       backgroundColor: AppColors.black,
       appBar: AppBar(
         backgroundColor: AppColors.black,
-        title: const Text('Mis clips'),
+        title: Text(widget.title ?? 'Mis clips'),
         actions: [
           IconButton(
             icon: Icon(
@@ -201,7 +207,7 @@ class _ClipsPageState extends State<ClipsPage> {
           : _clips.isEmpty
           ? const Center(
               child: Text(
-                'No hay clips grabados',
+                'No hay clips en este álbum',
                 style: TextStyle(color: AppColors.white),
                 textAlign: TextAlign.center,
               ),

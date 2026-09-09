@@ -6,7 +6,7 @@ class SaveClipUseCase {
 
   SaveClipUseCase(this._repository);
 
-  Future<Clip> execute(String tempFilePath) {
-    return _repository.saveClip(tempFilePath);
+  Future<Clip> execute(String tempFilePath, {String? albumId}) {
+    return _repository.saveClip(tempFilePath, albumId: albumId);
   }
 }

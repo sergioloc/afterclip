@@ -2,10 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:screen_brightness/screen_brightness.dart';
+import '../../../data/datasource/local/album_local_datasource.dart';
 import '../../../data/datasource/local/clip_local_datasource.dart';
+import '../../../data/repositories/album_repository_impl.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
 import '../../../data/repositories/settings_repository.dart';
+import '../../../domain/entities/album.dart';
 import '../../../domain/repositories/clip_repository.dart';
+import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../util/app_colors.dart';
 
 class CameraPage extends StatefulWidget {
@@ -25,13 +29,93 @@ class _CameraPageState extends State<CameraPage> {
   final SettingsRepository _settingsRepository = SettingsRepository();
   double _overlayOpacity = SettingsRepository.defaultOverlayOpacity;
   double _brightness = SettingsRepository.defaultBrightness;
+  late final GetAllAlbumsUseCase _getAllAlbumsUseCase;
+  List<Album> _albums = [];
+  String? _selectedAlbumId;
 
   @override
   void initState() {
     super.initState();
     _clipRepository = ClipRepositoryImpl(ClipLocalDatasource());
+    _getAllAlbumsUseCase =
+        GetAllAlbumsUseCase(AlbumRepositoryImpl(AlbumLocalDatasource()));
     _loadSettings();
+    _loadAlbums();
     _initCamera();
+  }
+
+  Future<void> _loadAlbums() async {
+    final albums = await _getAllAlbumsUseCase.execute();
+    if (mounted) {
+      setState(() => _albums = albums);
+    }
+  }
+
+  String get _selectedAlbumName {
+    final album = _albums.where((a) => a.id == _selectedAlbumId).firstOrNull;
+    return album?.name ?? 'Sin álbum';
+  }
+
+  Future<void> _showAlbumPicker() async {
+    final selected = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AppColors.black,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: const Text(
+                'Guardar en álbum',
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const Divider(color: AppColors.white24),
+            ListTile(
+              leading: const Icon(Icons.layers_clear, color: AppColors.white54),
+              title: const Text(
+                'Sin álbum',
+                style: TextStyle(color: AppColors.white),
+              ),
+              trailing: _selectedAlbumId == null
+                  ? const Icon(Icons.check, color: AppColors.primary)
+                  : null,
+              onTap: () => Navigator.pop(context, null),
+            ),
+            if (_albums.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'No hay álbumes todavía. Créalos desde la pantalla de álbumes.',
+                  style: TextStyle(color: AppColors.white54),
+                ),
+              )
+            else
+              for (final album in _albums)
+                ListTile(
+                  leading: const Icon(
+                    Icons.photo_library_outlined,
+                    color: AppColors.white54,
+                  ),
+                  title: Text(
+                    album.name,
+                    style: const TextStyle(color: AppColors.white),
+                  ),
+                  trailing: _selectedAlbumId == album.id
+                      ? const Icon(Icons.check, color: AppColors.primary)
+                      : null,
+                  onTap: () => Navigator.pop(context, album.id),
+                ),
+          ],
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    setState(() => _selectedAlbumId = selected);
   }
 
   Future<void> _loadSettings() async {
@@ -98,7 +182,7 @@ class _CameraPageState extends State<CameraPage> {
     final file = await _controller!.stopVideoRecording();
 
     if (_clipRepository != null) {
-      await _clipRepository!.saveClip(file.path);
+      await _clipRepository!.saveClip(file.path, albumId: _selectedAlbumId);
     }
 
     await _resetBrightness();
@@ -159,7 +243,7 @@ class _CameraPageState extends State<CameraPage> {
                         if (_isRecording)
                           Positioned(
                             top: MediaQuery.of(context).padding.top + 16,
-                            left: 16,
+                            right: 16,
                             child: Row(
                               children: [
                                 Container(
@@ -180,6 +264,46 @@ class _CameraPageState extends State<CameraPage> {
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+
+                        if (!_isRecording)
+                          Positioned(
+                            top: MediaQuery.of(context).padding.top + 16,
+                            left: 16,
+                            child: GestureDetector(
+                              onTap: _showAlbumPicker,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.black.withValues(alpha: 0.6),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: AppColors.white24,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.photo_library_outlined,
+                                      color: AppColors.white,
+                                      size: 16,
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      '$_selectedAlbumName  ▾',
+                                      style: const TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                       ],

@@ -5,8 +5,8 @@ import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../util/app_colors.dart';
+import '../albums/albums_page.dart';
 import '../camera/camera_page.dart';
-import '../clips/clips_page.dart';
 import '../settings/settings_page.dart';
 import 'full_home_page.dart';
 import 'saving_home_page.dart';
@@ -63,11 +63,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _openClips() {
+  void _openAlbums() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ClipsPage()),
-    );
+      MaterialPageRoute(builder: (context) => const AlbumsPage()),
+    ).then((_) => _loadPage());
   }
 
   @override
@@ -83,13 +83,13 @@ class _HomePageState extends State<HomePage> {
           clipCount: clipCount,
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
-          onOpenClips: _openClips,
+          onOpenAlbums: _openAlbums,
         ),
       EnergySavingMode.on => SavingHomePage(
           clipCount: clipCount,
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
-          onOpenClips: _openClips,
+          onOpenAlbums: _openAlbums,
         ),
     };
   }

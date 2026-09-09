@@ -4,11 +4,13 @@ class ClipModel {
   final String id;
   final String filePath;
   final String createdAt;
+  final String? albumId;
 
   const ClipModel({
     required this.id,
     required this.filePath,
     required this.createdAt,
+    this.albumId,
   });
 
   factory ClipModel.fromEntity(Clip clip) {
@@ -16,6 +18,7 @@ class ClipModel {
       id: clip.id,
       filePath: clip.filePath,
       createdAt: clip.createdAt.toIso8601String(),
+      albumId: clip.albumId,
     );
   }
 
@@ -24,6 +27,7 @@ class ClipModel {
       id: id,
       filePath: filePath,
       createdAt: DateTime.parse(createdAt),
+      albumId: albumId,
     );
   }
 
@@ -32,6 +36,7 @@ class ClipModel {
       id: json['id'] as String,
       filePath: json['filePath'] as String,
       createdAt: json['createdAt'] as String,
+      albumId: json['albumId'] as String?,
     );
   }
 
@@ -40,6 +45,7 @@ class ClipModel {
       'id': id,
       'filePath': filePath,
       'createdAt': createdAt,
+      if (albumId != null) 'albumId': albumId,
     };
   }
 }

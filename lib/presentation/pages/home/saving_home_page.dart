@@ -12,13 +12,13 @@ class SavingHomePage extends StatelessWidget {
     required this.clipCount,
     required this.onOpenSettings,
     required this.onOpenCamera,
-    required this.onOpenClips,
+    required this.onOpenAlbums,
   });
 
   final int clipCount;
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenCamera;
-  final VoidCallback onOpenClips;
+  final VoidCallback onOpenAlbums;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class SavingHomePage extends StatelessWidget {
               borderColor: AppColors.grey,
               badgeBackground: AppColors.grey,
               badgeForeground: AppColors.black,
-              onTap: onOpenClips,
+              onTap: onOpenAlbums,
             ),
           ),
           Positioned(
