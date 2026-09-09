@@ -10,6 +10,12 @@ class HomeButton extends StatelessWidget {
     this.filled = false,
     this.badge,
     this.glow = true,
+    this.fillColor,
+    this.showBorder = false,
+    this.badgeColor = AppColors.primary,
+    this.badgeTextColor = AppColors.white,
+    this.foregroundColor,
+    this.borderColor,
   });
 
   final IconData icon;
@@ -18,12 +24,23 @@ class HomeButton extends StatelessWidget {
   final bool filled;
   final int? badge;
   final bool glow;
+  final Color? fillColor;
+  final bool showBorder;
+  final Color badgeColor;
+  final Color badgeTextColor;
+  final Color? foregroundColor;
+  final Color? borderColor;
 
   static const double _height = 64;
   static const double _radius = 16;
 
   @override
   Widget build(BuildContext context) {
+    final Color backgroundColor =
+        fillColor ?? (filled ? AppColors.primary : AppColors.white.withValues(alpha: 0.05));
+    final Color foregroundColor = this.foregroundColor ??
+        (filled || fillColor != null ? AppColors.white : AppColors.white.withValues(alpha: 0.5));
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -31,13 +48,11 @@ class HomeButton extends StatelessWidget {
         height: _height,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(_radius),
-          color: filled
-              ? AppColors.primary
-              : AppColors.white.withValues(alpha: 0.05),
-          border: filled
+          color: backgroundColor,
+          border: filled && !showBorder
               ? null
               : Border.all(
-                  color: AppColors.white.withValues(alpha: 0.15),
+                  color: borderColor ?? AppColors.white.withValues(alpha: 0.15),
                   width: 1,
                 ),
           boxShadow: filled && glow
@@ -58,9 +73,7 @@ class HomeButton extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: filled
-                      ? AppColors.white
-                      : AppColors.white.withValues(alpha: 0.5),
+                  color: foregroundColor,
                   size: 24,
                 ),
                 const SizedBox(width: 10),
@@ -70,9 +83,7 @@ class HomeButton extends StatelessWidget {
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.5,
-                    color: filled
-                        ? AppColors.white
-                        : AppColors.white.withValues(alpha: 0.5),
+                    color: foregroundColor,
                   ),
                 ),
               ],
@@ -86,13 +97,13 @@ class HomeButton extends StatelessWidget {
                     vertical: 2,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary,
+                    color: badgeColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     '$badge',
-                    style: const TextStyle(
-                      color: AppColors.white,
+                    style: TextStyle(
+                      color: badgeTextColor,
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),

@@ -64,28 +64,13 @@ class _HighEnergyHomePageState extends State<HighEnergyHomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  IconButton(
-                    onPressed: widget.onOpenSettings,
-                    icon: Icon(
-                      Icons.settings,
-                      color: AppColors.white.withValues(alpha: 0.5),
-                      size: 22,
-                    ),
-                  ),
+                  _buildSettingsButton(),
                 ],
               ),
             ),
 
             const SizedBox(height: 24),
-            const Text(
-              'AFTERCLIP',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 4,
-                color: AppColors.white,
-              ),
-            ),
+            _buildTitle(),
 
             const Spacer(),
 
@@ -95,7 +80,11 @@ class _HighEnergyHomePageState extends State<HighEnergyHomePage> {
                 icon: Icons.fiber_manual_record,
                 label: 'Record',
                 filled: true,
+                fillColor: AppColors.black,
+                showBorder: true,
                 glow: false,
+                foregroundColor: AppColors.grey,
+                borderColor: AppColors.grey,
                 onTap: _openCamera,
               ),
             ),
@@ -108,7 +97,13 @@ class _HighEnergyHomePageState extends State<HighEnergyHomePage> {
                 icon: Icons.photo_library_outlined,
                 label: 'Album',
                 badge: _clipCount,
+                fillColor: AppColors.black,
+                showBorder: true,
                 glow: false,
+                foregroundColor: AppColors.grey,
+                borderColor: AppColors.grey,
+                badgeColor: AppColors.grey,
+                badgeTextColor: AppColors.black,
                 onTap: _openClips,
               ),
             ),
@@ -116,6 +111,50 @@ class _HighEnergyHomePageState extends State<HighEnergyHomePage> {
             const SizedBox(height: 48),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTitle() {
+    const fontSize = 34.0;
+    const letterSpacing = 6.0;
+    const fontWeight = FontWeight.w900;
+
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Text(
+          'AFTERCLIP',
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            letterSpacing: letterSpacing,
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1.5
+              ..color = AppColors.grey,
+          ),
+        ),
+        Text(
+          'AFTERCLIP',
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            letterSpacing: letterSpacing,
+            color: AppColors.black,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingsButton() {
+    return IconButton(
+      onPressed: widget.onOpenSettings,
+      icon: const Icon(
+        Icons.settings,
+        color: AppColors.grey,
+        size: 22,
       ),
     );
   }
