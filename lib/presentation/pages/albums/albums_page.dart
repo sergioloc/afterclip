@@ -13,6 +13,7 @@ import '../../../../domain/usecases/rename_album_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
 import '../../widgets/album_list_item.dart';
+import '../../widgets/albums_summary.dart';
 import '../clips/clips_page.dart';
 
 class AlbumsPage extends StatefulWidget {
@@ -187,66 +188,10 @@ class _AlbumsPageState extends State<AlbumsPage> {
               itemCount: _albums.length + 2,
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  return Container(
-                    margin: const EdgeInsets.only(bottom: 14),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 18,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.white10,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${_albums.where((a) => !a.archived).length}',
-                                style: const TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              const Text(
-                                'Álbumes activos',
-                                style: TextStyle(
-                                  color: AppColors.white54,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                '${_clips.length}',
-                                style: const TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              const Text(
-                                'Clips totales',
-                                style: TextStyle(
-                                  color: AppColors.white54,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  return AlbumsSummary(
+                    activeAlbums:
+                        _albums.where((a) => !a.archived).length,
+                    totalClips: _clips.length,
                   );
                 }
                 if (index == 1) {

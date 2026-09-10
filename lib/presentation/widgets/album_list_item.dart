@@ -74,12 +74,6 @@ class AlbumListItem extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (archived)
-                    Icon(
-                      Icons.archive_outlined,
-                      color: AppColors.white54,
-                      size: 20,
-                    ),
                 ],
               ),
             ),
