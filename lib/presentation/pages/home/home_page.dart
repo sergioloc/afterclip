@@ -102,14 +102,15 @@ class _HomePageState extends State<HomePage> {
     _loadPage();
   }
 
-  void _openCamera() {
-    Navigator.push(
+  Future<void> _openCamera() async {
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) =>
             CameraPage(initialAlbumId: _selectedAlbumId, initialLens: _lens),
       ),
     );
+    _loadPage();
   }
 
   void _openAlbums() {
