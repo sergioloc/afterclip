@@ -212,7 +212,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            ClipsPage(albumId: album.id, title: album.name),
+                            ClipsPage(albumId: album.id, title: album.name, archived: album.archived),
                       ),
                     ).then((_) => _loadAlbums());
                   },

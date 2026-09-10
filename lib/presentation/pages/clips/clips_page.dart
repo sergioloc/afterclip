@@ -1,30 +1,31 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import '../../../../data/datasource/local/album_local_datasource.dart';
 import '../../../../data/datasource/local/clip_local_datasource.dart';
+import '../../../../data/repositories/album_repository_impl.dart';
 import '../../../../data/repositories/clip_repository_impl.dart';
 import '../../../../data/services/gallery_service.dart';
 import '../../../../domain/entities/clip.dart';
 import '../../../../domain/usecases/get_all_clips_usecase.dart';
+import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
 
 class ClipsPage extends StatefulWidget {
-  const ClipsPage({super.key, this.albumId, this.title});
+  const ClipsPage({super.key, this.albumId, this.title, this.archived = false});
 
   final String? albumId;
   final String? title;
+  final bool archived;
 
   @override
   State<ClipsPage> createState() => _ClipsPageState();
 }
 
 class _ClipsPageState extends State<ClipsPage> {
-  static const String _secretPin = '1996';
-
   late final GetAllClipsUseCase _getAllClipsUseCase;
   List<Clip> _clips = [];
   bool _loading = true;
-  bool _unlocked = false;
 
   @override
   void initState() {
@@ -47,65 +48,6 @@ class _ClipsPageState extends State<ClipsPage> {
     }
   }
 
-  Future<void> _promptForPin() async {
-    final controller = TextEditingController();
-    final pin = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.black,
-        title: const Text(
-          'PIN',
-          style: TextStyle(color: AppColors.white),
-        ),
-        content: TextField(
-          controller: controller,
-          keyboardType: TextInputType.number,
-          obscureText: true,
-          style: const TextStyle(color: AppColors.white),
-          decoration: const InputDecoration(
-            hintText: '****',
-            hintStyle: TextStyle(color: AppColors.white54),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.white54),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.white),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Aceptar', style: TextStyle(color: AppColors.white)),
-          ),
-        ],
-      ),
-    );
-
-    if (pin == null) return;
-
-    if (pin == _secretPin) {
-      setState(() {
-        _unlocked = true;
-        _loading = true;
-      });
-      await _loadClips();
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('PIN incorrecto'),
-            backgroundColor: AppColors.red,
-          ),
-        );
-      }
-    }
-  }
-
   void _playClip(Clip clip) {
     Navigator.push(
       context,
@@ -113,6 +55,45 @@ class _ClipsPageState extends State<ClipsPage> {
         builder: (context) => ClipPlayerPage(clip: clip),
       ),
     );
+  }
+
+  Future<void> _unarchiveAlbum() async {
+    if (widget.albumId == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.black,
+        title: const Text(
+          'Desarchivar álbum',
+          style: TextStyle(color: AppColors.white),
+        ),
+        content: const Text(
+          'El álbum volverá a aparecer en la pantalla principal.',
+          style: TextStyle(color: AppColors.white),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Desarchivar', style: TextStyle(color: AppColors.primary)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    await SetAlbumArchivedUseCase(
+      AlbumRepositoryImpl(AlbumLocalDatasource()),
+    ).execute(widget.albumId!, false);
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   Future<void> _deleteClip(Clip clip) async {
@@ -183,24 +164,22 @@ class _ClipsPageState extends State<ClipsPage> {
       backgroundColor: AppColors.black,
       appBar: AppBar(
         backgroundColor: AppColors.black,
-        title: Text(widget.title ?? 'Mis clips'),
-        actions: [
-          IconButton(
-            icon: Icon(
-              _unlocked ? Icons.lock_open : Icons.lock,
-              color: _unlocked ? AppColors.green : AppColors.black,
-            ),
-            onPressed: _unlocked
-                ? () {
-                    setState(() {
-                      _unlocked = false;
-                      _loading = true;
-                    });
-                    _loadClips();
-                  }
-                : _promptForPin,
-          ),
-        ],
+        titleSpacing: 0,
+        title: Row(
+          children: [
+            if (widget.title != null)
+              Text(widget.title!),
+            const Spacer(),
+            if (widget.archived)
+              Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: IconButton(
+                  icon: const Icon(Icons.unarchive, color: AppColors.white),
+                  onPressed: _unarchiveAlbum,
+                ),
+              ),
+          ],
+        ),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.white))
@@ -216,7 +195,7 @@ class _ClipsPageState extends State<ClipsPage> {
               itemCount: _clips.length,
               itemBuilder: (context, index) {
                 final clip = _clips[index];
-                final isBlocked = !clip.isAvailable && !_unlocked;
+                final isBlocked = !clip.isAvailable;
                 return ListTile(
                   enabled: !isBlocked,
                   leading: Icon(
@@ -238,12 +217,11 @@ class _ClipsPageState extends State<ClipsPage> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (_unlocked)
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline,
-                              color: AppColors.white),
-                          onPressed: () => _deleteClip(clip),
-                        ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline,
+                            color: AppColors.white),
+                        onPressed: () => _deleteClip(clip),
+                      ),
                       IconButton(
                         icon: Icon(
                           Icons.download_outlined,
