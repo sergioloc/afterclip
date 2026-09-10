@@ -27,7 +27,7 @@ class FullHomePage extends StatelessWidget {
     required this.onArchiveAlbum,
   });
 
-  final List<Album> albums;
+  final List<Album?> albums;
   final int albumIndex;
   final Map<String, int> albumClipCounts;
   final CameraLens lens;
@@ -37,7 +37,7 @@ class FullHomePage extends StatelessWidget {
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenCamera;
   final VoidCallback onOpenAlbums;
-  final ValueChanged<String> onArchiveAlbum;
+  final ValueChanged<String?> onArchiveAlbum;
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +71,17 @@ class FullHomePage extends StatelessWidget {
               onPageChanged: onAlbumChanged,
               itemBuilder: (context, index) {
 return AlbumFrame(
-                    text: albums.isEmpty ? null : albums[index].name,
+                    text: albums.isEmpty ? null : albums[index]?.name,
                     clipCount: albums.isEmpty
                         ? 0
-                        : (albumClipCounts[albums[index].id] ?? 0),
+                        : (albums[index] == null
+                            ? 0
+                            : (albumClipCounts[albums[index]!.id] ?? 0)),
                     topMargin: useButtonAsLensIndicator ? 24 : 64,
                     bottomInset: 168,
-                    onArchive: albums.isEmpty
+                    onArchive: albums.isEmpty || albums[index] == null
                         ? null
-                        : () => onArchiveAlbum(albums[index].id),
+                        : () => onArchiveAlbum(albums[index]!.id),
                     archiveButtonColor: AppColors.white70,
                     archiveButtonBackground: AppColors.black,
                   );
@@ -129,6 +131,7 @@ return AlbumFrame(
                   ),
                   ShutterButton(
                     onTap: onOpenCamera,
+                    color: AppColors.primary,
                     ringColor: AppColors.primary,
                   ),
                   if (useButtonAsLensIndicator)

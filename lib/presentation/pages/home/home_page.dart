@@ -26,8 +26,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final SettingsRepository _settingsRepository = SettingsRepository();
-  List<Album> _albums = [];
   Map<String, int> _albumClipCounts = {};
+  List<Album?> _activeAlbums = [];
   int _albumIndex = 0;
   String? _selectedAlbumId;
   CameraLens _lens = CameraLens.front;
@@ -59,10 +59,12 @@ class _HomePageState extends State<HomePage> {
       if (!mounted) return;
       setState(() {
         _mode = mode;
-        _albums = albums;
         _albumClipCounts = counts;
+        _activeAlbums = albums.where((a) => !a.archived).toList();
+        if (_activeAlbums.isEmpty) _activeAlbums.add(null);
         _albumIndex = 0;
-        _selectedAlbumId = albums.isEmpty ? null : albums.first.id;
+        _selectedAlbumId =
+            _activeAlbums.isEmpty ? null : _activeAlbums.first?.id;
         _loading = false;
       });
     } catch (_) {
@@ -75,8 +77,7 @@ class _HomePageState extends State<HomePage> {
     if (index == _albumIndex) return;
     setState(() {
       _albumIndex = index;
-      _selectedAlbumId =
-          _albums.isEmpty ? null : _albums[index].id;
+      _selectedAlbumId = _activeAlbums[index]?.id;
     });
   }
 
@@ -93,7 +94,8 @@ class _HomePageState extends State<HomePage> {
     setState(() => _lens = lens);
   }
 
-  Future<void> _archiveAlbum(String albumId) async {
+  Future<void> _archiveAlbum(String? albumId) async {
+    if (albumId == null) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -159,11 +161,9 @@ class _HomePageState extends State<HomePage> {
       return const Scaffold(backgroundColor: AppColors.black);
     }
 
-    final activeAlbums = _albums.where((a) => !a.archived).toList();
-
     return switch (_mode) {
       EnergySavingMode.off => FullHomePage(
-          albums: activeAlbums,
+          albums: _activeAlbums,
           albumIndex: _albumIndex,
           albumClipCounts: _albumClipCounts,
           lens: _lens,
@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
           onArchiveAlbum: _archiveAlbum,
         ),
       EnergySavingMode.on => SavingHomePage(
-          albums: activeAlbums,
+          albums: _activeAlbums,
           albumIndex: _albumIndex,
           albumClipCounts: _albumClipCounts,
           lens: _lens,

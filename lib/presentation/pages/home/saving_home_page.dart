@@ -27,7 +27,7 @@ class SavingHomePage extends StatelessWidget {
     required this.onArchiveAlbum,
   });
 
-  final List<Album> albums;
+  final List<Album?> albums;
   final int albumIndex;
   final Map<String, int> albumClipCounts;
   final CameraLens lens;
@@ -37,7 +37,7 @@ class SavingHomePage extends StatelessWidget {
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenCamera;
   final VoidCallback onOpenAlbums;
-  final ValueChanged<String> onArchiveAlbum;
+  final ValueChanged<String?> onArchiveAlbum;
 
   @override
   Widget build(BuildContext context) {
@@ -71,17 +71,19 @@ class SavingHomePage extends StatelessWidget {
               onPageChanged: onAlbumChanged,
               itemBuilder: (context, index) {
 return AlbumFrame(
-                    text: albums.isEmpty ? null : albums[index].name,
+                    text: albums.isEmpty ? null : albums[index]?.name,
                     clipCount: albums.isEmpty
                         ? 0
-                        : (albumClipCounts[albums[index].id] ?? 0),
+                        : (albums[index] == null
+                            ? 0
+                            : (albumClipCounts[albums[index]!.id] ?? 0)),
                     textColor: AppColors.grey,
                     borderColor: AppColors.grey,
                     topMargin: useButtonAsLensIndicator ? 24 : 64,
                     bottomInset: 168,
-                    onArchive: albums.isEmpty
+                    onArchive: albums.isEmpty || albums[index] == null
                         ? null
-                        : () => onArchiveAlbum(albums[index].id),
+                        : () => onArchiveAlbum(albums[index]!.id),
                     archiveButtonColor: AppColors.grey,
                     archiveButtonBackground: AppColors.black,
                   );
@@ -128,9 +130,11 @@ return AlbumFrame(
                   RoundActionButton(
                     icon: Icons.photo_library_outlined,
                     onTap: onOpenAlbums,
+                    border: false,
                   ),
                   ShutterButton(
                     onTap: onOpenCamera,
+                    color: AppColors.black,
                     ringColor: AppColors.grey,
                   ),
                   if (useButtonAsLensIndicator)
@@ -139,6 +143,7 @@ return AlbumFrame(
                           ? Icons.photo_camera_front
                           : Icons.photo_camera_back_outlined,
                       onTap: onToggleCamera,
+                      border: false,
                     )
                   else
                     RoundActionButton(

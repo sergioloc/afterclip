@@ -4,11 +4,13 @@ class ShutterButton extends StatelessWidget {
   const ShutterButton({
     super.key,
     required this.onTap,
+    required this.color,
     required this.ringColor,
     this.size = 84,
   });
 
   final VoidCallback onTap;
+  final Color color;
   final Color ringColor;
   final double size;
 
@@ -26,7 +28,7 @@ class ShutterButton extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(7),
           child: Container(
-            decoration: BoxDecoration(shape: BoxShape.circle, color: ringColor),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
           ),
         ),
       ),

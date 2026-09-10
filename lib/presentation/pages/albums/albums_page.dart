@@ -183,7 +183,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.white))
-: ListView.builder(
+          : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: _albums.length + 2,
               itemBuilder: (context, index) {
@@ -197,7 +197,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 if (index == 1) {
                   return AlbumListItem(
                     title: 'Todos los clips',
-                    subtitle: '${_clips.length}',
+                    subtitle: '${_clips.length} clips',
                     onTap: _openAllClips,
                   );
                 }
