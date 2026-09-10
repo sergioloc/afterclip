@@ -26,6 +26,7 @@ class FullHomePage extends StatelessWidget {
     required this.onOpenSettings,
     required this.onOpenCamera,
     required this.onOpenAlbums,
+    required this.onArchiveAlbum,
   });
 
   final List<Album> albums;
@@ -38,6 +39,7 @@ class FullHomePage extends StatelessWidget {
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenCamera;
   final VoidCallback onOpenAlbums;
+  final ValueChanged<String> onArchiveAlbum;
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +60,7 @@ class FullHomePage extends StatelessWidget {
             child: RoundActionButton(
               icon: Icons.settings,
               color: AppColors.white70,
-              backgroundColor: AppColors.white05,
-              borderColor: AppColors.white24,
+              backgroundColor: AppColors.black,
               onTap: onOpenSettings,
             ),
           ),
@@ -79,6 +80,11 @@ return AlbumFrame(
                         : (albumClipCounts[albums[index].id] ?? 0),
                     topMargin: useButtonAsLensIndicator ? 24 : 64,
                     bottomInset: 168,
+                    onArchive: albums.isEmpty
+                        ? null
+                        : () => onArchiveAlbum(albums[index].id),
+                    archiveButtonColor: AppColors.white70,
+                    archiveButtonBackground: AppColors.black,
                   );
                 },
               ),

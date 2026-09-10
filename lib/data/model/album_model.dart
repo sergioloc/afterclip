@@ -4,11 +4,13 @@ class AlbumModel {
   final String id;
   final String name;
   final String createdAt;
+  final bool archived;
 
   const AlbumModel({
     required this.id,
     required this.name,
     required this.createdAt,
+    this.archived = false,
   });
 
   factory AlbumModel.fromEntity(Album album) {
@@ -16,6 +18,7 @@ class AlbumModel {
       id: album.id,
       name: album.name,
       createdAt: album.createdAt.toIso8601String(),
+      archived: album.archived,
     );
   }
 
@@ -24,6 +27,7 @@ class AlbumModel {
       id: id,
       name: name,
       createdAt: DateTime.parse(createdAt),
+      archived: archived,
     );
   }
 
@@ -32,6 +36,7 @@ class AlbumModel {
       id: json['id'] as String,
       name: json['name'] as String,
       createdAt: json['createdAt'] as String,
+      archived: json['archived'] as bool? ?? false,
     );
   }
 
@@ -40,6 +45,7 @@ class AlbumModel {
       'id': id,
       'name': name,
       'createdAt': createdAt,
+      'archived': archived,
     };
   }
 }

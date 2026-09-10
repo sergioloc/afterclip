@@ -26,6 +26,7 @@ class SavingHomePage extends StatelessWidget {
     required this.onOpenSettings,
     required this.onOpenCamera,
     required this.onOpenAlbums,
+    required this.onArchiveAlbum,
   });
 
   final List<Album> albums;
@@ -38,6 +39,7 @@ class SavingHomePage extends StatelessWidget {
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenCamera;
   final VoidCallback onOpenAlbums;
+  final ValueChanged<String> onArchiveAlbum;
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +82,11 @@ return AlbumFrame(
                     borderColor: AppColors.grey,
                     topMargin: useButtonAsLensIndicator ? 24 : 64,
                     bottomInset: 168,
+                    onArchive: albums.isEmpty
+                        ? null
+                        : () => onArchiveAlbum(albums[index].id),
+                    archiveButtonColor: AppColors.grey,
+                    archiveButtonBackground: AppColors.black,
                   );
               },
             ),

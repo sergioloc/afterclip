@@ -13,11 +13,19 @@ class AlbumFrame extends StatelessWidget {
     this.borderColor = AppColors.white,
     this.radius = 20,
     this.borderWidth = 2,
+    this.onArchive,
+    this.archiveButtonColor = AppColors.white70,
+    this.archiveButtonBackground = AppColors.white05,
   });
 
   final String? text;
   final int clipCount;
   final Color textColor;
+
+  /// Acción de archivar el álbum. Solo se muestra si es distinto de null.
+  final VoidCallback? onArchive;
+  final Color archiveButtonColor;
+  final Color archiveButtonBackground;
 
   /// Margen horizontal del marco respecto al ancho de la página.
   final double horizontalMargin;
@@ -45,55 +53,80 @@ class AlbumFrame extends StatelessWidget {
             horizontalMargin,
             bottomInset,
           ),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.black,
-              borderRadius: BorderRadius.circular(radius),
-              border: Border.all(color: borderColor, width: borderWidth),
-            ),
-            child: text == null
-                ? null
-                : Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            text!.toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 30,
-                              letterSpacing: 8,
-                              color: textColor,
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: double.infinity,
+                decoration: BoxDecoration(
+                  color: AppColors.black,
+                  borderRadius: BorderRadius.circular(radius),
+                  border: Border.all(color: borderColor, width: borderWidth),
+                ),
+                child: text == null
+                    ? null
+                    : Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                text!.toUpperCase(),
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  letterSpacing: 8,
+                                  color: textColor,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: textColor),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            '$clipCount CLIPS',
-                            style: TextStyle(
-                              color: textColor,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.2,
+                            const SizedBox(height: 14),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: textColor),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                '$clipCount CLIPS',
+                                style: TextStyle(
+                                  color: textColor,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
+              ),
+              if (onArchive != null)
+                Positioned(
+                  right: 12,
+                  bottom: 12,
+                  child: GestureDetector(
+                    onTap: onArchive,
+                    child: Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: archiveButtonBackground,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.archive,
+                        color: archiveButtonColor,
+                        size: 24,
+                      ),
                     ),
                   ),
+                ),
+            ],
           ),
         );
       },

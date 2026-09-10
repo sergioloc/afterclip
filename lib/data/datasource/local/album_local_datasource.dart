@@ -36,6 +36,20 @@ class AlbumLocalDatasource {
       id: album.id,
       name: newName,
       createdAt: album.createdAt,
+      archived: album.archived,
+    );
+    albums[albums.indexOf(album)] = updated;
+    await _saveMetadata(albums);
+  }
+
+  Future<void> setAlbumArchived(String albumId, bool archived) async {
+    final albums = await getAllAlbums();
+    final album = albums.firstWhere((a) => a.id == albumId);
+    final updated = AlbumModel(
+      id: album.id,
+      name: album.name,
+      createdAt: album.createdAt,
+      archived: archived,
     );
     albums[albums.indexOf(album)] = updated;
     await _saveMetadata(albums);

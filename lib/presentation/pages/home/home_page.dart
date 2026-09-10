@@ -9,6 +9,7 @@ import '../../../domain/entities/camera_lens.dart';
 import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../domain/usecases/get_all_clips_usecase.dart';
+import '../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../util/app_colors.dart';
 import '../albums/albums_page.dart';
 import '../camera/camera_page.dart';
@@ -92,6 +93,40 @@ class _HomePageState extends State<HomePage> {
     setState(() => _lens = lens);
   }
 
+  Future<void> _archiveAlbum(String albumId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.black,
+        title: const Text(
+          'Archivar álbum',
+          style: TextStyle(color: AppColors.white),
+        ),
+        content: const Text(
+          'Se ocultará el album en esta pantalla, pero podrás acceder a él desde la galería.',
+          style: TextStyle(color: AppColors.white),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Archivar', style: TextStyle(color: AppColors.primary)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    await SetAlbumArchivedUseCase(
+      AlbumRepositoryImpl(AlbumLocalDatasource()),
+    ).execute(albumId, true);
+    _loadPage();
+  }
+
   Future<void> _openSettings() async {
     await Navigator.push(
       context,
@@ -124,9 +159,11 @@ class _HomePageState extends State<HomePage> {
       return const Scaffold(backgroundColor: AppColors.black);
     }
 
+    final activeAlbums = _albums.where((a) => !a.archived).toList();
+
     return switch (_mode) {
       EnergySavingMode.off => FullHomePage(
-          albums: _albums,
+          albums: activeAlbums,
           albumIndex: _albumIndex,
           albumClipCounts: _albumClipCounts,
           lens: _lens,
@@ -136,9 +173,10 @@ class _HomePageState extends State<HomePage> {
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
           onOpenAlbums: _openAlbums,
+          onArchiveAlbum: _archiveAlbum,
         ),
       EnergySavingMode.on => SavingHomePage(
-          albums: _albums,
+          albums: activeAlbums,
           albumIndex: _albumIndex,
           albumClipCounts: _albumClipCounts,
           lens: _lens,
@@ -148,6 +186,7 @@ class _HomePageState extends State<HomePage> {
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
           onOpenAlbums: _openAlbums,
+          onArchiveAlbum: _archiveAlbum,
         ),
     };
   }

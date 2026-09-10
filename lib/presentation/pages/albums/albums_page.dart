@@ -10,6 +10,7 @@ import '../../../../domain/usecases/delete_album_usecase.dart';
 import '../../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/rename_album_usecase.dart';
+import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
 import '../clips/clips_page.dart';
 
@@ -26,6 +27,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
   late final RenameAlbumUseCase _renameAlbumUseCase;
   late final DeleteAlbumUseCase _deleteAlbumUseCase;
   late final GetAllClipsUseCase _getAllClipsUseCase;
+  late final SetAlbumArchivedUseCase _setAlbumArchivedUseCase;
   List<Album> _albums = [];
   List<Clip> _clips = [];
   bool _loading = true;
@@ -33,10 +35,12 @@ class _AlbumsPageState extends State<AlbumsPage> {
   @override
   void initState() {
     super.initState();
-    _getAllAlbumsUseCase = GetAllAlbumsUseCase(AlbumRepositoryImpl(AlbumLocalDatasource()));
-    _createAlbumUseCase = CreateAlbumUseCase(AlbumRepositoryImpl(AlbumLocalDatasource()));
-    _renameAlbumUseCase = RenameAlbumUseCase(AlbumRepositoryImpl(AlbumLocalDatasource()));
-    _deleteAlbumUseCase = DeleteAlbumUseCase(AlbumRepositoryImpl(AlbumLocalDatasource()));
+    final albumRepo = AlbumRepositoryImpl(AlbumLocalDatasource());
+    _getAllAlbumsUseCase = GetAllAlbumsUseCase(albumRepo);
+    _createAlbumUseCase = CreateAlbumUseCase(albumRepo);
+    _renameAlbumUseCase = RenameAlbumUseCase(albumRepo);
+    _deleteAlbumUseCase = DeleteAlbumUseCase(albumRepo);
+    _setAlbumArchivedUseCase = SetAlbumArchivedUseCase(albumRepo);
     _getAllClipsUseCase = GetAllClipsUseCase(ClipRepositoryImpl(ClipLocalDatasource()));
     _loadAlbums();
   }
@@ -104,6 +108,12 @@ class _AlbumsPageState extends State<AlbumsPage> {
     if (confirmed != true || !mounted) return;
 
     await _deleteAlbumUseCase.execute(album.id);
+    setState(() => _loading = true);
+    await _loadAlbums();
+  }
+
+  Future<void> _toggleArchived(Album album) async {
+    await _setAlbumArchivedUseCase.execute(album.id, !album.archived);
     setState(() => _loading = true);
     await _loadAlbums();
   }
@@ -191,9 +201,12 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 }
                 final album = _albums[index - 1];
                 return _AlbumCard(
-                  icon: Icons.photo_library_outlined,
+                  icon: album.archived
+                      ? Icons.archive_outlined
+                      : Icons.photo_library_outlined,
                   title: album.name,
                   subtitle: '${_clipCountForAlbum(album.id)}',
+                  titleColor: album.archived ? AppColors.white54 : AppColors.white,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -234,6 +247,20 @@ class _AlbumsPageState extends State<AlbumsPage> {
             ),
             const Divider(color: AppColors.white24),
             ListTile(
+              leading: Icon(
+                album.archived ? Icons.unarchive_outlined : Icons.archive_outlined,
+                color: AppColors.white,
+              ),
+              title: Text(
+                album.archived ? 'Quitar de archivo' : 'Archivar',
+                style: const TextStyle(color: AppColors.white),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                _toggleArchived(album);
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.edit_outlined, color: AppColors.white),
               title: const Text(
                 'Renombrar',
@@ -269,6 +296,7 @@ class _AlbumCard extends StatelessWidget {
     required this.subtitle,
     required this.onTap,
     this.onLongPress,
+    this.titleColor = AppColors.white,
   });
 
   final IconData icon;
@@ -276,6 +304,7 @@ class _AlbumCard extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
   final VoidCallback? onLongPress;
+  final Color titleColor;
 
   @override
   Widget build(BuildContext context) {
@@ -306,8 +335,8 @@ class _AlbumCard extends StatelessWidget {
               title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: AppColors.white,
+              style: TextStyle(
+                color: titleColor,
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),

@@ -36,4 +36,9 @@ class AlbumRepositoryImpl implements AlbumRepository {
   Future<void> deleteAlbum(String albumId) {
     return _localDatasource.deleteAlbum(albumId);
   }
+
+  @override
+  Future<void> setAlbumArchived(String albumId, bool archived) {
+    return _localDatasource.setAlbumArchived(albumId, archived);
+  }
 }
