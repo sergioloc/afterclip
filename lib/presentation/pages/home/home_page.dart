@@ -5,6 +5,7 @@ import '../../../data/repositories/album_repository_impl.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/album.dart';
+import '../../../domain/entities/camera_lens.dart';
 import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../domain/usecases/get_all_clips_usecase.dart';
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   Map<String, int> _albumClipCounts = {};
   int _albumIndex = 0;
   String? _selectedAlbumId;
+  CameraLens _lens = CameraLens.front;
   bool _loading = true;
   EnergySavingMode _mode = EnergySavingMode.off;
 
@@ -79,6 +81,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _toggleCamera() {
+    setState(() {
+      _lens = _lens == CameraLens.front
+          ? CameraLens.back
+          : CameraLens.front;
+    });
+  }
+
+  void _selectLens(CameraLens lens) {
+    if (lens == _lens) return;
+    setState(() => _lens = lens);
+  }
+
   Future<void> _openSettings() async {
     await Navigator.push(
       context,
@@ -91,7 +106,8 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CameraPage(initialAlbumId: _selectedAlbumId),
+        builder: (context) =>
+            CameraPage(initialAlbumId: _selectedAlbumId, initialLens: _lens),
       ),
     );
   }
@@ -117,7 +133,10 @@ class _HomePageState extends State<HomePage> {
           albums: _albums,
           albumIndex: _albumIndex,
           albumClipCounts: _albumClipCounts,
+          lens: _lens,
           onAlbumChanged: _onAlbumChanged,
+          onToggleCamera: _toggleCamera,
+          onSelectLens: _selectLens,
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
           onOpenAlbums: _openAlbums,
@@ -127,7 +146,10 @@ class _HomePageState extends State<HomePage> {
           albums: _albums,
           albumIndex: _albumIndex,
           albumClipCounts: _albumClipCounts,
+          lens: _lens,
           onAlbumChanged: _onAlbumChanged,
+          onToggleCamera: _toggleCamera,
+          onSelectLens: _selectLens,
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
           onOpenAlbums: _openAlbums,

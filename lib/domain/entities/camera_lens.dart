@@ -1,0 +1,4 @@
+enum CameraLens {
+  front,
+  back,
+}

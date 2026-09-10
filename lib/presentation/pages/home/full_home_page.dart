@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import '../../../domain/entities/album.dart';
+import '../../../domain/entities/camera_lens.dart';
 import '../../../util/app_colors.dart';
 import '../../widgets/album_frame.dart';
 import '../../widgets/app_bar_title.dart';
 import '../../widgets/gallery_button.dart';
+import '../../widgets/lens_flip_button.dart';
+import '../../widgets/lens_selector.dart';
 import '../../widgets/page_indicator.dart';
 import '../../widgets/round_action_button.dart';
 import '../../widgets/shutter_button.dart';
 
 class FullHomePage extends StatelessWidget {
+  static const bool useButtonAsLensIndicator = true;
+
   const FullHomePage({
     super.key,
     required this.clipCount,
     required this.albums,
     required this.albumIndex,
     required this.albumClipCounts,
+    required this.lens,
     required this.onAlbumChanged,
+    required this.onToggleCamera,
+    required this.onSelectLens,
     required this.onOpenSettings,
     required this.onOpenCamera,
     required this.onOpenAlbums,
@@ -25,7 +33,10 @@ class FullHomePage extends StatelessWidget {
   final List<Album> albums;
   final int albumIndex;
   final Map<String, int> albumClipCounts;
+  final CameraLens lens;
   final ValueChanged<int> onAlbumChanged;
+  final VoidCallback onToggleCamera;
+  final ValueChanged<CameraLens> onSelectLens;
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenCamera;
   final VoidCallback onOpenAlbums;
@@ -68,6 +79,7 @@ return AlbumFrame(
                     clipCount: albums.isEmpty
                         ? 0
                         : (albumClipCounts[albums[index].id] ?? 0),
+                    topMargin: useButtonAsLensIndicator ? 24 : 64,
                     bottomInset: 168,
                   );
                 },
@@ -84,6 +96,19 @@ return AlbumFrame(
                   currentIndex: albumIndex,
                   activeColor: AppColors.primary,
                   inactiveColor: AppColors.white24,
+                ),
+              ),
+            ),
+          if (!useButtonAsLensIndicator)
+            Positioned(
+              top: 8,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: LensSelector(
+                  lens: lens,
+                  color: AppColors.white70,
+                  onSelect: onSelectLens,
                 ),
               ),
             ),
@@ -110,12 +135,22 @@ return AlbumFrame(
                     onTap: onOpenCamera,
                     ringColor: AppColors.primary,
                   ),
-                  RoundActionButton(
-                    icon: Icons.cameraswitch,
-                    color: AppColors.white70,
-                    backgroundColor: AppColors.white05,
-                    borderColor: AppColors.white24,
-                  ),
+                  if (useButtonAsLensIndicator)
+                    LensFlipButton(
+                      lens: lens,
+                      color: AppColors.white70,
+                      backgroundColor: AppColors.white05,
+                      borderColor: AppColors.white24,
+                      onToggle: onToggleCamera,
+                    )
+                  else
+                    RoundActionButton(
+                      icon: Icons.cameraswitch,
+                      color: AppColors.white70,
+                      backgroundColor: AppColors.white05,
+                      borderColor: AppColors.white24,
+                      onTap: onToggleCamera,
+                    ),
                 ],
               ),
             ),

@@ -8,14 +8,16 @@ import '../../../data/repositories/album_repository_impl.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/album.dart';
+import '../../../domain/entities/camera_lens.dart';
 import '../../../domain/repositories/clip_repository.dart';
 import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../util/app_colors.dart';
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({super.key, this.initialAlbumId});
+  const CameraPage({super.key, this.initialAlbumId, this.initialLens});
 
   final String? initialAlbumId;
+  final CameraLens? initialLens;
 
   @override
   State<CameraPage> createState() => _CameraPageState();
@@ -147,12 +149,17 @@ class _CameraPageState extends State<CameraPage> {
 
   Future<void> _initCamera() async {
     final cameras = await availableCameras();
-    final frontCamera = cameras.firstWhere(
-      (camera) => camera.lensDirection == CameraLensDirection.front,
+    final target = widget.initialLens == CameraLens.back
+        ? CameraLensDirection.back
+        : CameraLensDirection.front;
+
+    final camera = cameras.firstWhere(
+      (camera) => camera.lensDirection == target,
+      orElse: () => cameras.first,
     );
 
     _controller = CameraController(
-      frontCamera,
+      camera,
       ResolutionPreset.high,
     );
 
