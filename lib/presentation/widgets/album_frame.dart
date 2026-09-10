@@ -12,7 +12,7 @@ class AlbumFrame extends StatelessWidget {
     required this.bottomInset,
     this.borderColor = AppColors.white,
     this.radius = 20,
-    this.borderWidth = 2,
+    this.borderWidth = 1,
     this.onArchive,
     this.archiveButtonColor = AppColors.white70,
     this.archiveButtonBackground = AppColors.white05,

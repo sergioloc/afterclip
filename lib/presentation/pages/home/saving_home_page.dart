@@ -4,8 +4,6 @@ import '../../../domain/entities/camera_lens.dart';
 import '../../../util/app_colors.dart';
 import '../../widgets/album_frame.dart';
 import '../../widgets/app_bar_title.dart';
-import '../../widgets/gallery_button.dart';
-import '../../widgets/lens_flip_button.dart';
 import '../../widgets/lens_selector.dart';
 import '../../widgets/page_indicator.dart';
 import '../../widgets/round_action_button.dart';
@@ -59,8 +57,7 @@ class SavingHomePage extends StatelessWidget {
             padding: const EdgeInsets.only(right: 16),
             child: RoundActionButton(
               icon: Icons.settings,
-              color: AppColors.grey,
-              backgroundColor: AppColors.black,
+              border: false,
               onTap: onOpenSettings,
             ),
           ),
@@ -128,12 +125,8 @@ return AlbumFrame(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  GalleryButton(
-                    color: AppColors.grey,
-                    backgroundColor: AppColors.black,
-                    borderColor: AppColors.grey,
-                    badgeBackground: AppColors.grey,
-                    badgeForeground: AppColors.black,
+                  RoundActionButton(
+                    icon: Icons.photo_library_outlined,
                     onTap: onOpenAlbums,
                   ),
                   ShutterButton(
@@ -141,19 +134,15 @@ return AlbumFrame(
                     ringColor: AppColors.grey,
                   ),
                   if (useButtonAsLensIndicator)
-                    LensFlipButton(
-                      lens: lens,
-                      color: AppColors.grey,
-                      backgroundColor: AppColors.black,
-                      borderColor: AppColors.grey,
-                      onToggle: onToggleCamera,
+                    RoundActionButton(
+                      icon: lens == CameraLens.front
+                          ? Icons.photo_camera_front
+                          : Icons.photo_camera_back_outlined,
+                      onTap: onToggleCamera,
                     )
                   else
                     RoundActionButton(
                       icon: Icons.cameraswitch,
-                      color: AppColors.grey,
-                      backgroundColor: AppColors.black,
-                      borderColor: AppColors.grey,
                       onTap: onToggleCamera,
                     ),
                 ],

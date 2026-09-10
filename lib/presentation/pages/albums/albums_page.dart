@@ -12,6 +12,7 @@ import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/rename_album_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
+import '../../widgets/album_list_item.dart';
 import '../clips/clips_page.dart';
 
 class AlbumsPage extends StatefulWidget {
@@ -181,32 +182,85 @@ class _AlbumsPageState extends State<AlbumsPage> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.white))
-          : GridView.builder(
+: ListView.builder(
               padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.9,
-              ),
-              itemCount: _albums.length + 1,
+              itemCount: _albums.length + 2,
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  return _AlbumCard(
-                    icon: Icons.grid_view,
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 14),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 18,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.white10,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${_albums.where((a) => !a.archived).length}',
+                                style: const TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              const Text(
+                                'Álbumes activos',
+                                style: TextStyle(
+                                  color: AppColors.white54,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                '${_clips.length}',
+                                style: const TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              const Text(
+                                'Clips totales',
+                                style: TextStyle(
+                                  color: AppColors.white54,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+                if (index == 1) {
+                  return AlbumListItem(
                     title: 'Todos los clips',
                     subtitle: '${_clips.length}',
                     onTap: _openAllClips,
                   );
                 }
-                final album = _albums[index - 1];
-                return _AlbumCard(
-                  icon: album.archived
-                      ? Icons.archive_outlined
-                      : Icons.photo_library_outlined,
+                final album = _albums[index - 2];
+                return AlbumListItem(
                   title: album.name,
-                  subtitle: '${_clipCountForAlbum(album.id)}',
-                  titleColor: album.archived ? AppColors.white54 : AppColors.white,
+                  subtitle: '${_clipCountForAlbum(album.id)} clips',
+                  archived: album.archived,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -281,70 +335,6 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 Navigator.pop(context);
                 _deleteAlbum(album);
               },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AlbumCard extends StatelessWidget {
-  const _AlbumCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-    this.onLongPress,
-    this.titleColor = AppColors.white,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-  final VoidCallback? onLongPress;
-  final Color titleColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.white05,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.white24, width: 1.5),
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primary.withValues(alpha: 0.2),
-              ),
-              child: Icon(icon, color: AppColors.primary, size: 22),
-            ),
-            const Spacer(),
-            Text(
-              title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: titleColor,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              subtitle,
-              style: const TextStyle(color: AppColors.white54, fontSize: 13),
             ),
           ],
         ),
