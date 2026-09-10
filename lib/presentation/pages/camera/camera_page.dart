@@ -23,12 +23,15 @@ class CameraPage extends StatefulWidget {
   State<CameraPage> createState() => _CameraPageState();
 }
 
-class _CameraPageState extends State<CameraPage> {
+class _CameraPageState extends State<CameraPage>
+    with SingleTickerProviderStateMixin {
   CameraController? _controller;
   Future<void>? _initializeControllerFuture;
   bool _isRecording = false;
   int _countdown = 3;
   Timer? _countdownTimer;
+  static const int _maxSeconds = 30;
+  late AnimationController _recordingController;
   ClipRepository? _clipRepository;
   final SettingsRepository _settingsRepository = SettingsRepository();
   double _overlayOpacity = SettingsRepository.defaultOverlayOpacity;
@@ -43,6 +46,15 @@ class _CameraPageState extends State<CameraPage> {
     _clipRepository = ClipRepositoryImpl(ClipLocalDatasource());
     _getAllAlbumsUseCase =
         GetAllAlbumsUseCase(AlbumRepositoryImpl(AlbumLocalDatasource()));
+    _recordingController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: _maxSeconds),
+    );
+    _recordingController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _stopRecording();
+      }
+    });
     _loadSettings();
     _loadAlbums();
     _initCamera();
@@ -184,13 +196,17 @@ class _CameraPageState extends State<CameraPage> {
   Future<void> _startRecording() async {
     if (_controller == null || !_controller!.value.isInitialized) return;
     await _controller!.startVideoRecording();
+    _recordingController.reset();
     setState(() => _isRecording = true);
+    _recordingController.forward();
   }
 
   Future<void> _stopRecording() async {
     if (_controller == null || !_controller!.value.isInitialized) return;
     if (!_isRecording) return;
 
+    _recordingController.stop();
+    _recordingController.reset();
     final file = await _controller!.stopVideoRecording();
 
     if (_clipRepository != null) {
@@ -207,6 +223,7 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void dispose() {
     _countdownTimer?.cancel();
+    _recordingController.dispose();
     _controller?.dispose();
     _resetBrightness();
     super.dispose();
@@ -276,6 +293,47 @@ class _CameraPageState extends State<CameraPage> {
                                   ),
                                 ),
                               ],
+                            ),
+                          ),
+
+                        if (_isRecording)
+                          Positioned(
+                            top: MediaQuery.of(context).padding.top + 50,
+                            left: 0,
+                            right: 0,
+                            child: AnimatedBuilder(
+                              animation: _recordingController,
+                              builder: (context, child) {
+                                final remaining = (_maxSeconds * (1 - _recordingController.value)).ceil();
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: Column(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(6),
+                                        child: SizedBox(
+                                          height: 8,
+                                          width: double.infinity,
+                                          child: LinearProgressIndicator(
+                                            value: _recordingController.value,
+                                            backgroundColor: AppColors.greyLight,
+                                            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.red),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        '${remaining}s',
+                                        style: const TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
                           ),
 
