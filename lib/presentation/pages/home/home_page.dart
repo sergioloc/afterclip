@@ -25,7 +25,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final SettingsRepository _settingsRepository = SettingsRepository();
-  int _clipCount = 0;
   List<Album> _albums = [];
   Map<String, int> _albumClipCounts = {};
   int _albumIndex = 0;
@@ -59,7 +58,6 @@ class _HomePageState extends State<HomePage> {
       if (!mounted) return;
       setState(() {
         _mode = mode;
-        _clipCount = clips.length;
         _albums = albums;
         _albumClipCounts = counts;
         _albumIndex = 0;
@@ -126,11 +124,8 @@ class _HomePageState extends State<HomePage> {
       return const Scaffold(backgroundColor: AppColors.black);
     }
 
-    final clipCount = _clipCount;
-
     return switch (_mode) {
       EnergySavingMode.off => FullHomePage(
-          clipCount: clipCount,
           albums: _albums,
           albumIndex: _albumIndex,
           albumClipCounts: _albumClipCounts,
@@ -143,7 +138,6 @@ class _HomePageState extends State<HomePage> {
           onOpenAlbums: _openAlbums,
         ),
       EnergySavingMode.on => SavingHomePage(
-          clipCount: clipCount,
           albums: _albums,
           albumIndex: _albumIndex,
           albumClipCounts: _albumClipCounts,

@@ -16,7 +16,6 @@ class SavingHomePage extends StatelessWidget {
 
   const SavingHomePage({
     super.key,
-    required this.clipCount,
     required this.albums,
     required this.albumIndex,
     required this.albumClipCounts,
@@ -29,7 +28,6 @@ class SavingHomePage extends StatelessWidget {
     required this.onOpenAlbums,
   });
 
-  final int clipCount;
   final List<Album> albums;
   final int albumIndex;
   final Map<String, int> albumClipCounts;
@@ -124,7 +122,6 @@ return AlbumFrame(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GalleryButton(
-                    clipCount: clipCount,
                     color: AppColors.grey,
                     backgroundColor: AppColors.black,
                     borderColor: AppColors.grey,

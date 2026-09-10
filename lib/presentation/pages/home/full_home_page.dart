@@ -16,7 +16,6 @@ class FullHomePage extends StatelessWidget {
 
   const FullHomePage({
     super.key,
-    required this.clipCount,
     required this.albums,
     required this.albumIndex,
     required this.albumClipCounts,
@@ -29,7 +28,6 @@ class FullHomePage extends StatelessWidget {
     required this.onOpenAlbums,
   });
 
-  final int clipCount;
   final List<Album> albums;
   final int albumIndex;
   final Map<String, int> albumClipCounts;
@@ -123,7 +121,6 @@ return AlbumFrame(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GalleryButton(
-                    clipCount: clipCount,
                     color: AppColors.white70,
                     backgroundColor: AppColors.white05,
                     borderColor: AppColors.white24,

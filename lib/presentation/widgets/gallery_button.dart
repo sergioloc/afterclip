@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class GalleryButton extends StatelessWidget {
   const GalleryButton({
     super.key,
-    required this.clipCount,
+    this.clipCount = 0,
     required this.color,
     required this.backgroundColor,
     required this.borderColor,
