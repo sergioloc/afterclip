@@ -88,37 +88,37 @@ class SavingHomePage extends StatelessWidget {
                 ),
               ),
             ),
-          Align(
-            alignment: Alignment.bottomCenter,
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 28,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 36),
-              child: ShutterButton(
-                onTap: onOpenCamera,
-                ringColor: AppColors.grey,
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GalleryButton(
+                    clipCount: clipCount,
+                    color: AppColors.grey,
+                    backgroundColor: AppColors.black,
+                    borderColor: AppColors.grey,
+                    badgeBackground: AppColors.grey,
+                    badgeForeground: AppColors.black,
+                    onTap: onOpenAlbums,
+                  ),
+                  ShutterButton(
+                    onTap: onOpenCamera,
+                    ringColor: AppColors.grey,
+                  ),
+                  RoundActionButton(
+                    icon: Icons.cameraswitch,
+                    color: AppColors.grey,
+                    backgroundColor: AppColors.black,
+                    borderColor: AppColors.grey,
+                  ),
+                ],
               ),
-            ),
-          ),
-          Positioned(
-            left: 24,
-            bottom: 32,
-            child: GalleryButton(
-              clipCount: clipCount,
-              color: AppColors.grey,
-              backgroundColor: AppColors.black,
-              borderColor: AppColors.grey,
-              badgeBackground: AppColors.grey,
-              badgeForeground: AppColors.black,
-              onTap: onOpenAlbums,
-            ),
-          ),
-          Positioned(
-            right: 24,
-            bottom: 32,
-            child: RoundActionButton(
-              icon: Icons.cameraswitch,
-              color: AppColors.grey,
-              backgroundColor: AppColors.black,
-              borderColor: AppColors.grey,
             ),
           ),
         ],

@@ -87,37 +87,37 @@ return AlbumFrame(
                 ),
               ),
             ),
-          Align(
-            alignment: Alignment.bottomCenter,
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 28,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 36),
-              child: ShutterButton(
-                onTap: onOpenCamera,
-                ringColor: AppColors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GalleryButton(
+                    clipCount: clipCount,
+                    color: AppColors.white70,
+                    backgroundColor: AppColors.white05,
+                    borderColor: AppColors.white24,
+                    badgeBackground: AppColors.primary,
+                    badgeForeground: AppColors.white,
+                    onTap: onOpenAlbums,
+                  ),
+                  ShutterButton(
+                    onTap: onOpenCamera,
+                    ringColor: AppColors.primary,
+                  ),
+                  RoundActionButton(
+                    icon: Icons.cameraswitch,
+                    color: AppColors.white70,
+                    backgroundColor: AppColors.white05,
+                    borderColor: AppColors.white24,
+                  ),
+                ],
               ),
-            ),
-          ),
-          Positioned(
-            left: 24,
-            bottom: 32,
-            child: GalleryButton(
-              clipCount: clipCount,
-              color: AppColors.white70,
-              backgroundColor: AppColors.white05,
-              borderColor: AppColors.white24,
-              badgeBackground: AppColors.primary,
-              badgeForeground: AppColors.white,
-              onTap: onOpenAlbums,
-            ),
-          ),
-          Positioned(
-            right: 24,
-            bottom: 32,
-            child: RoundActionButton(
-              icon: Icons.cameraswitch,
-              color: AppColors.white70,
-              backgroundColor: AppColors.white05,
-              borderColor: AppColors.white24,
             ),
           ),
         ],
