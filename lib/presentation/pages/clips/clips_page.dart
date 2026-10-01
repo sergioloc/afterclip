@@ -75,7 +75,7 @@ class _ClipsPageState extends State<ClipsPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -112,7 +112,7 @@ class _ClipsPageState extends State<ClipsPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -200,12 +200,12 @@ class _ClipsPageState extends State<ClipsPage> {
                   enabled: !isBlocked,
                   leading: Icon(
                     Icons.movie,
-                    color: isBlocked ? AppColors.white24 : AppColors.white,
+                    color: isBlocked ? AppColors.borderWhite : AppColors.white,
                   ),
                   title: Text(
                     _formatDate(clip.createdAt),
                     style: TextStyle(
-                      color: isBlocked ? AppColors.white24 : AppColors.white,
+                      color: isBlocked ? AppColors.borderWhite : AppColors.white,
                     ),
                   ),
                   subtitle: clip.isAvailable
@@ -225,7 +225,7 @@ class _ClipsPageState extends State<ClipsPage> {
                       IconButton(
                         icon: Icon(
                           Icons.download_outlined,
-                          color: isBlocked ? AppColors.white24 : AppColors.white,
+                          color: isBlocked ? AppColors.borderWhite : AppColors.white,
                         ),
                         onPressed:
                             isBlocked ? null : () => _downloadClip(clip),

@@ -97,7 +97,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -136,9 +136,9 @@ class _AlbumsPageState extends State<AlbumsPage> {
           style: const TextStyle(color: AppColors.white),
           decoration: const InputDecoration(
             hintText: 'Nombre del álbum',
-            hintStyle: TextStyle(color: AppColors.white54),
+            hintStyle: TextStyle(color: AppColors.textSecondary),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.white54),
+              borderSide: BorderSide(color: AppColors.textSecondary),
             ),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.white),
@@ -148,7 +148,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.white54)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, controller.text),
@@ -241,10 +241,10 @@ class _AlbumsPageState extends State<AlbumsPage> {
               ),
               subtitle: Text(
                 '${_clipCountForAlbum(album.id)} clips',
-                style: const TextStyle(color: AppColors.white54),
+                style: const TextStyle(color: AppColors.textSecondary),
               ),
             ),
-            const Divider(color: AppColors.white24),
+            const Divider(color: AppColors.borderWhite),
             ListTile(
               leading: Icon(
                 album.archived ? Icons.unarchive_outlined : Icons.archive_outlined,

@@ -82,7 +82,7 @@ return AlbumFrame(
                     onArchive: albums.isEmpty || albums[index] == null
                         ? null
                         : () => onArchiveAlbum(albums[index]!.id),
-                    archiveButtonColor: AppColors.white70,
+                    archiveButtonColor: AppColors.textPrimary,
                     archiveButtonBackground: AppColors.black,
                   );
                 },
@@ -98,7 +98,7 @@ return AlbumFrame(
                   count: albums.length,
                   currentIndex: albumIndex,
                   activeColor: AppColors.primary,
-                  inactiveColor: AppColors.white24,
+                  inactiveColor: AppColors.borderWhite,
                 ),
               ),
             ),
@@ -110,7 +110,7 @@ return AlbumFrame(
               child: Center(
                 child: LensSelector(
                   lens: lens,
-                  color: AppColors.white70,
+                  color: AppColors.textPrimary,
                   onSelect: onSelectLens,
                 ),
               ),

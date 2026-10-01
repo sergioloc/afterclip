@@ -37,7 +37,7 @@ class AlbumListItem extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: AppColors.white05,
+                color: AppColors.backgroundOverlay,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -67,7 +67,7 @@ class AlbumListItem extends StatelessWidget {
                         Text(
                           subtitle,
                           style: const TextStyle(
-                            color: AppColors.white54,
+                            color: AppColors.textSecondary,
                             fontSize: 15,
                           ),
                         ),

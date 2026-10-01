@@ -92,9 +92,9 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
                 ),
               ),
             ),
-            const Divider(color: AppColors.white24),
+            const Divider(color: AppColors.borderWhite),
             ListTile(
-              leading: const Icon(Icons.layers_clear, color: AppColors.white54),
+              leading: const Icon(Icons.layers_clear, color: AppColors.textSecondary),
               title: const Text(
                 'Sin álbum',
                 style: TextStyle(color: AppColors.white),
@@ -109,7 +109,7 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
                 padding: EdgeInsets.all(16),
                 child: Text(
                   'No hay álbumes todavía. Créalos desde la pantalla de álbumes.',
-                  style: TextStyle(color: AppColors.white54),
+                  style: TextStyle(color: AppColors.textSecondary),
                 ),
               )
             else
@@ -117,7 +117,7 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
                 ListTile(
                   leading: const Icon(
                     Icons.photo_library_outlined,
-                    color: AppColors.white54,
+                    color: AppColors.textSecondary,
                   ),
                   title: Text(
                     album.name,
@@ -355,7 +355,7 @@ _overlayOpacity = results[0] as double;
                                   color: AppColors.black.withValues(alpha: 0.6),
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
-                                    color: AppColors.white24,
+                                    color: AppColors.borderWhite,
                                   ),
                                 ),
                                 child: Row(

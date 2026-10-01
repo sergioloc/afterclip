@@ -110,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               decoration: BoxDecoration(
                                 color: _maxClipDuration == seconds
                                     ? AppColors.primary
-                                    : AppColors.white10,
+                                    : AppColors.backgroundCard,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
@@ -150,7 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               decoration: BoxDecoration(
                                 color: _energySavingMode == mode
                                     ? AppColors.primary
-                                    : AppColors.white10,
+                                    : AppColors.backgroundCard,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
@@ -190,7 +190,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     max: 1,
                     onChanged: _saveOverlayOpacity,
                     activeColor: AppColors.white,
-                    inactiveColor: AppColors.white24,
+                    inactiveColor: AppColors.borderWhite,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -211,7 +211,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     max: 1,
                     onChanged: _saveBrightness,
                     activeColor: AppColors.white,
-                    inactiveColor: AppColors.white24,
+                    inactiveColor: AppColors.borderWhite,
                   ),
                 ),
               ],
@@ -223,7 +223,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Text(
       title,
       style: const TextStyle(
-        color: AppColors.white70,
+        color: AppColors.textPrimary,
         fontSize: 13,
         fontWeight: FontWeight.w600,
         letterSpacing: 1.2,
@@ -240,7 +240,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.white10,
+        color: AppColors.backgroundCard,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -264,7 +264,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Text(
                       subtitle,
                       style: const TextStyle(
-                        color: AppColors.white54,
+                        color: AppColors.textSecondary,
                         fontSize: 13,
                       ),
                     ),
