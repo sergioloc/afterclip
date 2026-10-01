@@ -23,14 +23,14 @@ class CameraPage extends StatefulWidget {
   State<CameraPage> createState() => _CameraPageState();
 }
 
-class _CameraPageState extends State<CameraPage>
-    with SingleTickerProviderStateMixin {
+class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateMixin {
   CameraController? _controller;
   Future<void>? _initializeControllerFuture;
   bool _isRecording = false;
   int _countdown = 3;
   Timer? _countdownTimer;
-  static const int _maxSeconds = 30;
+  static const int _defaultMaxSeconds = 30;
+  int _maxSeconds = _defaultMaxSeconds;
   late AnimationController _recordingController;
   ClipRepository? _clipRepository;
   final SettingsRepository _settingsRepository = SettingsRepository();
@@ -48,7 +48,7 @@ class _CameraPageState extends State<CameraPage>
         GetAllAlbumsUseCase(AlbumRepositoryImpl(AlbumLocalDatasource()));
     _recordingController = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: _maxSeconds),
+      duration: Duration(seconds: _maxSeconds),
     );
     _recordingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -141,12 +141,15 @@ class _CameraPageState extends State<CameraPage>
     final results = await Future.wait([
       _settingsRepository.getOverlayOpacity(),
       _settingsRepository.getBrightness(),
+      _settingsRepository.getMaxClipDuration(),
     ]);
     if (mounted) {
       setState(() {
-        _overlayOpacity = results[0];
-        _brightness = results[1];
+_overlayOpacity = results[0] as double;
+        _brightness = results[1] as double;
+        _maxSeconds = results[2] as int;
       });
+      _recordingController.duration = Duration(seconds: _maxSeconds);
     }
     await _setBrightness();
   }

@@ -18,6 +18,7 @@ class _SettingsPageState extends State<SettingsPage> {
   double _brightness = SettingsRepository.defaultBrightness;
   EnergySavingMode _energySavingMode =
       SettingsRepository.defaultEnergySavingMode;
+  int _maxClipDuration = SettingsRepository.defaultMaxClipDuration;
   bool _loading = true;
 
   @override
@@ -37,11 +38,15 @@ class _SettingsPageState extends State<SettingsPage> {
       final energySavingMode = await _settingsRepository
           .getEnergySavingMode()
           .timeout(const Duration(seconds: 3));
+      final maxClipDuration = await _settingsRepository
+          .getMaxClipDuration()
+          .timeout(const Duration(seconds: 3));
       if (!mounted) return;
       setState(() {
         _overlayOpacity = opacity;
         _brightness = brightness;
         _energySavingMode = energySavingMode;
+        _maxClipDuration = maxClipDuration;
         _loading = false;
       });
     } catch (e) {
@@ -65,6 +70,11 @@ class _SettingsPageState extends State<SettingsPage> {
     _settingsRepository.setEnergySavingMode(mode);
   }
 
+  void _saveMaxClipDuration(int seconds) {
+    setState(() => _maxClipDuration = seconds);
+    _settingsRepository.setMaxClipDuration(seconds);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,6 +88,49 @@ class _SettingsPageState extends State<SettingsPage> {
           : ListView(
               padding: const EdgeInsets.all(24),
               children: [
+                _buildSectionHeader('Grabación'),
+                const SizedBox(height: 16),
+                _buildSettingCard(
+                  title: 'Duración máxima del clip',
+                  subtitle: 'Tiempo límite de grabación por clip',
+                  child: Row(
+                    children: [
+                      for (final seconds
+                          in SettingsRepository.maxClipDurationOptions) ...[
+                        if (seconds !=
+                            SettingsRepository.maxClipDurationOptions.first)
+                          const SizedBox(width: 8),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => _saveMaxClipDuration(seconds),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                color: _maxClipDuration == seconds
+                                    ? AppColors.primary
+                                    : AppColors.white10,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '${seconds}s',
+                                  style: const TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 32),
                 _buildSectionHeader('Energía'),
                 const SizedBox(height: 16),
                 _buildSettingCard(
