@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'presentation/pages/home/home_page.dart';
+import 'util/app_flavor.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,8 @@ void main() async {
     Permission.microphone,
   ].request();
 
+  await AppFlavorConfig.load();
+
   runApp(const MyApp());
 }
 
@@ -23,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'AfterClip',
+      title: AppFlavorConfig.appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.dark(),

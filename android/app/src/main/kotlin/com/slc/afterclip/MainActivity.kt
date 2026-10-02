@@ -13,9 +13,17 @@ import java.io.FileInputStream
 
 class MainActivity : FlutterActivity() {
     private val channelName = "afterclip/gallery"
+    private val flavorChannelName = "afterclip/flavor"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, flavorChannelName)
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "getFlavor" -> result.success(BuildConfig.FLAVOR)
+                    else -> result.notImplemented()
+                }
+            }
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channelName)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
