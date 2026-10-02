@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'pill_button.dart';
 import '../../../util/app_colors.dart';
 import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
@@ -155,14 +156,14 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                _DialogPillButton(
+                PillButton(
                   label: widget.cancelLabel,
                   foregroundColor: AppColors.outline,
                   splashColor: AppColors.onBackground.withValues(alpha: 0.12),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
                 const SizedBox(width: AppSpacing.medium),
-                _DialogPillButton(
+                PillButton(
                   label: widget.confirmLabel,
                   foregroundColor:
                       canConfirm ? AppColors.onPrimary : AppColors.outline,
@@ -180,43 +181,3 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
   }
 }
 
-class _DialogPillButton extends StatelessWidget {
-  const _DialogPillButton({
-    required this.label,
-    required this.foregroundColor,
-    required this.splashColor,
-    required this.onPressed,
-    this.backgroundColor,
-  });
-
-  final String label;
-  final Color foregroundColor;
-  final Color splashColor;
-  final VoidCallback? onPressed;
-  final Color? backgroundColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: backgroundColor ?? Colors.transparent,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.large),
-        side: BorderSide.none,
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onPressed,
-        splashColor: splashColor,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xLarge, vertical: AppSpacing.medium),
-          child: Text(
-            label.toUpperCase(),
-            style: AppTextStyles.label.copyWith(
-              color: foregroundColor,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

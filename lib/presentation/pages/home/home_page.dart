@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../data/datasource/local/album_local_datasource.dart';
 import '../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../data/repositories/album_repository_impl.dart';
@@ -13,6 +14,7 @@ import '../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../util/app_colors.dart';
 import '../albums/albums_page.dart';
 import '../camera/camera_page.dart';
+import '../permissions/permission_page.dart';
 import '../settings/settings_page.dart';
 import 'full_home_page.dart';
 import 'saving_home_page.dart';
@@ -138,6 +140,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _openCamera() async {
+    if (!await _ensureRecordingPermissions()) return;
+    if (!mounted) return;
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -146,6 +150,38 @@ class _HomePageState extends State<HomePage> {
       ),
     );
     _loadPage();
+  }
+
+  Future<bool> _ensureRecordingPermissions() async {
+    final statuses = await Future.wait([
+      Permission.camera.status,
+      Permission.microphone.status,
+    ]);
+    if (statuses.every((status) => status.isGranted)) return true;
+    if (!mounted) return false;
+
+    final result = await PermissionPage.showRecording(context);
+    if (result == PermissionRequestResult.denied) {
+      _showPermissionSnackBar(
+        'Nos faltan permisos para grabar. Puedes autorizarlos en los ajustes '
+        'del dispositivo.',
+      );
+    } else if (result == PermissionRequestResult.blocked) {
+      _showPermissionSnackBar(
+        'Los permisos están bloqueados. Actívalos en los ajustes del '
+        'dispositivo para poder grabar.',
+      );
+    }
+    return result == PermissionRequestResult.granted;
+  }
+
+  void _showPermissionSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.surface,
+      ),
+    );
   }
 
   void _openAlbums() {

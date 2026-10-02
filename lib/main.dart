@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'presentation/pages/home/home_page.dart';
 import 'util/app_flavor.dart';
 
@@ -9,11 +8,6 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-
-  await [
-    Permission.camera,
-    Permission.microphone,
-  ].request();
 
   await AppFlavorConfig.load();
 
