@@ -13,6 +13,7 @@ import '../../../../domain/usecases/rename_album_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
 import '../../widgets/album_list_item.dart';
+import '../../widgets/album_name_dialog.dart';
 import '../../widgets/albums_summary.dart';
 import '../clips/clips_page.dart';
 
@@ -120,42 +121,13 @@ class _AlbumsPageState extends State<AlbumsPage> {
     await _loadAlbums();
   }
 
-  Future<String?> _promptForAlbumName({String? initial}) async {
-    final controller = TextEditingController(text: initial);
-    return showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.background,
-        title: Text(
-          initial == null ? 'Nuevo álbum' : 'Renombrar álbum',
-          style: const TextStyle(color: AppColors.onBackground),
-        ),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: const TextStyle(color: AppColors.onBackground),
-          decoration: const InputDecoration(
-            hintText: 'Nombre del álbum',
-            hintStyle: TextStyle(color: AppColors.outline),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.outline),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.onBackground),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Aceptar', style: TextStyle(color: AppColors.onBackground)),
-          ),
-        ],
-      ),
+  Future<String?> _promptForAlbumName({String? initial}) {
+    final isNew = initial == null;
+    return AlbumNameDialog.show(
+      context,
+      initialValue: initial,
+      title: isNew ? 'Nuevo álbum' : 'Renombrar álbum',
+      confirmLabel: isNew ? 'Crear' : 'Guardar',
     );
   }
 
