@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
@@ -90,7 +91,7 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
         padding: const EdgeInsets.all(AppSpacing.xLarge),
         decoration: BoxDecoration(
           color: AppColors.background,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
           border: Border.all(color: AppColors.onBackground, width: 1),
         ),
         child: Column(
@@ -125,7 +126,7 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
               duration: const Duration(milliseconds: 150),
               decoration: BoxDecoration(
                 color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.small),
               ),
               child: TextField(
                 controller: _controller,
@@ -199,7 +200,7 @@ class _DialogPillButton extends StatelessWidget {
     return Material(
       color: backgroundColor ?? Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(AppRadius.large),
         side: BorderSide.none,
       ),
       clipBehavior: Clip.antiAlias,

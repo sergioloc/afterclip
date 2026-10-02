@@ -12,6 +12,7 @@ import '../../../domain/entities/camera_lens.dart';
 import '../../../domain/repositories/clip_repository.dart';
 import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
@@ -311,7 +312,7 @@ _overlayOpacity = results[0] as double;
                                   child: Column(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(6),
+                                        borderRadius: BorderRadius.circular(AppRadius.small),
                                         child: SizedBox(
                                           height: AppSpacing.small,
                                           width: double.infinity,
@@ -349,7 +350,7 @@ _overlayOpacity = results[0] as double;
                                 ),
                                 decoration: BoxDecoration(
                                   color: AppColors.background.withValues(alpha: 0.6),
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(AppRadius.large),
                                   border: Border.all(
                                     color: AppColors.surface,
                                   ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../domain/entities/camera_lens.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
@@ -22,7 +23,7 @@ class LensSelector extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xxSmall),
       decoration: BoxDecoration(
         border: Border.all(color: color, width: 1.5),
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(AppRadius.large),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -68,7 +69,7 @@ class _Segment extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large, vertical: AppSpacing.small),
         decoration: BoxDecoration(
           color: active ? color : Colors.transparent,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(AppRadius.large),
         ),
         child: Text(
           label,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
@@ -13,7 +14,7 @@ class AlbumFrame extends StatelessWidget {
     this.topMargin = AppSpacing.xLarge,
     required this.bottomInset,
     this.borderColor = AppColors.onBackground,
-    this.radius = 20,
+    this.radius = AppRadius.large,
     this.borderWidth = 1,
     this.onArchive,
     this.archiveButtonColor = AppColors.onSurface,
@@ -89,7 +90,7 @@ class AlbumFrame extends StatelessWidget {
                               ),
                               decoration: BoxDecoration(
                                 border: Border.all(color: textColor),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(AppRadius.large),
                               ),
                               child: Text(
                                 '$clipCount CLIPS',

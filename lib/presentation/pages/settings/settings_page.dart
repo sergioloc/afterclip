@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
@@ -113,7 +114,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 color: _maxClipDuration == seconds
                                     ? AppColors.primary
                                     : AppColors.surface,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(AppRadius.small),
                               ),
                               child: Center(
                                 child: Text(
@@ -151,7 +152,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 color: _energySavingMode == mode
                                     ? AppColors.primary
                                     : AppColors.surface,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(AppRadius.small),
                               ),
                               child: Center(
                                 child: Text(
@@ -233,7 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: const EdgeInsets.all(AppSpacing.large),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppRadius.small),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

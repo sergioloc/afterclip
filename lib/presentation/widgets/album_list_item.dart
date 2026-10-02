@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
@@ -31,7 +32,7 @@ class AlbumListItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.background,
           border: Border.all(color: AppColors.onBackground, width: 1),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppRadius.medium),
         ),
         child: Row(
           children: [
@@ -40,7 +41,7 @@ class AlbumListItem extends StatelessWidget {
               height: 56,
               decoration: BoxDecoration(
                 color: AppColors.surface,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppRadius.small),
               ),
               child: Icon(
                 Icons.camera_roll_outlined,
