@@ -93,7 +93,7 @@ return AlbumFrame(
           ),
           if (albums.length > 1)
             Positioned(
-              bottom: 150,
+              bottom: 140,
               left: 0,
               right: 0,
               child: Center(

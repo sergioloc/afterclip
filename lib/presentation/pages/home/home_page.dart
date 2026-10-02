@@ -84,16 +84,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _toggleCamera() {
+    final selectedLens = _lens == CameraLens.front
+        ? CameraLens.back
+        : CameraLens.front;
     setState(() {
-      _lens = _lens == CameraLens.front
-          ? CameraLens.back
-          : CameraLens.front;
+      _lens = selectedLens;
     });
+    _showLensSelectedToast(selectedLens);
   }
 
   void _selectLens(CameraLens lens) {
-    if (lens == _lens) return;
-    setState(() => _lens = lens);
+    if (lens != _lens) {
+      setState(() => _lens = lens);
+    }
+    _showLensSelectedToast(lens);
+  }
+
+  void _showLensSelectedToast(CameraLens lens) {
+    final name = lens == CameraLens.front ? 'delantera' : 'trasera';
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text('Cámara $name seleccionada', style: TextStyle(color: AppColors.onSurface)),
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.surface,
+      ),
+    );
   }
 
   Future<void> _archiveAlbum(String? albumId) async {
