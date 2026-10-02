@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_flavor.dart';
+import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
@@ -36,11 +37,27 @@ class AppBarTitle extends StatelessWidget {
           'CLIP',
           style: AppTextStyles.brandTitle.copyWith(color: highlightColor),
         ),
-        if (AppFlavorConfig.isPro)
-          Text(
-            ' PRO',
-            style: AppTextStyles.brandTitle.copyWith(color: titleColor, fontSize: AppTextSizes.titleSmall),
+        if (AppFlavorConfig.isPro) ...[
+          const SizedBox(width: AppSpacing.small),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.small,
+              vertical: AppSpacing.xxSmall,
+            ),
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(AppRadius.small),
+              border: Border.all(color: accent.withValues(alpha: 0.55)),
+            ),
+            child: Text(
+              'PRO',
+              style: AppTextStyles.label.copyWith(
+                color: accent,
+                fontSize: AppTextSizes.labelMedium,
+              ),
+            ),
           ),
+        ],
       ],
     );
   }

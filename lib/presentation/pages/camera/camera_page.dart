@@ -15,6 +15,7 @@ import '../../../util/app_colors.dart';
 import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
+import '../../widgets/stop_recording_button.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key, this.initialAlbumId, this.initialLens});
@@ -26,7 +27,8 @@ class CameraPage extends StatefulWidget {
   State<CameraPage> createState() => _CameraPageState();
 }
 
-class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateMixin {
+class _CameraPageState extends State<CameraPage>
+    with SingleTickerProviderStateMixin {
   CameraController? _controller;
   Future<void>? _initializeControllerFuture;
   bool _isRecording = false;
@@ -148,7 +150,7 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
     ]);
     if (mounted) {
       setState(() {
-_overlayOpacity = results[0] as double;
+        _overlayOpacity = results[0] as double;
         _brightness = results[1] as double;
         _maxSeconds = results[2] as int;
       });
@@ -247,140 +249,154 @@ _overlayOpacity = results[0] as double;
               future: _initializeControllerFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return GestureDetector(
-                    onTap: _isRecording ? _stopRecording : null,
-                    child: Stack(
-                      children: [
+                  return Stack(
+                    children: [
+                      Center(
+                        child: Transform.scale(
+                          scaleX: -1,
+                          child: CameraPreview(_controller!),
+                        ),
+                      ),
+                      if (_overlayOpacity > 0)
+                        Container(
+                          color: AppColors.onBackground
+                              .withValues(alpha: _overlayOpacity),
+                        ),
+                      if (_countdown > 0)
                         Center(
-                          child: Transform.scale(
-                            scaleX: -1,
-                            child: CameraPreview(_controller!),
+                          child: Text(
+                            '$_countdown',
+                            style: AppTextStyles.counter.copyWith(
+                              color: AppColors.primary,
+                            ),
                           ),
                         ),
-
-                        if (_overlayOpacity > 0)
-                          Container(
-                            color: AppColors.onBackground.withValues(alpha: _overlayOpacity),
-                          ),
-
-                        if (_countdown > 0)
-                          Center(
-                            child: Text(
-                              '$_countdown',
-                              style: AppTextStyles.counter.copyWith(
-                                color: AppColors.primary,
+                      if (_isRecording)
+                        Positioned(
+                          top: MediaQuery.of(context).padding.top + 16,
+                          right: 16,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 12,
+                                height: 12,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.primary,
+                                ),
                               ),
-                            ),
-                          ),
-
-                        if (_isRecording)
-                          Positioned(
-                            top: MediaQuery.of(context).padding.top + 16,
-                            right: 16,
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColors.primary,
-                                  ),
+                              const SizedBox(width: AppSpacing.small),
+                              Text(
+                                'REC',
+                                style: AppTextStyles.title.copyWith(
+                                  color: AppColors.primary,
                                 ),
-                                const SizedBox(width: AppSpacing.small),
-                                Text(
-                                  'REC',
-                                  style: AppTextStyles.title.copyWith(
-                                    color: AppColors.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-
-                        if (_isRecording)
-                          Positioned(
-                            top: MediaQuery.of(context).padding.top + 50,
-                            left: 0,
-                            right: 0,
-                            child: AnimatedBuilder(
-                              animation: _recordingController,
-                              builder: (context, child) {
-                                final remaining = (_maxSeconds * (1 - _recordingController.value)).ceil();
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
-                                  child: Column(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(AppRadius.small),
-                                        child: SizedBox(
-                                          height: AppSpacing.small,
-                                          width: double.infinity,
-                                          child: LinearProgressIndicator(
-                                            value: _recordingController.value,
-                                            backgroundColor: AppColors.surface,
-                                            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: AppSpacing.small),
-                                      Text(
-                                        '${remaining}s',
-                                        style: AppTextStyles.caption.copyWith(
-                                          color: AppColors.onBackground,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-
-                        if (!_isRecording)
-                          Positioned(
-                            top: MediaQuery.of(context).padding.top + 16,
-                            left: 16,
-                            child: GestureDetector(
-                              onTap: _showAlbumPicker,
-                              child: Container(
+                        ),
+                      if (_isRecording)
+                        Positioned(
+                          top: MediaQuery.of(context).padding.top + 50,
+                          left: 0,
+                          right: 0,
+                          child: AnimatedBuilder(
+                            animation: _recordingController,
+                            builder: (context, child) {
+                              final remaining = (_maxSeconds *
+                                      (1 - _recordingController.value))
+                                  .ceil();
+                              return Padding(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: AppSpacing.medium,
-                                  vertical: AppSpacing.small,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AppColors.background.withValues(alpha: 0.6),
-                                  borderRadius: BorderRadius.circular(AppRadius.large),
-                                  border: Border.all(
-                                    color: AppColors.surface,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
+                                    horizontal: AppSpacing.large),
+                                child: Column(
                                   children: [
-                                    const Icon(
-                                      Icons.photo_library_outlined,
-                                      color: AppColors.onBackground,
-                                      size: 16,
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                          AppRadius.small),
+                                      child: SizedBox(
+                                        height: AppSpacing.small,
+                                        width: double.infinity,
+                                        child: LinearProgressIndicator(
+                                          value: _recordingController.value,
+                                          backgroundColor: AppColors.surface,
+                                          valueColor:
+                                              const AlwaysStoppedAnimation<
+                                                  Color>(AppColors.primary),
+                                        ),
+                                      ),
                                     ),
-                                    const SizedBox(width: AppSpacing.small),
+                                    const SizedBox(height: AppSpacing.small),
                                     Text(
-                                      '$_selectedAlbumName  ▾',
+                                      '${remaining}s',
                                       style: AppTextStyles.caption.copyWith(
                                         color: AppColors.onBackground,
                                       ),
                                     ),
                                   ],
                                 ),
+                              );
+                            },
+                          ),
+                        ),
+                      if (_isRecording)
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: MediaQuery.of(context).padding.bottom +
+                              AppSpacing.xLarge,
+                          child: Center(
+                            child: StopRecordingButton(
+                              onTap: _stopRecording,
+                            ),
+                          ),
+                        ),
+                      if (!_isRecording)
+                        Positioned(
+                          top: MediaQuery.of(context).padding.top + 16,
+                          left: 16,
+                          child: GestureDetector(
+                            onTap: _showAlbumPicker,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.medium,
+                                vertical: AppSpacing.small,
+                              ),
+                              decoration: BoxDecoration(
+                                color:
+                                    AppColors.background.withValues(alpha: 0.6),
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.large),
+                                border: Border.all(
+                                  color: AppColors.surface,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.photo_library_outlined,
+                                    color: AppColors.onBackground,
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: AppSpacing.small),
+                                  Text(
+                                    '$_selectedAlbumName  ▾',
+                                    style: AppTextStyles.caption.copyWith(
+                                      color: AppColors.onBackground,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
                   );
                 } else {
                   return const Center(
-                    child: CircularProgressIndicator(color: AppColors.onBackground),
+                    child: CircularProgressIndicator(
+                        color: AppColors.onBackground),
                   );
                 }
               },
