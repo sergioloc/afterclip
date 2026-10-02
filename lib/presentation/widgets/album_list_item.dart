@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../util/app_colors.dart';
+import '../../../util/app_colors.dart';
+import '../../../util/app_text_styles.dart';
 
 class AlbumListItem extends StatelessWidget {
 
@@ -58,17 +59,15 @@ class AlbumListItem extends StatelessWidget {
                           title,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: AppTextStyles.itemTitle.copyWith(
                             color: AppColors.onBackground,
-                            fontSize: 18,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           subtitle,
-                          style: const TextStyle(
+                          style: AppTextStyles.subtitle.copyWith(
                             color: AppColors.outline,
-                            fontSize: 15,
                           ),
                         ),
                       ],

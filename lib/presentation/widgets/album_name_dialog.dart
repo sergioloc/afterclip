@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_text_styles.dart';
 
 class AlbumNameDialog extends StatefulWidget {
   const AlbumNameDialog({
@@ -111,11 +112,8 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
                     widget.title.toUpperCase(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: AppTextStyles.dialogTitle.copyWith(
                       color: AppColors.onBackground,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 2.5,
                     ),
                   ),
                 ),
@@ -132,16 +130,15 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
                 controller: _controller,
                 focusNode: _focusNode,
                 autofocus: true,
-                style: const TextStyle(color: AppColors.onSurface, fontSize: 16),
+                style: AppTextStyles.input.copyWith(color: AppColors.onSurface),
                 textCapitalization: TextCapitalization.sentences,
                 textInputAction: TextInputAction.done,
                 onChanged: (_) => setState(() {}),
                 onSubmitted: (_) => _confirm(),
                 decoration: InputDecoration(
                   hintText: widget.hintText,
-                  hintStyle: const TextStyle(
+                  hintStyle: AppTextStyles.input.copyWith(
                     color: AppColors.outline,
-                    fontSize: 16,
                   ),
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
@@ -212,11 +209,8 @@ class _DialogPillButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
             label.toUpperCase(),
-            style: TextStyle(
+            style: AppTextStyles.label.copyWith(
               color: foregroundColor,
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.5,
             ),
           ),
         ),

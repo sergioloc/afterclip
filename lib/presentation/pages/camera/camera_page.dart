@@ -12,6 +12,7 @@ import '../../../domain/entities/camera_lens.dart';
 import '../../../domain/repositories/clip_repository.dart';
 import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_text_styles.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key, this.initialAlbumId, this.initialLens});
@@ -264,9 +265,7 @@ _overlayOpacity = results[0] as double;
                           Center(
                             child: Text(
                               '$_countdown',
-                              style: const TextStyle(
-                                fontSize: 96,
-                                fontWeight: FontWeight.bold,
+                              style: AppTextStyles.counter.copyWith(
                                 color: AppColors.primary,
                               ),
                             ),
@@ -287,12 +286,10 @@ _overlayOpacity = results[0] as double;
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                const Text(
+                                Text(
                                   'REC',
-                                  style: TextStyle(
+                                  style: AppTextStyles.title.copyWith(
                                     color: AppColors.primary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
                                   ),
                                 ),
                               ],
@@ -327,10 +324,8 @@ _overlayOpacity = results[0] as double;
                                       const SizedBox(height: 6),
                                       Text(
                                         '${remaining}s',
-                                        style: const TextStyle(
+                                        style: AppTextStyles.caption.copyWith(
                                           color: AppColors.onBackground,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ],
@@ -369,9 +364,8 @@ _overlayOpacity = results[0] as double;
                                     const SizedBox(width: 6),
                                     Text(
                                       '$_selectedAlbumName  ▾',
-                                      style: const TextStyle(
+                                      style: AppTextStyles.caption.copyWith(
                                         color: AppColors.onBackground,
-                                        fontSize: 13,
                                       ),
                                     ),
                                   ],

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_text_styles.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -116,10 +117,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               child: Center(
                                 child: Text(
                                   '${seconds}s',
-                                  style: const TextStyle(
+                                  style: AppTextStyles.metric.copyWith(
                                     color: AppColors.onPrimary,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -156,10 +155,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               child: Center(
                                 child: Text(
                                   mode.label,
-                                  style: const TextStyle(
+                                  style: AppTextStyles.metric.copyWith(
                                     color: AppColors.onPrimary,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
@@ -178,10 +175,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: 'Intensidad del efecto flash sobre la cámara',
                   trailing: Text(
                     '${(_overlayOpacity * 100).round()}%',
-                    style: const TextStyle(
+                    style: AppTextStyles.heading.copyWith(
                       color: AppColors.onBackground,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   child: Slider(
@@ -199,10 +194,8 @@ class _SettingsPageState extends State<SettingsPage> {
                   subtitle: 'Nivel de brillo de la pantalla al grabar',
                   trailing: Text(
                     '${(_brightness * 100).round()}%',
-                    style: const TextStyle(
+                    style: AppTextStyles.heading.copyWith(
                       color: AppColors.onBackground,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   child: Slider(
@@ -222,11 +215,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildSectionHeader(String title) {
     return Text(
       title,
-      style: const TextStyle(
+      style: AppTextStyles.label.copyWith(
         color: AppColors.onSurface,
-        fontSize: 13,
-        fontWeight: FontWeight.w600,
-        letterSpacing: 1.2,
       ),
     );
   }
@@ -254,18 +244,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: AppTextStyles.title.copyWith(
                         color: AppColors.onBackground,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: const TextStyle(
+                      style: AppTextStyles.caption.copyWith(
                         color: AppColors.outline,
-                        fontSize: 13,
                       ),
                     ),
                   ],

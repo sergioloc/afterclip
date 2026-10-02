@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_text_styles.dart';
 
 class AlbumFrame extends StatelessWidget {
   const AlbumFrame({
@@ -74,9 +75,7 @@ class AlbumFrame extends StatelessWidget {
                               child: Text(
                                 text!.toUpperCase(),
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  letterSpacing: 8,
+                                style: AppTextStyles.display.copyWith(
                                   color: textColor,
                                 ),
                               ),
@@ -93,11 +92,8 @@ class AlbumFrame extends StatelessWidget {
                               ),
                               child: Text(
                                 '$clipCount CLIPS',
-                                style: TextStyle(
+                                style: AppTextStyles.label.copyWith(
                                   color: textColor,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.2,
                                 ),
                               ),
                             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../domain/entities/camera_lens.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_text_styles.dart';
 
 class LensSelector extends StatelessWidget {
   const LensSelector({
@@ -70,11 +71,8 @@ class _Segment extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(
+          style: AppTextStyles.badge.copyWith(
             color: active ? AppColors.background : color,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
           ),
         ),
       ),

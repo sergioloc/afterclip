@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../util/app_text_styles.dart';
 
 class AppBarTitle extends StatelessWidget {
   const AppBarTitle({
@@ -27,21 +28,11 @@ class AppBarTitle extends StatelessWidget {
         const SizedBox(width: 10),
         Text(
           'AFTER',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 8,
-            color: titleColor,
-          )
+          style: AppTextStyles.brandTitle.copyWith(color: titleColor),
         ),
         Text(
           'CLIP',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w900,
-              letterSpacing: 8,
-              color: highlightColor,
-            ),
+          style: AppTextStyles.brandTitle.copyWith(color: highlightColor),
         ),
       ],
     );

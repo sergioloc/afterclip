@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../util/app_text_styles.dart';
 
 class GalleryButton extends StatelessWidget {
   const GalleryButton({
@@ -53,10 +54,8 @@ class GalleryButton extends StatelessWidget {
                   ),
                   child: Text(
                     '$clipCount',
-                    style: TextStyle(
+                    style: AppTextStyles.badge.copyWith(
                       color: badgeForeground,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),

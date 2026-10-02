@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../util/app_colors.dart';
+import '../../../util/app_colors.dart';
+import '../../../util/app_text_styles.dart';
 
 class AlbumsSummary extends StatelessWidget {
   const AlbumsSummary({
@@ -40,18 +41,15 @@ class AlbumsSummary extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   '$activeAlbums',
-                  style: const TextStyle(
+                  style: AppTextStyles.metric.copyWith(
                     color: AppColors.onBackground,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Text(
                   activeAlbums == 1? 'ÁLBUM ACTIVO': 'ÁLBUMES ACTIVOS',
-                  style: const TextStyle(
+                  style: AppTextStyles.paragraph.copyWith(
                     color: AppColors.outline,
-                    fontSize: 14,
                   ),
                 ),
               ],
@@ -63,18 +61,15 @@ class AlbumsSummary extends StatelessWidget {
               children: [
                 Text(
                   '$totalClips',
-                  style: const TextStyle(
+                  style: AppTextStyles.metric.copyWith(
                     color: AppColors.onBackground,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Text(
                   totalClips == 1? 'CLIP TOTAL': 'CLIPS TOTALES',
-                  style: const TextStyle(
+                  style: AppTextStyles.paragraph.copyWith(
                     color: AppColors.outline,
-                    fontSize: 14,
                   ),
                 ),
               ],
