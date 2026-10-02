@@ -47,6 +47,8 @@ class SavingHomePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         titleSpacing: 20,
         title: const AppBarTitle(
           accent: AppColors.outline,

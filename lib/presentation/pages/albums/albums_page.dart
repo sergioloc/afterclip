@@ -145,6 +145,9 @@ class _AlbumsPageState extends State<AlbumsPage> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         title: const Text('Álbumes'),
       ),
       floatingActionButton: FloatingActionButton(

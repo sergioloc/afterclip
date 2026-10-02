@@ -84,6 +84,9 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: AppColors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         title: const Text('Ajustes'),
       ),
       body: _loading
