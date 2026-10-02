@@ -12,6 +12,7 @@ import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/rename_album_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
+import '../../../../util/app_spacing.dart';
 import '../../widgets/album_list_item.dart';
 import '../../widgets/album_name_dialog.dart';
 import '../../widgets/albums_summary.dart';
@@ -156,7 +157,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.onBackground))
           : ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSpacing.large),
               itemCount: _albums.length + 2,
               itemBuilder: (context, index) {
                 if (index == 0) {

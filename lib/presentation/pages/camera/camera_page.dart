@@ -12,6 +12,7 @@ import '../../../domain/entities/camera_lens.dart';
 import '../../../domain/repositories/clip_repository.dart';
 import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
 class CameraPage extends StatefulWidget {
@@ -107,7 +108,7 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
             ),
             if (_albums.isEmpty)
               const Padding(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.all(AppSpacing.large),
                 child: Text(
                   'No hay álbumes todavía. Créalos desde la pantalla de álbumes.',
                   style: TextStyle(color: AppColors.outline),
@@ -285,7 +286,7 @@ _overlayOpacity = results[0] as double;
                                     color: AppColors.primary,
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: AppSpacing.small),
                                 Text(
                                   'REC',
                                   style: AppTextStyles.title.copyWith(
@@ -306,13 +307,13 @@ _overlayOpacity = results[0] as double;
                               builder: (context, child) {
                                 final remaining = (_maxSeconds * (1 - _recordingController.value)).ceil();
                                 return Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
                                   child: Column(
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(6),
                                         child: SizedBox(
-                                          height: 8,
+                                          height: AppSpacing.small,
                                           width: double.infinity,
                                           child: LinearProgressIndicator(
                                             value: _recordingController.value,
@@ -321,7 +322,7 @@ _overlayOpacity = results[0] as double;
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 6),
+                                      const SizedBox(height: AppSpacing.small),
                                       Text(
                                         '${remaining}s',
                                         style: AppTextStyles.caption.copyWith(
@@ -343,8 +344,8 @@ _overlayOpacity = results[0] as double;
                               onTap: _showAlbumPicker,
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
+                                  horizontal: AppSpacing.medium,
+                                  vertical: AppSpacing.small,
                                 ),
                                 decoration: BoxDecoration(
                                   color: AppColors.background.withValues(alpha: 0.6),
@@ -361,7 +362,7 @@ _overlayOpacity = results[0] as double;
                                       color: AppColors.onBackground,
                                       size: 16,
                                     ),
-                                    const SizedBox(width: 6),
+                                    const SizedBox(width: AppSpacing.small),
                                     Text(
                                       '$_selectedAlbumName  ▾',
                                       style: AppTextStyles.caption.copyWith(

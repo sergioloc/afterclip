@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../domain/entities/camera_lens.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
 class LensSelector extends StatelessWidget {
@@ -18,7 +19,7 @@ class LensSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(AppSpacing.xxSmall),
       decoration: BoxDecoration(
         border: Border.all(color: color, width: 1.5),
         borderRadius: BorderRadius.circular(22),
@@ -32,7 +33,7 @@ class LensSelector extends StatelessWidget {
             color: color,
             onTap: () => onSelect(CameraLens.front),
           ),
-          const SizedBox(width: 2),
+          const SizedBox(width: AppSpacing.xxSmall),
           _Segment(
             label: 'BACK',
             active: lens == CameraLens.back,
@@ -64,7 +65,7 @@ class _Segment extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large, vertical: AppSpacing.small),
         decoration: BoxDecoration(
           color: active ? color : Colors.transparent,
           borderRadius: BorderRadius.circular(18),

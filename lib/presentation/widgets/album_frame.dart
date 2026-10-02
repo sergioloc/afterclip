@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
 class AlbumFrame extends StatelessWidget {
@@ -8,8 +9,8 @@ class AlbumFrame extends StatelessWidget {
     this.text,
     this.clipCount = 0,
     this.textColor = AppColors.onBackground,
-    this.horizontalMargin = 24,
-    this.topMargin = 24,
+    this.horizontalMargin = AppSpacing.xLarge,
+    this.topMargin = AppSpacing.xLarge,
     required this.bottomInset,
     this.borderColor = AppColors.onBackground,
     this.radius = 20,
@@ -71,7 +72,7 @@ class AlbumFrame extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.large),
                               child: Text(
                                 text!.toUpperCase(),
                                 textAlign: TextAlign.center,
@@ -80,11 +81,11 @@ class AlbumFrame extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 14),
+                            const SizedBox(height: AppSpacing.large),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 5,
+                                horizontal: AppSpacing.medium,
+                                vertical: AppSpacing.xxSmall,
                               ),
                               decoration: BoxDecoration(
                                 border: Border.all(color: textColor),

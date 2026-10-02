@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../util/app_spacing.dart';
 
 class PageIndicator extends StatelessWidget {
   const PageIndicator({
@@ -24,7 +25,7 @@ class PageIndicator extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             width: i == currentIndex ? 22 : 8,
             height: 8,
-            margin: const EdgeInsets.symmetric(horizontal: 3),
+            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xxSmall),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: i == currentIndex ? activeColor : inactiveColor,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
 class AlbumListItem extends StatelessWidget {
@@ -25,8 +26,8 @@ class AlbumListItem extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPress,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 14),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: AppSpacing.large),
+        padding: const EdgeInsets.all(AppSpacing.large),
         decoration: BoxDecoration(
           color: AppColors.background,
           border: Border.all(color: AppColors.onBackground, width: 1),
@@ -47,7 +48,7 @@ class AlbumListItem extends StatelessWidget {
                 size: 32,
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.large),
             Expanded(
               child: Row(
                 children: [
@@ -63,7 +64,7 @@ class AlbumListItem extends StatelessWidget {
                             color: AppColors.onBackground,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.xxSmall),
                         Text(
                           subtitle,
                           style: AppTextStyles.subtitle.copyWith(

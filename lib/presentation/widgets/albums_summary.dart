@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
 class AlbumsSummary extends StatelessWidget {
@@ -15,10 +16,10 @@ class AlbumsSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
+      margin: const EdgeInsets.only(bottom: AppSpacing.large),
       padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 16,
+        horizontal: AppSpacing.large,
+        vertical: AppSpacing.large,
       ),
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -38,14 +39,14 @@ class AlbumsSummary extends StatelessWidget {
                     color: AppColors.primary,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.medium),
                 Text(
                   '$activeAlbums',
                   style: AppTextStyles.metric.copyWith(
                     color: AppColors.onBackground,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.medium),
                 Text(
                   activeAlbums == 1? 'ÁLBUM ACTIVO': 'ÁLBUMES ACTIVOS',
                   style: AppTextStyles.paragraph.copyWith(
@@ -65,7 +66,7 @@ class AlbumsSummary extends StatelessWidget {
                     color: AppColors.onBackground,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.medium),
                 Text(
                   totalClips == 1? 'CLIP TOTAL': 'CLIPS TOTALES',
                   style: AppTextStyles.paragraph.copyWith(

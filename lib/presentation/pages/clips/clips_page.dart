@@ -10,6 +10,7 @@ import '../../../../domain/entities/clip.dart';
 import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
+import '../../../../util/app_spacing.dart';
 
 class ClipsPage extends StatefulWidget {
   const ClipsPage({super.key, this.albumId, this.title, this.archived = false});
@@ -172,7 +173,7 @@ class _ClipsPageState extends State<ClipsPage> {
             const Spacer(),
             if (widget.archived)
               Padding(
-                padding: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.only(right: AppSpacing.medium),
                 child: IconButton(
                   icon: const Icon(Icons.unarchive, color: AppColors.onBackground),
                   onPressed: _unarchiveAlbum,

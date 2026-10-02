@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
 class AlbumNameDialog extends StatefulWidget {
@@ -84,9 +85,9 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.xLarge),
       child: Container(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.xLarge),
         decoration: BoxDecoration(
           color: AppColors.background,
           borderRadius: BorderRadius.circular(16),
@@ -106,7 +107,7 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
                     color: AppColors.primary,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.medium),
                 Expanded(
                   child: Text(
                     widget.title.toUpperCase(),
@@ -119,7 +120,7 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.xLarge),
             AnimatedContainer(
               duration: const Duration(milliseconds: 150),
               decoration: BoxDecoration(
@@ -145,11 +146,11 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
                   focusedBorder: InputBorder.none,
                   isDense: true,
                   contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      const EdgeInsets.symmetric(horizontal: AppSpacing.large, vertical: AppSpacing.large),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.xLarge),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -159,7 +160,7 @@ class _AlbumNameDialogState extends State<AlbumNameDialog> {
                   splashColor: AppColors.onBackground.withValues(alpha: 0.12),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.medium),
                 _DialogPillButton(
                   label: widget.confirmLabel,
                   foregroundColor:
@@ -206,7 +207,7 @@ class _DialogPillButton extends StatelessWidget {
         onTap: onPressed,
         splashColor: splashColor,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xLarge, vertical: AppSpacing.medium),
           child: Text(
             label.toUpperCase(),
             style: AppTextStyles.label.copyWith(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../domain/entities/album.dart';
 import '../../../domain/entities/camera_lens.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_spacing.dart';
 import '../../widgets/album_frame.dart';
 import '../../widgets/app_bar_title.dart';
 import '../../widgets/lens_selector.dart';
@@ -54,7 +55,7 @@ class FullHomePage extends StatelessWidget {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: AppSpacing.large),
             child: RoundActionButton(
               icon: Icons.settings,
               border: false,
@@ -120,7 +121,7 @@ return AlbumFrame(
             right: 0,
             bottom: 28,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxLarge),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,

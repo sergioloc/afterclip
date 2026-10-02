@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -87,10 +88,10 @@ class _SettingsPageState extends State<SettingsPage> {
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.onBackground))
           : ListView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSpacing.xLarge),
               children: [
                 _buildSectionHeader('Grabación'),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
                   title: 'Duración máxima del clip',
                   subtitle: 'Tiempo límite de grabación por clip',
@@ -100,14 +101,14 @@ class _SettingsPageState extends State<SettingsPage> {
                           in SettingsRepository.maxClipDurationOptions) ...[
                         if (seconds !=
                             SettingsRepository.maxClipDurationOptions.first)
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSpacing.small),
                         Expanded(
                           child: GestureDetector(
                             onTap: () => _saveMaxClipDuration(seconds),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
                               padding:
-                                  const EdgeInsets.symmetric(vertical: 10),
+                                  const EdgeInsets.symmetric(vertical: AppSpacing.medium),
                               decoration: BoxDecoration(
                                 color: _maxClipDuration == seconds
                                     ? AppColors.primary
@@ -129,9 +130,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.xxLarge),
                 _buildSectionHeader('Energía'),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
                   title: 'Ahorro de energía',
                   subtitle: 'Nivel de reducción de consumo de batería',
@@ -139,13 +140,13 @@ class _SettingsPageState extends State<SettingsPage> {
                     children: [
                       for (final mode in EnergySavingMode.values) ...[
                         if (mode != EnergySavingMode.values.first)
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSpacing.small),
                         Expanded(
                           child: GestureDetector(
                             onTap: () => _saveEnergySavingMode(mode),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              padding: const EdgeInsets.symmetric(vertical: AppSpacing.medium),
                               decoration: BoxDecoration(
                                 color: _energySavingMode == mode
                                     ? AppColors.primary
@@ -167,9 +168,9 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.xxLarge),
                 _buildSectionHeader('Flash'),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
                   title: 'Opacidad del overlay',
                   subtitle: 'Intensidad del efecto flash sobre la cámara',
@@ -188,7 +189,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     inactiveColor: AppColors.surface,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
                   title: 'Brillo durante grabación',
                   subtitle: 'Nivel de brillo de la pantalla al grabar',
@@ -207,6 +208,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     inactiveColor: AppColors.surface,
                   ),
                 ),
+                const SizedBox(height: AppSpacing.large),
               ],
             ),
     );
@@ -228,7 +230,7 @@ class _SettingsPageState extends State<SettingsPage> {
     required Widget child,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.large),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
@@ -248,7 +250,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         color: AppColors.onBackground,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppSpacing.xxSmall),
                     Text(
                       subtitle,
                       style: AppTextStyles.caption.copyWith(
@@ -259,12 +261,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               if (trailing != null) ...[
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.medium),
                 trailing,
               ],
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.medium),
           child,
         ],
       ),

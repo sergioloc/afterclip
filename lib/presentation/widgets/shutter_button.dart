@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../util/app_spacing.dart';
 
 class ShutterButton extends StatelessWidget {
   const ShutterButton({
@@ -26,7 +27,7 @@ class ShutterButton extends StatelessWidget {
           border: Border.all(color: ringColor, width: 4),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(7),
+          padding: const EdgeInsets.all(AppSpacing.small),
           child: Container(
             decoration: BoxDecoration(shape: BoxShape.circle, color: color),
           ),
@@ -35,8 +36,8 @@ class ShutterButton extends StatelessWidget {
     );
 
     return SizedBox(
-      width: size + 24,
-      height: size + 24,
+      width: size + AppSpacing.xLarge,
+      height: size + AppSpacing.xLarge,
       child: Center(child: shutter),
     );
   }
