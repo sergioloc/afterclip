@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'presentation/pages/home/home_page.dart';
+import 'util/app_colors.dart';
 import 'util/app_flavor.dart';
 
 void main() async {
@@ -25,8 +26,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.dark(),
         useMaterial3: true,
+        actionIconTheme: const ActionIconThemeData(
+          backButtonIconBuilder: _buildBackButtonIcon,
+        ),
       ),
       home: const HomePage(),
     );
   }
+}
+
+Widget _buildBackButtonIcon(BuildContext context) {
+  return const Icon(Icons.arrow_back_ios_new, color: AppColors.onBackground);
 }
