@@ -6,11 +6,13 @@ class SettingsRepository {
   static const _brightnessKey = 'brightness';
   static const _energySavingModeKey = 'energy_saving_mode';
   static const _maxClipDurationKey = 'max_clip_duration';
+  static const _hasSeenOnboardingKey = 'has_seen_onboarding';
   static const double defaultOverlayOpacity = 0.90;
   static const double defaultBrightness = 1.0;
   static const EnergySavingMode defaultEnergySavingMode = EnergySavingMode.off;
   static const int defaultMaxClipDuration = 30;
   static const List<int> maxClipDurationOptions = [30, 60, 90];
+  static const bool defaultHasSeenOnboarding = false;
 
   late final SharedPreferencesAsync _prefs;
 
@@ -52,5 +54,13 @@ class SettingsRepository {
 
   Future<void> setMaxClipDuration(int seconds) async {
     await _prefs.setInt(_maxClipDurationKey, seconds);
+  }
+
+  Future<bool> getHasSeenOnboarding() async {
+    return await _prefs.getBool(_hasSeenOnboardingKey) ?? defaultHasSeenOnboarding;
+  }
+
+  Future<void> setHasSeenOnboarding(bool value) async {
+    await _prefs.setBool(_hasSeenOnboardingKey, value);
   }
 }

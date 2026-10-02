@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'presentation/pages/home/home_page.dart';
+import 'presentation/pages/onboarding/onboarding_gate.dart';
 import 'util/app_colors.dart';
 import 'util/app_flavor.dart';
 
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
           backButtonIconBuilder: _buildBackButtonIcon,
         ),
       ),
-      home: const HomePage(),
+      home: const OnboardingGate(),
     );
   }
 }
