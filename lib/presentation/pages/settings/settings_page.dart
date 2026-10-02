@@ -6,6 +6,7 @@ import '../../../util/app_colors.dart';
 import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
+import '../../widgets/page_title.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -87,7 +88,7 @@ class _SettingsPageState extends State<SettingsPage> {
         elevation: 0,
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
-        title: const Text('Ajustes'),
+        title: const PageTitle('Ajustes'),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.onBackground))

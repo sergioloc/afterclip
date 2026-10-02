@@ -4,6 +4,7 @@ import '../../../util/app_colors.dart';
 import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
+import '../../widgets/page_title.dart';
 import '../../widgets/pill_button.dart';
 
 enum PermissionRequestResult { granted, denied, blocked, cancelled }
@@ -160,7 +161,7 @@ class _PermissionPageState extends State<PermissionPage>
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
         titleSpacing: 20,
-        title: Text(widget.title),
+        title: PageTitle(widget.title),
       ),
       body: _loading
           ? const Center(

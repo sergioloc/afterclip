@@ -16,6 +16,7 @@ import '../../../../util/app_spacing.dart';
 import '../../widgets/album_list_item.dart';
 import '../../widgets/album_name_dialog.dart';
 import '../../widgets/albums_summary.dart';
+import '../../widgets/page_title.dart';
 import '../clips/clips_page.dart';
 
 class AlbumsPage extends StatefulWidget {
@@ -148,7 +149,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
         elevation: 0,
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
-        title: const Text('Álbumes'),
+        title: const PageTitle('Álbumes'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _createAlbum,

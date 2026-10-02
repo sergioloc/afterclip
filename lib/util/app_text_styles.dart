@@ -30,6 +30,12 @@ abstract final class AppTextStyles {
     letterSpacing: 8,
   );
 
+  static const TextStyle pageTitle = TextStyle(
+    fontSize: AppTextSizes.titleMedium,
+    fontWeight: FontWeight.w900,
+    letterSpacing: 4,
+  );
+
   static const TextStyle heading = TextStyle(
     fontSize: AppTextSizes.heading,
     fontWeight: FontWeight.bold,

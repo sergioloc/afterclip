@@ -11,6 +11,7 @@ import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
 import '../../../../util/app_spacing.dart';
+import '../../widgets/page_title.dart';
 
 class ClipsPage extends StatefulWidget {
   const ClipsPage({super.key, this.albumId, this.title, this.archived = false});
@@ -172,7 +173,7 @@ class _ClipsPageState extends State<ClipsPage> {
         title: Row(
           children: [
             if (widget.title != null)
-              Text(widget.title!),
+              PageTitle(widget.title!),
             const Spacer(),
             if (widget.archived)
               Padding(
