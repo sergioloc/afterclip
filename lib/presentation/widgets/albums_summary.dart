@@ -49,7 +49,7 @@ class AlbumsSummary extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.medium),
                 Text(
-                  activeAlbums == 1? 'ÁLBUM ACTIVO': 'ÁLBUMES ACTIVOS',
+                  activeAlbums == 1 ? 'ACTIVE ALBUM' : 'ACTIVE ALBUMS',
                   style: AppTextStyles.paragraph.copyWith(
                     color: AppColors.outline,
                   ),
@@ -69,7 +69,7 @@ class AlbumsSummary extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.medium),
                 Text(
-                  totalClips == 1? 'CLIP TOTAL': 'CLIPS TOTALES',
+                  totalClips == 1 ? 'TOTAL CLIP' : 'TOTAL CLIPS',
                   style: AppTextStyles.paragraph.copyWith(
                     color: AppColors.outline,
                   ),

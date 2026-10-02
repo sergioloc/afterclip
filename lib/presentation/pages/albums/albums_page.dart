@@ -90,21 +90,21 @@ class _AlbumsPageState extends State<AlbumsPage> {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.background,
         title: const Text(
-          'Borrar álbum',
+          'Delete album',
           style: TextStyle(color: AppColors.onBackground),
         ),
         content: Text(
-          '¿Seguro que quieres borrar "${album.name}"? Los clips no se eliminarán.',
+          'Are you sure you want to delete "${album.name}"? The clips will not be deleted.',
           style: const TextStyle(color: AppColors.onBackground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Borrar', style: TextStyle(color: AppColors.error)),
+            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -128,8 +128,8 @@ class _AlbumsPageState extends State<AlbumsPage> {
     return AlbumNameDialog.show(
       context,
       initialValue: initial,
-      title: isNew ? 'Nuevo álbum' : 'Renombrar álbum',
-      confirmLabel: isNew ? 'Crear' : 'Guardar',
+      title: isNew ? 'New album' : 'Rename album',
+      confirmLabel: isNew ? 'Create' : 'Save',
     );
   }
 
@@ -149,7 +149,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
         elevation: 0,
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
-        title: const PageTitle('Álbumes'),
+        title: const PageTitle('Albums'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _createAlbum,
@@ -173,15 +173,15 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 }
                 if (index == 1) {
                   return AlbumListItem(
-                    title: 'Todos los clips',
-                    subtitle: '${_clips.length} clips',
+                    title: 'All clips',
+                    subtitle: _clipCountLabel(_clips.length),
                     onTap: _openAllClips,
                   );
                 }
                 final album = _albums[index - 2];
                 return AlbumListItem(
                   title: album.name,
-                  subtitle: '${_clipCountForAlbum(album.id)} clips',
+                  subtitle: _clipCountLabel(_clipCountForAlbum(album.id)),
                   archived: album.archived,
                   onTap: () {
                     Navigator.push(
@@ -200,6 +200,9 @@ class _AlbumsPageState extends State<AlbumsPage> {
     );
   }
 
+  String _clipCountLabel(int count) =>
+      '$count ${count == 1 ? 'clip' : 'clips'}';
+
   void _showAlbumActions(Album album) {
     showModalBottomSheet(
       context: context,
@@ -217,7 +220,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 ),
               ),
               subtitle: Text(
-                '${_clipCountForAlbum(album.id)} clips',
+                _clipCountLabel(_clipCountForAlbum(album.id)),
                 style: const TextStyle(color: AppColors.outline),
               ),
             ),
@@ -228,7 +231,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 color: AppColors.onBackground,
               ),
               title: Text(
-                album.archived ? 'Quitar de archivo' : 'Archivar',
+                album.archived ? 'Unarchive' : 'Archive',
                 style: const TextStyle(color: AppColors.onBackground),
               ),
               onTap: () {
@@ -239,7 +242,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
             ListTile(
               leading: const Icon(Icons.edit_outlined, color: AppColors.onBackground),
               title: const Text(
-                'Renombrar',
+                'Rename',
                 style: TextStyle(color: AppColors.onBackground),
               ),
               onTap: () {
@@ -250,7 +253,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
             ListTile(
               leading: const Icon(Icons.delete_outline, color: AppColors.error),
               title: const Text(
-                'Eliminar',
+                'Delete',
                 style: TextStyle(color: AppColors.error),
               ),
               onTap: () {

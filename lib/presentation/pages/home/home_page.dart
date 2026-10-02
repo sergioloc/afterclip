@@ -101,12 +101,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showLensSelectedToast(CameraLens lens) {
-    final name = lens == CameraLens.front ? 'delantera' : 'trasera';
+    final name = lens == CameraLens.front ? 'Front camera' : 'Rear camera';
     final messenger = ScaffoldMessenger.of(context);
     messenger.clearSnackBars();
     messenger.showSnackBar(
       SnackBar(
-        content: Text('Cámara $name seleccionada', style: TextStyle(color: AppColors.onSurface)),
+        content: Text('$name selected', style: TextStyle(color: AppColors.onSurface)),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
         backgroundColor: AppColors.surface,
@@ -121,21 +121,21 @@ class _HomePageState extends State<HomePage> {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.background,
         title: const Text(
-          'Archivar álbum',
+          'Archive album',
           style: TextStyle(color: AppColors.onBackground),
         ),
         content: const Text(
-          'Se ocultará el album en esta pantalla, pero podrás acceder a él desde la galería.',
+          'This album will be hidden from the home screen, but you can still access it from your gallery.',
           style: TextStyle(color: AppColors.onBackground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Archivar', style: TextStyle(color: AppColors.primary)),
+            child: const Text('Archive', style: TextStyle(color: AppColors.primary)),
           ),
         ],
       ),
@@ -181,13 +181,13 @@ class _HomePageState extends State<HomePage> {
     final result = await PermissionPage.showRecording(context);
     if (result == PermissionRequestResult.denied) {
       _showPermissionSnackBar(
-        'Nos faltan permisos para grabar. Puedes autorizarlos en los ajustes '
-        'del dispositivo.',
+        'Camera and microphone permissions are required to record. You can '
+        'enable them in your device settings.',
       );
     } else if (result == PermissionRequestResult.blocked) {
       _showPermissionSnackBar(
-        'Los permisos están bloqueados. Actívalos en los ajustes del '
-        'dispositivo para poder grabar.',
+        'Camera and microphone permissions are blocked. Enable them in your '
+        'device settings to record.',
       );
     }
     return result == PermissionRequestResult.granted;

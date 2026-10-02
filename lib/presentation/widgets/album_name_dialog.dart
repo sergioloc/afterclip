@@ -9,10 +9,10 @@ class AlbumNameDialog extends StatefulWidget {
   const AlbumNameDialog({
     super.key,
     this.initialValue,
-    this.title = 'Nuevo álbum',
-    this.hintText = 'Nombre del álbum',
-    this.confirmLabel = 'Crear',
-    this.cancelLabel = 'Cancelar',
+    this.title = 'New album',
+    this.hintText = 'Album name',
+    this.confirmLabel = 'Create',
+    this.cancelLabel = 'Cancel',
   });
 
   final String? initialValue;
@@ -24,10 +24,10 @@ class AlbumNameDialog extends StatefulWidget {
   static Future<String?> show(
     BuildContext context, {
     String? initialValue,
-    String title = 'Nuevo álbum',
-    String hintText = 'Nombre del álbum',
-    String confirmLabel = 'Crear',
-    String cancelLabel = 'Cancelar',
+    String title = 'New album',
+    String hintText = 'Album name',
+    String confirmLabel = 'Create',
+    String cancelLabel = 'Cancel',
   }) {
     return showDialog<String>(
       context: context,

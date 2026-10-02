@@ -3,7 +3,7 @@ enum EnergySavingMode {
   on;
 
   String get label => switch (this) {
-        EnergySavingMode.off => 'Desactivado',
-        EnergySavingMode.on => 'Activado',
+        EnergySavingMode.off => 'Off',
+        EnergySavingMode.on => 'On',
       };
 }

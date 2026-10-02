@@ -39,14 +39,14 @@ class PermissionPage extends StatefulWidget {
     PermissionInfo(
       permission: Permission.camera,
       icon: Icons.photo_camera_outlined,
-      title: 'Cámara',
-      description: 'Para grabar el vídeo de tus clips.',
+      title: 'Camera',
+      description: 'Used to record your clips.',
     ),
     PermissionInfo(
       permission: Permission.microphone,
       icon: Icons.mic_outlined,
-      title: 'Micrófono',
-      description: 'Para guardar el audio de tus vídeos.',
+      title: 'Microphone',
+      description: 'Used to save audio with your videos.',
     ),
   ];
 
@@ -56,10 +56,10 @@ class PermissionPage extends StatefulWidget {
     final result = await Navigator.of(context).push<PermissionRequestResult>(
       MaterialPageRoute(
         builder: (_) => const PermissionPage(
-          title: 'Permisos para grabar',
+          title: 'Recording permissions',
           reason:
-              'Afterclip solo usa tu cámara y tu micrófono mientras grabas un '
-              'clip. Si no los autorizas, no podremos grabar vídeo.',
+              'AfterClip only uses your camera and microphone while recording '
+              'a clip. Without these permissions, it cannot record video.',
           permissions: _recording,
         ),
       ),
@@ -180,8 +180,8 @@ class _PermissionPageState extends State<PermissionPage>
                   children: [
                     Text(
                       _pending.length == 1
-                          ? 'Afterclip necesita este permiso para poder '
-                                'grabar tus clips. Solo se usa mientras grabas.'
+                          ? 'AfterClip needs this permission to record your '
+                                'clips. It is only used while you are recording.'
                           : widget.reason,
                       style: AppTextStyles.paragraph.copyWith(
                         color: AppColors.onSurface,
@@ -261,8 +261,8 @@ class _PermissionPageState extends State<PermissionPage>
           const SizedBox(width: AppSpacing.large),
           Expanded(
             child: Text(
-              'Has denegado el permiso y Android ya no permite volver a '
-              'pedírtelo. Actívalo en los ajustes del dispositivo.',
+              'You denied this permission, and Android will not ask again. '
+              'Enable it in your device settings.',
               style: AppTextStyles.caption.copyWith(
                 color: AppColors.onSurface,
               ),
@@ -279,7 +279,7 @@ class _PermissionPageState extends State<PermissionPage>
       children: [
         PillButton(
           expand: true,
-          label: _blocked ? 'Abrir ajustes' : 'Continuar',
+          label: _blocked ? 'Open settings' : 'Continue',
           foregroundColor: enabled ? AppColors.onPrimary : AppColors.outline,
           backgroundColor: enabled ? AppColors.primary : AppColors.surface,
           splashColor: AppColors.onPrimary.withValues(alpha: 0.16),
@@ -290,7 +290,7 @@ class _PermissionPageState extends State<PermissionPage>
         const SizedBox(height: AppSpacing.small),
         PillButton(
           expand: true,
-          label: 'Ahora no',
+          label: 'Not now',
           foregroundColor: AppColors.outline,
           splashColor: AppColors.onBackground.withValues(alpha: 0.12),
           onPressed: enabled

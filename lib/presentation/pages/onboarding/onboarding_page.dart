@@ -36,13 +36,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
     ),
     _OnboardingStep(
       icon: Icons.videocam,
-      title: 'Grabar',
+      title: 'Record',
       body:
           'Switch between the front and rear camera, then capture the moment.',
     ),
     _OnboardingStep(
       icon: Icons.video_library,
-      title: 'Organizar',
+      title: 'Organize',
       body: 'Organize your videos into albums and keep every memory together.',
     ),
   ];
@@ -106,7 +106,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   ),
                   const SizedBox(height: AppSpacing.xLarge),
                   PillButton(
-                    label: _isLast ? 'Empezar' : 'Siguiente',
+                    label: _isLast ? 'Get started' : 'Next',
                     foregroundColor: AppColors.onPrimary,
                     splashColor: AppColors.onPrimary.withValues(alpha: 0.16),
                     backgroundColor: AppColors.primary,
@@ -117,7 +117,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: AppSpacing.small),
                       child: PillButton(
-                        label: 'Saltar',
+                        label: 'Skip',
                         foregroundColor: AppColors.onSurface,
                         splashColor: AppColors.surface,
                         onPressed: widget.onCompleted,

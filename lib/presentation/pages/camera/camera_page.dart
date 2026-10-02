@@ -77,7 +77,7 @@ class _CameraPageState extends State<CameraPage>
 
   String get _selectedAlbumName {
     final album = _albums.where((a) => a.id == _selectedAlbumId).firstOrNull;
-    return album?.name ?? 'Sin álbum';
+    return album?.name ?? 'No album';
   }
 
   Future<void> _showAlbumPicker() async {
@@ -90,7 +90,7 @@ class _CameraPageState extends State<CameraPage>
           children: [
             ListTile(
               title: const Text(
-                'Guardar en álbum',
+                'Save to album',
                 style: TextStyle(
                   color: AppColors.onBackground,
                   fontWeight: FontWeight.bold,
@@ -101,7 +101,7 @@ class _CameraPageState extends State<CameraPage>
             ListTile(
               leading: const Icon(Icons.layers_clear, color: AppColors.outline),
               title: const Text(
-                'Sin álbum',
+                'No album',
                 style: TextStyle(color: AppColors.onBackground),
               ),
               trailing: _selectedAlbumId == null
@@ -113,7 +113,7 @@ class _CameraPageState extends State<CameraPage>
               const Padding(
                 padding: EdgeInsets.all(AppSpacing.large),
                 child: Text(
-                  'No hay álbumes todavía. Créalos desde la pantalla de álbumes.',
+                  'There are no albums yet. Create one from the Albums screen.',
                   style: TextStyle(color: AppColors.outline),
                 ),
               )

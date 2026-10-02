@@ -88,18 +88,18 @@ class _SettingsPageState extends State<SettingsPage> {
         elevation: 0,
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
-        title: const PageTitle('Ajustes'),
+        title: const PageTitle('Settings'),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: AppColors.onBackground))
           : ListView(
               padding: const EdgeInsets.all(AppSpacing.xLarge),
               children: [
-                _buildSectionHeader('Grabación'),
+                _buildSectionHeader('Recording'),
                 const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
-                  title: 'Duración máxima del clip',
-                  subtitle: 'Tiempo límite de grabación por clip',
+                  title: 'Maximum clip duration',
+                  subtitle: 'Recording time limit for each clip',
                   child: Row(
                     children: [
                       for (final seconds
@@ -136,11 +136,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xxLarge),
-                _buildSectionHeader('Energía'),
+                _buildSectionHeader('Energy'),
                 const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
-                  title: 'Ahorro de energía',
-                  subtitle: 'Nivel de reducción de consumo de batería',
+                  title: 'Battery saver',
+                  subtitle: 'Battery usage reduction level',
                   child: Row(
                     children: [
                       for (final mode in EnergySavingMode.values) ...[
@@ -177,8 +177,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 _buildSectionHeader('Flash'),
                 const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
-                  title: 'Opacidad del overlay',
-                  subtitle: 'Intensidad del efecto flash sobre la cámara',
+                  title: 'Overlay opacity',
+                  subtitle: 'Intensity of the camera flash effect',
                   trailing: Text(
                     '${(_overlayOpacity * 100).round()}%',
                     style: AppTextStyles.heading.copyWith(
@@ -196,8 +196,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
-                  title: 'Brillo durante grabación',
-                  subtitle: 'Nivel de brillo de la pantalla al grabar',
+                  title: 'Screen brightness while recording',
+                  subtitle: 'Screen brightness level during recording',
                   trailing: Text(
                     '${(_brightness * 100).round()}%',
                     style: AppTextStyles.heading.copyWith(

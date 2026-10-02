@@ -67,21 +67,21 @@ class _ClipsPageState extends State<ClipsPage> {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.background,
         title: const Text(
-          'Desarchivar álbum',
+          'Unarchive album',
           style: TextStyle(color: AppColors.onBackground),
         ),
         content: const Text(
-          'El álbum volverá a aparecer en la pantalla principal.',
+          'This album will appear on the home screen again.',
           style: TextStyle(color: AppColors.onBackground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Desarchivar', style: TextStyle(color: AppColors.primary)),
+            child: const Text('Unarchive', style: TextStyle(color: AppColors.primary)),
           ),
         ],
       ),
@@ -104,21 +104,21 @@ class _ClipsPageState extends State<ClipsPage> {
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.background,
         title: const Text(
-          'Borrar clip',
+          'Delete clip',
           style: TextStyle(color: AppColors.onBackground),
         ),
         content: Text(
-          '¿Seguro que quieres borrar este clip?',
+          'Are you sure you want to delete this clip?',
           style: const TextStyle(color: AppColors.onBackground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Borrar', style: TextStyle(color: AppColors.error)),
+            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -142,7 +142,7 @@ class _ClipsPageState extends State<ClipsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Video guardado en la galería'),
+            content: Text('Video saved to your gallery.'),
             backgroundColor: AppColors.success,
           ),
         );
@@ -152,7 +152,7 @@ class _ClipsPageState extends State<ClipsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Error al guardar el video'),
+            content: Text('Error saving the video.'),
             backgroundColor: AppColors.error,
           ),
         );
@@ -191,7 +191,7 @@ class _ClipsPageState extends State<ClipsPage> {
           : _clips.isEmpty
           ? const Center(
               child: Text(
-                'No hay clips en este álbum',
+                'There are no clips in this album.',
                 style: TextStyle(color: AppColors.onBackground),
                 textAlign: TextAlign.center,
               ),
@@ -216,7 +216,7 @@ class _ClipsPageState extends State<ClipsPage> {
                   subtitle: clip.isAvailable
                       ? null
                       : Text(
-                          'Disponible en ${_formatCountdown(clip.timeUntilAvailable)}',
+                          'Available in ${_formatCountdown(clip.timeUntilAvailable)}',
                           style: const TextStyle(color: AppColors.outline),
                         ),
                   trailing: Row(
@@ -245,20 +245,23 @@ class _ClipsPageState extends State<ClipsPage> {
   }
 
   String _formatDate(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    final year = date.year;
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    final month = months[date.month - 1];
+    final day = date.day;
     final hour = date.hour.toString().padLeft(2, '0');
     final minute = date.minute.toString().padLeft(2, '0');
-    return '$day/$month/$year - $hour:$minute';
+    return '$month $day, ${date.year} - $hour:$minute';
   }
 
   String _formatCountdown(Duration duration) {
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
     final parts = <String>[];
-    if (hours > 0) parts.add('${hours}h');
-    parts.add('${minutes}min');
+    if (hours > 0) parts.add('$hours hr');
+    parts.add('$minutes min');
     return parts.join(' ');
   }
 }
