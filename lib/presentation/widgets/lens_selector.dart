@@ -71,7 +71,7 @@ class _Segment extends StatelessWidget {
         child: Text(
           label,
           style: TextStyle(
-            color: active ? AppColors.black : color,
+            color: active ? AppColors.background : color,
             fontSize: 12,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,

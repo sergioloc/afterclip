@@ -6,16 +6,16 @@ class AlbumFrame extends StatelessWidget {
     super.key,
     this.text,
     this.clipCount = 0,
-    this.textColor = AppColors.white,
+    this.textColor = AppColors.onBackground,
     this.horizontalMargin = 24,
     this.topMargin = 24,
     required this.bottomInset,
-    this.borderColor = AppColors.white,
+    this.borderColor = AppColors.onBackground,
     this.radius = 20,
     this.borderWidth = 1,
     this.onArchive,
-    this.archiveButtonColor = AppColors.textPrimary,
-    this.archiveButtonBackground = AppColors.backgroundOverlay,
+    this.archiveButtonColor = AppColors.onSurface,
+    this.archiveButtonBackground = AppColors.surface,
   });
 
   final String? text;
@@ -59,7 +59,7 @@ class AlbumFrame extends StatelessWidget {
                 width: double.infinity,
                 height: double.infinity,
                 decoration: BoxDecoration(
-                  color: AppColors.black,
+                  color: AppColors.background,
                   borderRadius: BorderRadius.circular(radius),
                   border: Border.all(color: borderColor, width: borderWidth),
                 ),

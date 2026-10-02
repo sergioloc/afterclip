@@ -99,19 +99,19 @@ class _HomePageState extends State<HomePage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         title: const Text(
           'Archivar álbum',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.onBackground),
         ),
         content: const Text(
           'Se ocultará el album en esta pantalla, pero podrás acceder a él desde la galería.',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.onBackground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -158,7 +158,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(backgroundColor: AppColors.black);
+      return const Scaffold(backgroundColor: AppColors.background);
     }
 
     return switch (_mode) {

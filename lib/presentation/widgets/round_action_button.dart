@@ -23,12 +23,12 @@ class RoundActionButton extends StatelessWidget {
         height: 56,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: AppColors.black,
+          color: AppColors.background,
           border: border
-              ? Border.all(color: AppColors.grey, width: 1)
+              ? Border.all(color: AppColors.outline, width: 1)
               : null,
         ),
-        child: Icon(icon, color: AppColors.grey, size: 24),
+        child: Icon(icon, color: AppColors.outline, size: 24),
       ),
     );
   }

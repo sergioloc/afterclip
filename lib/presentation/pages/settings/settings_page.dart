@@ -78,13 +78,13 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         title: const Text('Ajustes'),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.white))
+          ? const Center(child: CircularProgressIndicator(color: AppColors.onBackground))
           : ListView(
               padding: const EdgeInsets.all(24),
               children: [
@@ -110,14 +110,14 @@ class _SettingsPageState extends State<SettingsPage> {
                               decoration: BoxDecoration(
                                 color: _maxClipDuration == seconds
                                     ? AppColors.primary
-                                    : AppColors.backgroundCard,
+                                    : AppColors.surface,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
                                 child: Text(
                                   '${seconds}s',
                                   style: const TextStyle(
-                                    color: AppColors.white,
+                                    color: AppColors.onPrimary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -150,14 +150,14 @@ class _SettingsPageState extends State<SettingsPage> {
                               decoration: BoxDecoration(
                                 color: _energySavingMode == mode
                                     ? AppColors.primary
-                                    : AppColors.backgroundCard,
+                                    : AppColors.surface,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
                                 child: Text(
                                   mode.label,
                                   style: const TextStyle(
-                                    color: AppColors.white,
+                                    color: AppColors.onPrimary,
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -179,7 +179,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   trailing: Text(
                     '${(_overlayOpacity * 100).round()}%',
                     style: const TextStyle(
-                      color: AppColors.white,
+                      color: AppColors.onBackground,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
@@ -189,8 +189,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     min: 0,
                     max: 1,
                     onChanged: _saveOverlayOpacity,
-                    activeColor: AppColors.white,
-                    inactiveColor: AppColors.borderWhite,
+                    activeColor: AppColors.onPrimary,
+                    inactiveColor: AppColors.surface,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -200,7 +200,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   trailing: Text(
                     '${(_brightness * 100).round()}%',
                     style: const TextStyle(
-                      color: AppColors.white,
+                      color: AppColors.onBackground,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
@@ -210,8 +210,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     min: 0.1,
                     max: 1,
                     onChanged: _saveBrightness,
-                    activeColor: AppColors.white,
-                    inactiveColor: AppColors.borderWhite,
+                    activeColor: AppColors.onPrimary,
+                    inactiveColor: AppColors.surface,
                   ),
                 ),
               ],
@@ -223,7 +223,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Text(
       title,
       style: const TextStyle(
-        color: AppColors.textPrimary,
+        color: AppColors.onSurface,
         fontSize: 13,
         fontWeight: FontWeight.w600,
         letterSpacing: 1.2,
@@ -240,7 +240,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.backgroundCard,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -255,7 +255,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Text(
                       title,
                       style: const TextStyle(
-                        color: AppColors.white,
+                        color: AppColors.onBackground,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -264,7 +264,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Text(
                       subtitle,
                       style: const TextStyle(
-                        color: AppColors.textSecondary,
+                        color: AppColors.outline,
                         fontSize: 13,
                       ),
                     ),

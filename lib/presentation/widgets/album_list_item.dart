@@ -27,8 +27,8 @@ class AlbumListItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 14),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.black,
-          border: Border.all(color: AppColors.white, width: 1),
+          color: AppColors.background,
+          border: Border.all(color: AppColors.onBackground, width: 1),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -37,12 +37,12 @@ class AlbumListItem extends StatelessWidget {
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: AppColors.backgroundOverlay,
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 Icons.camera_roll_outlined,
-                color: archived? AppColors.grey: AppColors.primary,
+                color: archived? AppColors.outline: AppColors.primary,
                 size: 32,
               ),
             ),
@@ -59,7 +59,7 @@ class AlbumListItem extends StatelessWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: AppColors.white,
+                            color: AppColors.onBackground,
                             fontSize: 18,
                           ),
                         ),
@@ -67,7 +67,7 @@ class AlbumListItem extends StatelessWidget {
                         Text(
                           subtitle,
                           style: const TextStyle(
-                            color: AppColors.textSecondary,
+                            color: AppColors.outline,
                             fontSize: 15,
                           ),
                         ),

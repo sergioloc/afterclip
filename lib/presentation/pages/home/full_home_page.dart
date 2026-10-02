@@ -42,14 +42,14 @@ class FullHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         elevation: 0,
         titleSpacing: 20,
         title: const AppBarTitle(
           accent: AppColors.primary,
-          titleColor: AppColors.white,
+          titleColor: AppColors.onBackground,
           highlightColor: AppColors.primary,
         ),
         actions: [
@@ -82,8 +82,8 @@ return AlbumFrame(
                     onArchive: albums.isEmpty || albums[index] == null
                         ? null
                         : () => onArchiveAlbum(albums[index]!.id),
-                    archiveButtonColor: AppColors.textPrimary,
-                    archiveButtonBackground: AppColors.black,
+                    archiveButtonColor: AppColors.onSurface,
+                    archiveButtonBackground: AppColors.background,
                   );
                 },
               ),
@@ -98,7 +98,7 @@ return AlbumFrame(
                   count: albums.length,
                   currentIndex: albumIndex,
                   activeColor: AppColors.primary,
-                  inactiveColor: AppColors.borderWhite,
+                  inactiveColor: AppColors.surface,
                 ),
               ),
             ),
@@ -110,7 +110,7 @@ return AlbumFrame(
               child: Center(
                 child: LensSelector(
                   lens: lens,
-                  color: AppColors.textPrimary,
+                  color: AppColors.onSurface,
                   onSelect: onSelectLens,
                 ),
               ),

@@ -63,19 +63,19 @@ class _ClipsPageState extends State<ClipsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         title: const Text(
           'Desarchivar álbum',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.onBackground),
         ),
         content: const Text(
           'El álbum volverá a aparecer en la pantalla principal.',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.onBackground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -100,23 +100,23 @@ class _ClipsPageState extends State<ClipsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         title: const Text(
           'Borrar clip',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.onBackground),
         ),
         content: Text(
           '¿Seguro que quieres borrar este clip?',
-          style: const TextStyle(color: AppColors.white),
+          style: const TextStyle(color: AppColors.onBackground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Borrar', style: TextStyle(color: AppColors.red)),
+            child: const Text('Borrar', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -141,7 +141,7 @@ class _ClipsPageState extends State<ClipsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Video guardado en la galería'),
-            backgroundColor: AppColors.green,
+            backgroundColor: AppColors.success,
           ),
         );
       }
@@ -151,7 +151,7 @@ class _ClipsPageState extends State<ClipsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Error al guardar el video'),
-            backgroundColor: AppColors.red,
+            backgroundColor: AppColors.error,
           ),
         );
       }
@@ -161,9 +161,9 @@ class _ClipsPageState extends State<ClipsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         titleSpacing: 0,
         title: Row(
           children: [
@@ -174,7 +174,7 @@ class _ClipsPageState extends State<ClipsPage> {
               Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: IconButton(
-                  icon: const Icon(Icons.unarchive, color: AppColors.white),
+                  icon: const Icon(Icons.unarchive, color: AppColors.onBackground),
                   onPressed: _unarchiveAlbum,
                 ),
               ),
@@ -182,12 +182,12 @@ class _ClipsPageState extends State<ClipsPage> {
         ),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.white))
+          ? const Center(child: CircularProgressIndicator(color: AppColors.onBackground))
           : _clips.isEmpty
           ? const Center(
               child: Text(
                 'No hay clips en este álbum',
-                style: TextStyle(color: AppColors.white),
+                style: TextStyle(color: AppColors.onBackground),
                 textAlign: TextAlign.center,
               ),
             )
@@ -200,32 +200,32 @@ class _ClipsPageState extends State<ClipsPage> {
                   enabled: !isBlocked,
                   leading: Icon(
                     Icons.movie,
-                    color: isBlocked ? AppColors.borderWhite : AppColors.white,
+                    color: isBlocked ? AppColors.surface : AppColors.onBackground,
                   ),
                   title: Text(
                     _formatDate(clip.createdAt),
                     style: TextStyle(
-                      color: isBlocked ? AppColors.borderWhite : AppColors.white,
+                      color: isBlocked ? AppColors.surface : AppColors.onBackground,
                     ),
                   ),
                   subtitle: clip.isAvailable
                       ? null
                       : Text(
                           'Disponible en ${_formatCountdown(clip.timeUntilAvailable)}',
-                          style: const TextStyle(color: AppColors.grey),
+                          style: const TextStyle(color: AppColors.outline),
                         ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.delete_outline,
-                            color: AppColors.white),
+                            color: AppColors.onBackground),
                         onPressed: () => _deleteClip(clip),
                       ),
                       IconButton(
                         icon: Icon(
                           Icons.download_outlined,
-                          color: isBlocked ? AppColors.borderWhite : AppColors.white,
+                          color: isBlocked ? AppColors.surface : AppColors.onBackground,
                         ),
                         onPressed:
                             isBlocked ? null : () => _downloadClip(clip),
@@ -291,7 +291,7 @@ class _ClipPlayerPageState extends State<ClipPlayerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       body: Center(
         child: _controller.value.isInitialized
             ? InkWell(
@@ -307,7 +307,7 @@ class _ClipPlayerPageState extends State<ClipPlayerPage> {
                   child: VideoPlayer(_controller),
                 ),
               )
-            : const CircularProgressIndicator(color: AppColors.white),
+            : const CircularProgressIndicator(color: AppColors.onBackground),
       ),
     );
   }

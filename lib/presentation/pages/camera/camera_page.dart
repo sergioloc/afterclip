@@ -78,7 +78,7 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
   Future<void> _showAlbumPicker() async {
     final selected = await showModalBottomSheet<String>(
       context: context,
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -87,17 +87,17 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
               title: const Text(
                 'Guardar en álbum',
                 style: TextStyle(
-                  color: AppColors.white,
+                  color: AppColors.onBackground,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const Divider(color: AppColors.borderWhite),
+            const Divider(color: AppColors.surface),
             ListTile(
-              leading: const Icon(Icons.layers_clear, color: AppColors.textSecondary),
+              leading: const Icon(Icons.layers_clear, color: AppColors.outline),
               title: const Text(
                 'Sin álbum',
-                style: TextStyle(color: AppColors.white),
+                style: TextStyle(color: AppColors.onBackground),
               ),
               trailing: _selectedAlbumId == null
                   ? const Icon(Icons.check, color: AppColors.primary)
@@ -109,7 +109,7 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
                 padding: EdgeInsets.all(16),
                 child: Text(
                   'No hay álbumes todavía. Créalos desde la pantalla de álbumes.',
-                  style: TextStyle(color: AppColors.textSecondary),
+                  style: TextStyle(color: AppColors.outline),
                 ),
               )
             else
@@ -117,11 +117,11 @@ class _CameraPageState extends State<CameraPage> with SingleTickerProviderStateM
                 ListTile(
                   leading: const Icon(
                     Icons.photo_library_outlined,
-                    color: AppColors.textSecondary,
+                    color: AppColors.outline,
                   ),
                   title: Text(
                     album.name,
-                    style: const TextStyle(color: AppColors.white),
+                    style: const TextStyle(color: AppColors.onBackground),
                   ),
                   trailing: _selectedAlbumId == album.id
                       ? const Icon(Icons.check, color: AppColors.primary)
@@ -235,10 +235,10 @@ _overlayOpacity = results[0] as double;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       body: _initializeControllerFuture == null
           ? const Center(
-              child: CircularProgressIndicator(color: AppColors.white),
+              child: CircularProgressIndicator(color: AppColors.onBackground),
             )
           : FutureBuilder<void>(
               future: _initializeControllerFuture,
@@ -257,7 +257,7 @@ _overlayOpacity = results[0] as double;
 
                         if (_overlayOpacity > 0)
                           Container(
-                            color: AppColors.white.withValues(alpha: _overlayOpacity),
+                            color: AppColors.onBackground.withValues(alpha: _overlayOpacity),
                           ),
 
                         if (_countdown > 0)
@@ -267,7 +267,7 @@ _overlayOpacity = results[0] as double;
                               style: const TextStyle(
                                 fontSize: 96,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.red,
+                                color: AppColors.primary,
                               ),
                             ),
                           ),
@@ -283,14 +283,14 @@ _overlayOpacity = results[0] as double;
                                   height: 12,
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: AppColors.red,
+                                    color: AppColors.primary,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
                                 const Text(
                                   'REC',
                                   style: TextStyle(
-                                    color: AppColors.red,
+                                    color: AppColors.primary,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
@@ -319,8 +319,8 @@ _overlayOpacity = results[0] as double;
                                           width: double.infinity,
                                           child: LinearProgressIndicator(
                                             value: _recordingController.value,
-                                            backgroundColor: AppColors.greyLight,
-                                            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.red),
+                                            backgroundColor: AppColors.surface,
+                                            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
                                           ),
                                         ),
                                       ),
@@ -328,7 +328,7 @@ _overlayOpacity = results[0] as double;
                                       Text(
                                         '${remaining}s',
                                         style: const TextStyle(
-                                          color: AppColors.white,
+                                          color: AppColors.onBackground,
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -352,10 +352,10 @@ _overlayOpacity = results[0] as double;
                                   vertical: 8,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.black.withValues(alpha: 0.6),
+                                  color: AppColors.background.withValues(alpha: 0.6),
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
-                                    color: AppColors.borderWhite,
+                                    color: AppColors.surface,
                                   ),
                                 ),
                                 child: Row(
@@ -363,14 +363,14 @@ _overlayOpacity = results[0] as double;
                                   children: [
                                     const Icon(
                                       Icons.photo_library_outlined,
-                                      color: AppColors.white,
+                                      color: AppColors.onBackground,
                                       size: 16,
                                     ),
                                     const SizedBox(width: 6),
                                     Text(
                                       '$_selectedAlbumName  ▾',
                                       style: const TextStyle(
-                                        color: AppColors.white,
+                                        color: AppColors.onBackground,
                                         fontSize: 13,
                                       ),
                                     ),
@@ -384,7 +384,7 @@ _overlayOpacity = results[0] as double;
                   );
                 } else {
                   return const Center(
-                    child: CircularProgressIndicator(color: AppColors.white),
+                    child: CircularProgressIndicator(color: AppColors.onBackground),
                   );
                 }
               },

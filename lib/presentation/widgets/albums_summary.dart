@@ -20,7 +20,7 @@ class AlbumsSummary extends StatelessWidget {
         vertical: 16,
       ),
       decoration: BoxDecoration(
-        color: AppColors.backgroundOverlay,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -41,7 +41,7 @@ class AlbumsSummary extends StatelessWidget {
                 Text(
                   '$activeAlbums',
                   style: const TextStyle(
-                    color: AppColors.white,
+                    color: AppColors.onBackground,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -50,7 +50,7 @@ class AlbumsSummary extends StatelessWidget {
                 Text(
                   activeAlbums == 1? 'ÁLBUM ACTIVO': 'ÁLBUMES ACTIVOS',
                   style: const TextStyle(
-                    color: AppColors.textSecondary,
+                    color: AppColors.outline,
                     fontSize: 14,
                   ),
                 ),
@@ -64,7 +64,7 @@ class AlbumsSummary extends StatelessWidget {
                 Text(
                   '$totalClips',
                   style: const TextStyle(
-                    color: AppColors.white,
+                    color: AppColors.onBackground,
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                   ),
@@ -73,7 +73,7 @@ class AlbumsSummary extends StatelessWidget {
                 Text(
                   totalClips == 1? 'CLIP TOTAL': 'CLIPS TOTALES',
                   style: const TextStyle(
-                    color: AppColors.textSecondary,
+                    color: AppColors.outline,
                     fontSize: 14,
                   ),
                 ),

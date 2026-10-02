@@ -85,23 +85,23 @@ class _AlbumsPageState extends State<AlbumsPage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         title: const Text(
           'Borrar álbum',
-          style: TextStyle(color: AppColors.white),
+          style: TextStyle(color: AppColors.onBackground),
         ),
         content: Text(
           '¿Seguro que quieres borrar "${album.name}"? Los clips no se eliminarán.',
-          style: const TextStyle(color: AppColors.white),
+          style: const TextStyle(color: AppColors.onBackground),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Borrar', style: TextStyle(color: AppColors.red)),
+            child: const Text('Borrar', style: TextStyle(color: AppColors.error)),
           ),
         ],
       ),
@@ -125,34 +125,34 @@ class _AlbumsPageState extends State<AlbumsPage> {
     return showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         title: Text(
           initial == null ? 'Nuevo álbum' : 'Renombrar álbum',
-          style: const TextStyle(color: AppColors.white),
+          style: const TextStyle(color: AppColors.onBackground),
         ),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: AppColors.white),
+          style: const TextStyle(color: AppColors.onBackground),
           decoration: const InputDecoration(
             hintText: 'Nombre del álbum',
-            hintStyle: TextStyle(color: AppColors.textSecondary),
+            hintStyle: TextStyle(color: AppColors.outline),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.textSecondary),
+              borderSide: BorderSide(color: AppColors.outline),
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.white),
+              borderSide: BorderSide(color: AppColors.onBackground),
             ),
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar', style: TextStyle(color: AppColors.textSecondary)),
+            child: const Text('Cancelar', style: TextStyle(color: AppColors.outline)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Aceptar', style: TextStyle(color: AppColors.white)),
+            child: const Text('Aceptar', style: TextStyle(color: AppColors.onBackground)),
           ),
         ],
       ),
@@ -169,20 +169,20 @@ class _AlbumsPageState extends State<AlbumsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         title: const Text('Álbumes'),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _createAlbum,
         backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
+        foregroundColor: AppColors.onPrimary,
         shape: const CircleBorder(),
         child: const Icon(Icons.add),
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: AppColors.white))
+          ? const Center(child: CircularProgressIndicator(color: AppColors.onBackground))
           : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: _albums.length + 2,
@@ -226,7 +226,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
   void _showAlbumActions(Album album) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       builder: (context) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -235,24 +235,24 @@ class _AlbumsPageState extends State<AlbumsPage> {
               title: Text(
                 album.name,
                 style: const TextStyle(
-                  color: AppColors.white,
+                  color: AppColors.onBackground,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               subtitle: Text(
                 '${_clipCountForAlbum(album.id)} clips',
-                style: const TextStyle(color: AppColors.textSecondary),
+                style: const TextStyle(color: AppColors.outline),
               ),
             ),
-            const Divider(color: AppColors.borderWhite),
+            const Divider(color: AppColors.surface),
             ListTile(
               leading: Icon(
                 album.archived ? Icons.unarchive_outlined : Icons.archive_outlined,
-                color: AppColors.white,
+                color: AppColors.onBackground,
               ),
               title: Text(
                 album.archived ? 'Quitar de archivo' : 'Archivar',
-                style: const TextStyle(color: AppColors.white),
+                style: const TextStyle(color: AppColors.onBackground),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -260,10 +260,10 @@ class _AlbumsPageState extends State<AlbumsPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.edit_outlined, color: AppColors.white),
+              leading: const Icon(Icons.edit_outlined, color: AppColors.onBackground),
               title: const Text(
                 'Renombrar',
-                style: TextStyle(color: AppColors.white),
+                style: TextStyle(color: AppColors.onBackground),
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -271,10 +271,10 @@ class _AlbumsPageState extends State<AlbumsPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.delete_outline, color: AppColors.red),
+              leading: const Icon(Icons.delete_outline, color: AppColors.error),
               title: const Text(
                 'Eliminar',
-                style: TextStyle(color: AppColors.red),
+                style: TextStyle(color: AppColors.error),
               ),
               onTap: () {
                 Navigator.pop(context);

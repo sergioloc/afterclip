@@ -1,0 +1,7 @@
+- Create album custom dialog
+- Improve camera selector
+- Separate between Free and Pro
+- Traducciones
+- Estandarizar tamaños y fuentes
+- Estandarizar colores
+- On boarding

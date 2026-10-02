@@ -42,15 +42,15 @@ class SavingHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.black,
+        backgroundColor: AppColors.background,
         elevation: 0,
         titleSpacing: 20,
         title: const AppBarTitle(
-          accent: AppColors.grey,
-          titleColor: AppColors.grey,
-          highlightColor: AppColors.grey,
+          accent: AppColors.outline,
+          titleColor: AppColors.outline,
+          highlightColor: AppColors.outline,
         ),
         actions: [
           Padding(
@@ -77,15 +77,15 @@ return AlbumFrame(
                         : (albums[index] == null
                             ? 0
                             : (albumClipCounts[albums[index]!.id] ?? 0)),
-                    textColor: AppColors.grey,
-                    borderColor: AppColors.grey,
+                    textColor: AppColors.outline,
+                    borderColor: AppColors.outline,
                     topMargin: useButtonAsLensIndicator ? 24 : 64,
                     bottomInset: 168,
                     onArchive: albums.isEmpty || albums[index] == null
                         ? null
                         : () => onArchiveAlbum(albums[index]!.id),
-                    archiveButtonColor: AppColors.grey,
-                    archiveButtonBackground: AppColors.black,
+                    archiveButtonColor: AppColors.outline,
+                    archiveButtonBackground: AppColors.background,
                   );
               },
             ),
@@ -99,8 +99,8 @@ return AlbumFrame(
                 child: PageIndicator(
                   count: albums.length,
                   currentIndex: albumIndex,
-                  activeColor: AppColors.grey,
-                  inactiveColor: AppColors.grey.withValues(alpha: 0.3),
+                  activeColor: AppColors.outline,
+                  inactiveColor: AppColors.outline.withValues(alpha: 0.3),
                 ),
               ),
             ),
@@ -112,7 +112,7 @@ return AlbumFrame(
               child: Center(
                 child: LensSelector(
                   lens: lens,
-                  color: AppColors.grey,
+                  color: AppColors.outline,
                   onSelect: onSelectLens,
                 ),
               ),
@@ -134,8 +134,8 @@ return AlbumFrame(
                   ),
                   ShutterButton(
                     onTap: onOpenCamera,
-                    color: AppColors.black,
-                    ringColor: AppColors.grey,
+                    color: AppColors.background,
+                    ringColor: AppColors.outline,
                   ),
                   if (useButtonAsLensIndicator)
                     RoundActionButton(
