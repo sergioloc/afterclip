@@ -80,73 +80,6 @@ class _CameraPageState extends State<CameraPage>
     }
   }
 
-  String get _selectedAlbumName {
-    final album = _albums.where((a) => a.id == _selectedAlbumId).firstOrNull;
-    return album?.name ?? 'No album';
-  }
-
-  Future<void> _showAlbumPicker() async {
-    final selected = await showModalBottomSheet<String>(
-      context: context,
-      backgroundColor: AppColors.background,
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text(
-                'Save to album',
-                style: TextStyle(
-                  color: AppColors.onBackground,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const Divider(color: AppColors.surface),
-            ListTile(
-              leading: const Icon(Icons.layers_clear, color: AppColors.outline),
-              title: const Text(
-                'No album',
-                style: TextStyle(color: AppColors.onBackground),
-              ),
-              trailing: _selectedAlbumId == null
-                  ? const Icon(Icons.check, color: AppColors.primary)
-                  : null,
-              onTap: () => Navigator.pop(context, null),
-            ),
-            if (_albums.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(AppSpacing.large),
-                child: Text(
-                  'There are no albums yet. Create one from the Albums screen.',
-                  style: TextStyle(color: AppColors.outline),
-                ),
-              )
-            else
-              for (final album in _albums)
-                ListTile(
-                  leading: const Icon(
-                    Icons.photo_library_outlined,
-                    color: AppColors.outline,
-                  ),
-                  title: Text(
-                    album.name,
-                    style: const TextStyle(color: AppColors.onBackground),
-                  ),
-                  trailing: _selectedAlbumId == album.id
-                      ? const Icon(Icons.check, color: AppColors.primary)
-                      : null,
-                  onTap: () => Navigator.pop(context, album.id),
-                ),
-          ],
-        ),
-      ),
-    );
-
-    if (!mounted) return;
-    setState(() => _selectedAlbumId = selected);
-  }
-
   Future<void> _loadSettings() async {
     final results = await Future.wait([
       _settingsRepository.getOverlayOpacity(),
@@ -372,46 +305,6 @@ class _CameraPageState extends State<CameraPage>
                           child: Center(
                             child: StopRecordingButton(
                               onTap: _stopRecording,
-                            ),
-                          ),
-                        ),
-                      if (!_isRecording)
-                        Positioned(
-                          top: MediaQuery.of(context).padding.top + 16,
-                          left: 16,
-                          child: GestureDetector(
-                            onTap: _showAlbumPicker,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.medium,
-                                vertical: AppSpacing.small,
-                              ),
-                              decoration: BoxDecoration(
-                                color:
-                                    AppColors.background.withValues(alpha: 0.6),
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.large),
-                                border: Border.all(
-                                  color: AppColors.surface,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.photo_library_outlined,
-                                    color: AppColors.onBackground,
-                                    size: 16,
-                                  ),
-                                  const SizedBox(width: AppSpacing.small),
-                                  Text(
-                                    '$_selectedAlbumName  ▾',
-                                    style: AppTextStyles.caption.copyWith(
-                                      color: AppColors.onBackground,
-                                    ),
-                                  ),
-                                ],
-                              ),
                             ),
                           ),
                         ),
