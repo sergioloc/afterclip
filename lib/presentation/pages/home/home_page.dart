@@ -14,6 +14,7 @@ import '../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../util/app_colors.dart';
 import '../../../util/app_flavor.dart';
+import '../../widgets/camera_lens_toast.dart';
 import '../../widgets/confirmation_dialog.dart';
 import '../albums/albums_page.dart';
 import '../camera/camera_page.dart';
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
   bool _loading = true;
   bool _isOpeningCamera = false;
   EnergySavingMode _mode = EnergySavingMode.off;
+  OverlayEntry? _lensToastEntry;
 
   @override
   void initState() {
@@ -112,17 +114,34 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showLensSelectedToast(CameraLens lens) {
-    final name = lens == CameraLens.front ? 'Front camera' : 'Rear camera';
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.clearSnackBars();
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text('$name selected', style: TextStyle(color: AppColors.onSurface)),
-        duration: const Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        backgroundColor: AppColors.surface,
+    final previousEntry = _lensToastEntry;
+    _lensToastEntry = null;
+    previousEntry?.remove();
+    previousEntry?.dispose();
+
+    late final OverlayEntry entry;
+    entry = OverlayEntry(
+      builder: (context) => CameraLensToast(
+        lens: lens,
+        onDismiss: () {
+          if (!mounted || !identical(_lensToastEntry, entry)) return;
+          entry.remove();
+          entry.dispose();
+          _lensToastEntry = null;
+        },
       ),
     );
+    _lensToastEntry = entry;
+    Overlay.of(context, rootOverlay: true).insert(entry);
+  }
+
+  @override
+  void dispose() {
+    final entry = _lensToastEntry;
+    _lensToastEntry = null;
+    entry?.remove();
+    entry?.dispose();
+    super.dispose();
   }
 
   Future<void> _archiveAlbum(String? albumId) async {
