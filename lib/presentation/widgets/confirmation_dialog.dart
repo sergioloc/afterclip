@@ -13,6 +13,7 @@ class ConfirmationDialog extends StatelessWidget {
     this.confirmLabel = 'Delete',
     this.cancelLabel = 'Cancel',
     this.confirmColor = AppColors.error,
+    this.showCancelButton = true,
   });
 
   final String title;
@@ -20,6 +21,7 @@ class ConfirmationDialog extends StatelessWidget {
   final String confirmLabel;
   final String cancelLabel;
   final Color confirmColor;
+  final bool showCancelButton;
 
   static Future<bool?> show(
     BuildContext context, {
@@ -28,6 +30,7 @@ class ConfirmationDialog extends StatelessWidget {
     String confirmLabel = 'Delete',
     String cancelLabel = 'Cancel',
     Color confirmColor = AppColors.error,
+    bool showCancelButton = true,
   }) {
     return showDialog<bool>(
       context: context,
@@ -38,6 +41,7 @@ class ConfirmationDialog extends StatelessWidget {
         confirmLabel: confirmLabel,
         cancelLabel: cancelLabel,
         confirmColor: confirmColor,
+        showCancelButton: showCancelButton,
       ),
     );
   }
@@ -91,13 +95,15 @@ class ConfirmationDialog extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                PillButton(
-                  label: cancelLabel,
-                  foregroundColor: AppColors.outline,
-                  splashColor: AppColors.onBackground.withValues(alpha: 0.12),
-                  onPressed: () => Navigator.of(context).pop(false),
-                ),
-                const SizedBox(width: AppSpacing.medium),
+                if (showCancelButton) ...[
+                  PillButton(
+                    label: cancelLabel,
+                    foregroundColor: AppColors.outline,
+                    splashColor: AppColors.onBackground.withValues(alpha: 0.12),
+                    onPressed: () => Navigator.of(context).pop(false),
+                  ),
+                  const SizedBox(width: AppSpacing.medium),
+                ],
                 PillButton(
                   label: confirmLabel,
                   foregroundColor: AppColors.onPrimary,

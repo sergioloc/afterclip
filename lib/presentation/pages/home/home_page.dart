@@ -14,6 +14,7 @@ import '../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../util/app_colors.dart';
 import '../../../util/app_flavor.dart';
+import '../../widgets/confirmation_dialog.dart';
 import '../albums/albums_page.dart';
 import '../camera/camera_page.dart';
 import '../permissions/permission_page.dart';
@@ -177,7 +178,7 @@ class _HomePageState extends State<HomePage> {
             .getClipsRecordedInLast24Hours();
         if (!mounted) return;
         if (clipsRecorded >= DailyClipLimitRepository.maxClips) {
-          _showDailyClipLimitSnackBar();
+          await _showDailyClipLimitDialog();
           return;
         }
       }
@@ -197,18 +198,16 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _showDailyClipLimitSnackBar() {
-    final messenger = ScaffoldMessenger.of(context);
-    messenger.clearSnackBars();
-    messenger.showSnackBar(
-      const SnackBar(
-        content: Text(
-          'You have reached the free limit of 24 clips in the last 24 hours. '
-          'Try again when a clip is over 24 hours old.',
-        ),
-        backgroundColor: AppColors.surface,
-        duration: Duration(seconds: 4),
-      ),
+  Future<void> _showDailyClipLimitDialog() async {
+    await ConfirmationDialog.show(
+      context,
+      title: '24-hour limit reached',
+      message:
+          'The free version allows 24 clips in the last 24 hours. '
+          'You can record again when a clip is over 24 hours old.',
+      confirmLabel: 'OK',
+      confirmColor: AppColors.primary,
+      showCancelButton: false,
     );
   }
 
