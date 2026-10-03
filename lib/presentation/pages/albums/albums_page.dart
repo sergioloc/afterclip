@@ -18,6 +18,7 @@ import '../../../../util/app_spacing.dart';
 import '../../widgets/album_list_item.dart';
 import '../../widgets/album_name_dialog.dart';
 import '../../widgets/albums_summary.dart';
+import '../../widgets/confirmation_dialog.dart';
 import '../../widgets/daily_clip_limit_indicator.dart';
 import '../../widgets/page_title.dart';
 import '../clips/clips_page.dart';
@@ -95,29 +96,11 @@ class _AlbumsPageState extends State<AlbumsPage> {
   }
 
   Future<void> _deleteAlbum(Album album) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.background,
-        title: const Text(
-          'Delete album',
-          style: TextStyle(color: AppColors.onBackground),
-        ),
-        content: Text(
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: 'Delete album',
+      message:
           'Are you sure you want to delete "${album.name}"? The clips will not be deleted.',
-          style: const TextStyle(color: AppColors.onBackground),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.outline)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
-      ),
     );
 
     if (confirmed != true || !mounted) return;

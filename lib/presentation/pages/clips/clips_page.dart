@@ -8,14 +8,17 @@ import '../../../../data/repositories/album_repository_impl.dart';
 import '../../../../data/repositories/clip_repository_impl.dart';
 import '../../../../data/services/gallery_service.dart';
 import '../../../../domain/entities/clip.dart';
+import '../../../../domain/usecases/delete_album_usecase.dart';
 import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
 import '../../../../util/app_radius.dart';
 import '../../../../util/app_spacing.dart';
+import '../../widgets/confirmation_dialog.dart';
 import '../../widgets/page_title.dart';
 
 enum _ClipAction { download, delete }
+enum _AlbumAction { downloadAllClips, deleteAlbum }
 
 class ClipsPage extends StatefulWidget {
   const ClipsPage({super.key, this.albumId, this.title, this.archived = false});
@@ -32,6 +35,7 @@ class _ClipsPageState extends State<ClipsPage> {
   late final GetAllClipsUseCase _getAllClipsUseCase;
   List<Clip> _clips = [];
   bool _loading = true;
+  bool _isBulkActionRunning = false;
   Timer? _availabilityTimer;
 
   @override
@@ -128,29 +132,10 @@ class _ClipsPageState extends State<ClipsPage> {
   }
 
   Future<void> _deleteClip(Clip clip) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.background,
-        title: const Text(
-          'Delete clip',
-          style: TextStyle(color: AppColors.onBackground),
-        ),
-        content: Text(
-          'Are you sure you want to delete this clip?',
-          style: const TextStyle(color: AppColors.onBackground),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.outline)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
-      ),
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: 'Delete clip',
+      message: 'Are you sure you want to delete this clip?',
     );
 
     if (confirmed != true || !mounted) return;
@@ -265,6 +250,162 @@ class _ClipsPageState extends State<ClipsPage> {
     }
   }
 
+  Future<void> _showAlbumOptions() async {
+    if (widget.albumId == null || _loading || _isBulkActionRunning) return;
+
+    final hasRevealingClips = _clips.any((clip) => !clip.isAvailable);
+    final action = await showModalBottomSheet<_AlbumAction>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.medium),
+        ),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.large,
+                vertical: AppSpacing.large,
+              ),
+              child: Text(
+                widget.title ?? 'Album options',
+                style: const TextStyle(
+                  color: AppColors.onBackground,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const Divider(color: AppColors.surface, height: 1),
+            const SizedBox(height: AppSpacing.small),
+            ListTile(
+              enabled: _clips.isNotEmpty && !hasRevealingClips,
+              leading: Icon(
+                Icons.download_outlined,
+                color: _clips.isNotEmpty && !hasRevealingClips
+                    ? AppColors.onBackground
+                    : AppColors.onSurface,
+              ),
+              title: Text(
+                'Download all clips',
+                style: TextStyle(
+                  color: _clips.isNotEmpty && !hasRevealingClips
+                      ? AppColors.onBackground
+                      : AppColors.onSurface,
+                ),
+              ),
+              subtitle: hasRevealingClips
+                  ? const Text(
+                      'Available when all clips have been revealed.',
+                      style: TextStyle(color: AppColors.outline),
+                    )
+                  : null,
+              onTap: _clips.isEmpty || hasRevealingClips
+                  ? null
+                  : () => Navigator.pop(
+                        sheetContext,
+                        _AlbumAction.downloadAllClips,
+                      ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_outline, color: AppColors.error),
+              title: const Text(
+                'Delete album and clips',
+                style: TextStyle(color: AppColors.error),
+              ),
+              onTap: () =>
+                  Navigator.pop(sheetContext, _AlbumAction.deleteAlbum),
+            ),
+            const SizedBox(height: AppSpacing.small),
+          ],
+        ),
+      ),
+    );
+
+    if (!mounted || action == null) return;
+    switch (action) {
+      case _AlbumAction.downloadAllClips:
+        await _downloadAllClips();
+        break;
+      case _AlbumAction.deleteAlbum:
+        await _confirmDeleteAlbum();
+        break;
+    }
+  }
+
+  Future<void> _downloadAllClips() async {
+    if (_clips.isEmpty || _clips.any((clip) => !clip.isAvailable)) return;
+
+    setState(() => _isBulkActionRunning = true);
+    var saved = 0;
+    var failed = 0;
+    for (final clip in _clips) {
+      try {
+        await _galleryService.saveVideo(clip.filePath);
+        saved++;
+      } catch (e) {
+        debugPrint('GalleryService saveVideo error: $e');
+        failed++;
+      }
+    }
+
+    if (!mounted) return;
+    setState(() => _isBulkActionRunning = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          failed == 0
+              ? 'Saved $saved videos to your gallery.'
+              : 'Saved $saved videos; $failed could not be saved.',
+        ),
+        backgroundColor: failed == 0 ? AppColors.success : AppColors.error,
+      ),
+    );
+  }
+
+  Future<void> _confirmDeleteAlbum() async {
+    final albumId = widget.albumId;
+    if (albumId == null) return;
+
+    final albumName = widget.title ?? 'this album';
+    final clipCount = _clips.length;
+    final clipLabel = clipCount == 1 ? 'clip' : 'clips';
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: 'Delete album and clips',
+      message:
+          'Delete "$albumName" and all $clipCount $clipLabel? This cannot be undone.',
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _loading = true);
+    try {
+      final clipRepository = ClipRepositoryImpl(ClipLocalDatasource());
+      for (final clip in _clips) {
+        await clipRepository.deleteClip(clip.id);
+      }
+      await DeleteAlbumUseCase(
+        AlbumRepositoryImpl(AlbumLocalDatasource()),
+      ).execute(albumId);
+
+      if (mounted) Navigator.pop(context);
+    } catch (e) {
+      debugPrint('Delete album error: $e');
+      if (!mounted) return;
+      await _loadClips();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error deleting the album and its clips.'),
+          backgroundColor: AppColors.error,
+        ),
+      );
+    }
+  }
+
   @override
   void dispose() {
     _availabilityTimer?.cancel();
@@ -293,6 +434,20 @@ class _ClipsPageState extends State<ClipsPage> {
                 child: IconButton(
                   icon: const Icon(Icons.unarchive, color: AppColors.onBackground),
                   onPressed: _unarchiveAlbum,
+                ),
+              ),
+            if (widget.albumId != null)
+              Padding(
+                padding: const EdgeInsets.only(right: AppSpacing.small),
+                child: IconButton(
+                  tooltip: 'Album options',
+                  icon: const Icon(
+                    Icons.more_vert,
+                    color: AppColors.onBackground,
+                  ),
+                  onPressed: _loading || _isBulkActionRunning
+                      ? null
+                      : _showAlbumOptions,
                 ),
               ),
           ],
