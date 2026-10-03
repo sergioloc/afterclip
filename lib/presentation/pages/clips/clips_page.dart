@@ -283,8 +283,9 @@ class _ClipsPageState extends State<ClipsPage> {
         titleSpacing: 0,
         title: Row(
           children: [
-            if (widget.title != null)
-              PageTitle(widget.title!),
+            widget.title != null
+              ? PageTitle(widget.title!)
+              : PageTitle("All clips"),
             const Spacer(),
             if (widget.archived)
               Padding(
