@@ -18,6 +18,7 @@ import '../../widgets/camera_lens_toast.dart';
 import '../../widgets/confirmation_dialog.dart';
 import '../albums/albums_page.dart';
 import '../camera/camera_page.dart';
+import '../clips/clips_page.dart';
 import '../permissions/permission_page.dart';
 import '../settings/settings_page.dart';
 import 'full_home_page.dart';
@@ -269,6 +270,19 @@ class _HomePageState extends State<HomePage> {
     ).then((_) => _loadPage());
   }
 
+  void _openAlbumClips(Album album) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ClipsPage(
+          albumId: album.id,
+          title: album.name,
+          archived: album.archived,
+        ),
+      ),
+    ).then((_) => _loadPage());
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -287,6 +301,7 @@ class _HomePageState extends State<HomePage> {
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
           onOpenAlbums: _openAlbums,
+          onOpenAlbum: _openAlbumClips,
           onArchiveAlbum: _archiveAlbum,
         ),
       EnergySavingMode.on => SavingHomePage(
@@ -300,6 +315,7 @@ class _HomePageState extends State<HomePage> {
           onOpenSettings: _openSettings,
           onOpenCamera: _openCamera,
           onOpenAlbums: _openAlbums,
+          onOpenAlbum: _openAlbumClips,
           onArchiveAlbum: _archiveAlbum,
         ),
     };

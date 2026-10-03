@@ -17,6 +17,7 @@ class AlbumFrame extends StatelessWidget {
     this.radius = AppRadius.large,
     this.borderWidth = 1,
     this.onArchive,
+    this.onTapClipCount,
     this.archiveButtonColor = AppColors.onSurface,
     this.archiveButtonBackground = AppColors.surface,
   });
@@ -27,6 +28,7 @@ class AlbumFrame extends StatelessWidget {
 
   /// Acción de archivar el álbum. Solo se muestra si es distinto de null.
   final VoidCallback? onArchive;
+  final VoidCallback? onTapClipCount;
   final Color archiveButtonColor;
   final Color archiveButtonBackground;
 
@@ -83,19 +85,23 @@ class AlbumFrame extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: AppSpacing.large),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: AppSpacing.medium,
-                                vertical: AppSpacing.xxSmall,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: textColor),
-                                borderRadius: BorderRadius.circular(AppRadius.large),
-                              ),
-                              child: Text(
-                                '$clipCount CLIPS',
-                                style: AppTextStyles.label.copyWith(
-                                  color: textColor,
+                            InkWell(
+                              onTap: onTapClipCount,
+                              borderRadius: BorderRadius.circular(AppRadius.large),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.medium,
+                                  vertical: AppSpacing.xxSmall,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: textColor),
+                                  borderRadius: BorderRadius.circular(AppRadius.large),
+                                ),
+                                child: Text(
+                                  '$clipCount CLIPS',
+                                  style: AppTextStyles.label.copyWith(
+                                    color: textColor,
+                                  ),
                                 ),
                               ),
                             ),

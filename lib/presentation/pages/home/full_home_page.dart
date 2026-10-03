@@ -25,6 +25,7 @@ class FullHomePage extends StatelessWidget {
     required this.onOpenSettings,
     required this.onOpenCamera,
     required this.onOpenAlbums,
+    required this.onOpenAlbum,
     required this.onArchiveAlbum,
   });
 
@@ -38,6 +39,7 @@ class FullHomePage extends StatelessWidget {
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenCamera;
   final VoidCallback onOpenAlbums;
+  final ValueChanged<Album> onOpenAlbum;
   final ValueChanged<String?> onArchiveAlbum;
 
   @override
@@ -85,6 +87,9 @@ class FullHomePage extends StatelessWidget {
                     onArchive: albums.isEmpty || albums[index] == null
                         ? null
                         : () => onArchiveAlbum(albums[index]!.id),
+                    onTapClipCount: albums.isEmpty || albums[index] == null
+                        ? null
+                        : () => onOpenAlbum(albums[index]!),
                     archiveButtonColor: AppColors.onSurface,
                     archiveButtonBackground: AppColors.background,
                   );
