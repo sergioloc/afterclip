@@ -3,6 +3,7 @@ import '../../../../data/datasource/local/album_local_datasource.dart';
 import '../../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../../data/repositories/album_repository_impl.dart';
 import '../../../../data/repositories/clip_repository_impl.dart';
+import '../../../../data/repositories/daily_clip_limit_repository.dart';
 import '../../../../domain/entities/album.dart';
 import '../../../../domain/entities/clip.dart';
 import '../../../../domain/usecases/create_album_usecase.dart';
@@ -12,10 +13,12 @@ import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/rename_album_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
+import '../../../../util/app_flavor.dart';
 import '../../../../util/app_spacing.dart';
 import '../../widgets/album_list_item.dart';
 import '../../widgets/album_name_dialog.dart';
 import '../../widgets/albums_summary.dart';
+import '../../widgets/daily_clip_limit_indicator.dart';
 import '../../widgets/page_title.dart';
 import '../clips/clips_page.dart';
 
@@ -33,8 +36,11 @@ class _AlbumsPageState extends State<AlbumsPage> {
   late final DeleteAlbumUseCase _deleteAlbumUseCase;
   late final GetAllClipsUseCase _getAllClipsUseCase;
   late final SetAlbumArchivedUseCase _setAlbumArchivedUseCase;
+  final DailyClipLimitRepository _dailyClipLimitRepository =
+      DailyClipLimitRepository();
   List<Album> _albums = [];
   List<Clip> _clips = [];
+  int _clipsRecordedInLast24Hours = 0;
   bool _loading = true;
 
   @override
@@ -53,10 +59,14 @@ class _AlbumsPageState extends State<AlbumsPage> {
   Future<void> _loadAlbums() async {
     final albums = await _getAllAlbumsUseCase.execute();
     final clips = await _getAllClipsUseCase.execute();
+    final clipsRecordedInLast24Hours = AppFlavorConfig.isFree
+        ? await _dailyClipLimitRepository.getClipsRecordedInLast24Hours()
+        : 0;
     if (mounted) {
       setState(() {
         _albums = albums;
         _clips = clips;
+        _clipsRecordedInLast24Hours = clipsRecordedInLast24Hours;
         _loading = false;
       });
     }
@@ -162,23 +172,36 @@ class _AlbumsPageState extends State<AlbumsPage> {
           ? const Center(child: CircularProgressIndicator(color: AppColors.onBackground))
           : ListView.builder(
               padding: const EdgeInsets.all(AppSpacing.large),
-              itemCount: _albums.length + 2,
+              itemCount: _albums.length + (AppFlavorConfig.isFree ? 3 : 2),
               itemBuilder: (context, index) {
                 if (index == 0) {
                   return AlbumsSummary(
-                    activeAlbums:
-                        _albums.where((a) => !a.archived).length,
+                    activeAlbums: _albums.where((a) => !a.archived).length,
                     totalClips: _clips.length,
                   );
                 }
-                if (index == 1) {
+                if (AppFlavorConfig.isFree && index == 1) {
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: AppSpacing.large,
+                    ),
+                    child: Center(
+                      child: DailyClipLimitIndicator(
+                        clipsRecorded: _clipsRecordedInLast24Hours,
+                      ),
+                    ),
+                  );
+                }
+                final allClipsIndex = AppFlavorConfig.isFree ? 2 : 1;
+                final firstAlbumIndex = allClipsIndex + 1;
+                if (index == allClipsIndex) {
                   return AlbumListItem(
                     title: 'All clips',
                     subtitle: _clipCountLabel(_clips.length),
                     onTap: _openAllClips,
                   );
                 }
-                final album = _albums[index - 2];
+                final album = _albums[index - firstAlbumIndex];
                 return AlbumListItem(
                   title: album.name,
                   subtitle: _clipCountLabel(_clipCountForAlbum(album.id)),

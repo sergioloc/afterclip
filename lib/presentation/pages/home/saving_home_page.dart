@@ -73,7 +73,7 @@ class SavingHomePage extends StatelessWidget {
               itemCount: albums.isEmpty ? 1 : albums.length,
               onPageChanged: onAlbumChanged,
               itemBuilder: (context, index) {
-return AlbumFrame(
+                return AlbumFrame(
                     text: albums.isEmpty ? null : albums[index]?.name,
                     clipCount: albums.isEmpty
                         ? 0

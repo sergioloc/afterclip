@@ -6,12 +6,14 @@ import '../../../data/datasource/local/album_local_datasource.dart';
 import '../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../data/repositories/album_repository_impl.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
+import '../../../data/repositories/daily_clip_limit_repository.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/album.dart';
 import '../../../domain/entities/camera_lens.dart';
 import '../../../domain/repositories/clip_repository.dart';
 import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_flavor.dart';
 import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
@@ -32,12 +34,15 @@ class _CameraPageState extends State<CameraPage>
   CameraController? _controller;
   Future<void>? _initializeControllerFuture;
   bool _isRecording = false;
+  bool _isStoppingRecording = false;
   int _countdown = 3;
   Timer? _countdownTimer;
   static const int _defaultMaxSeconds = 30;
   int _maxSeconds = _defaultMaxSeconds;
   late AnimationController _recordingController;
   ClipRepository? _clipRepository;
+  final DailyClipLimitRepository _dailyClipLimitRepository =
+      DailyClipLimitRepository();
   final SettingsRepository _settingsRepository = SettingsRepository();
   double _overlayOpacity = SettingsRepository.defaultOverlayOpacity;
   double _brightness = SettingsRepository.defaultBrightness;
@@ -203,6 +208,16 @@ class _CameraPageState extends State<CameraPage>
 
   Future<void> _startRecording() async {
     if (_controller == null || !_controller!.value.isInitialized) return;
+    if (AppFlavorConfig.isFree) {
+      final clipsRecorded = await _dailyClipLimitRepository
+          .getClipsRecordedInLast24Hours();
+      if (!mounted) return;
+      if (clipsRecorded >= DailyClipLimitRepository.maxClips) {
+        _countdownTimer?.cancel();
+        Navigator.pop(context);
+        return;
+      }
+    }
     await _controller!.startVideoRecording();
     _recordingController.reset();
     setState(() => _isRecording = true);
@@ -210,12 +225,21 @@ class _CameraPageState extends State<CameraPage>
   }
 
   Future<void> _stopRecording() async {
-    if (_controller == null || !_controller!.value.isInitialized) return;
+    if (_isStoppingRecording ||
+        _controller == null ||
+        !_controller!.value.isInitialized) {
+      return;
+    }
     if (!_isRecording) return;
 
+    _isStoppingRecording = true;
     _recordingController.stop();
     _recordingController.reset();
     final file = await _controller!.stopVideoRecording();
+
+    if (AppFlavorConfig.isFree) {
+      await _dailyClipLimitRepository.recordClip();
+    }
 
     if (_clipRepository != null) {
       await _clipRepository!.saveClip(file.path, albumId: _selectedAlbumId);

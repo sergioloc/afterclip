@@ -95,7 +95,7 @@ class _SettingsPageState extends State<SettingsPage> {
           : ListView(
               padding: const EdgeInsets.all(AppSpacing.xLarge),
               children: [
-                _buildSectionHeader('Recording'),
+                /*_buildSectionHeader('Recording'),
                 const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
                   title: 'Maximum clip duration',
@@ -135,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: AppSpacing.xxLarge),
+                const SizedBox(height: AppSpacing.xxLarge),*/
                 _buildSectionHeader('Energy'),
                 const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(

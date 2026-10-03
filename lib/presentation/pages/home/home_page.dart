@@ -4,6 +4,7 @@ import '../../../data/datasource/local/album_local_datasource.dart';
 import '../../../data/datasource/local/clip_local_datasource.dart';
 import '../../../data/repositories/album_repository_impl.dart';
 import '../../../data/repositories/clip_repository_impl.dart';
+import '../../../data/repositories/daily_clip_limit_repository.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/album.dart';
 import '../../../domain/entities/camera_lens.dart';
@@ -12,6 +13,7 @@ import '../../../domain/usecases/get_all_albums_usecase.dart';
 import '../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_flavor.dart';
 import '../albums/albums_page.dart';
 import '../camera/camera_page.dart';
 import '../permissions/permission_page.dart';
@@ -28,12 +30,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final SettingsRepository _settingsRepository = SettingsRepository();
+  final DailyClipLimitRepository _dailyClipLimitRepository =
+      DailyClipLimitRepository();
   Map<String, int> _albumClipCounts = {};
   List<Album?> _activeAlbums = [];
   int _albumIndex = 0;
   String? _selectedAlbumId;
   CameraLens _lens = CameraLens.front;
   bool _loading = true;
+  bool _isOpeningCamera = false;
   EnergySavingMode _mode = EnergySavingMode.off;
 
   @override
@@ -48,6 +53,11 @@ class _HomePageState extends State<HomePage> {
       final clips = await GetAllClipsUseCase(
         ClipRepositoryImpl(ClipLocalDatasource()),
       ).execute();
+      if (AppFlavorConfig.isFree) {
+        await _dailyClipLimitRepository.seedFromSavedClips(
+          clips.map((clip) => clip.createdAt),
+        );
+      }
       final albums = await GetAllAlbumsUseCase(
         AlbumRepositoryImpl(AlbumLocalDatasource()),
       ).execute();
@@ -158,16 +168,48 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _openCamera() async {
-    if (!await _ensureRecordingPermissions()) return;
-    if (!mounted) return;
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) =>
-            CameraPage(initialAlbumId: _selectedAlbumId, initialLens: _lens),
+    if (_isOpeningCamera) return;
+    _isOpeningCamera = true;
+
+    try {
+      if (AppFlavorConfig.isFree) {
+        final clipsRecorded = await _dailyClipLimitRepository
+            .getClipsRecordedInLast24Hours();
+        if (!mounted) return;
+        if (clipsRecorded >= DailyClipLimitRepository.maxClips) {
+          _showDailyClipLimitSnackBar();
+          return;
+        }
+      }
+
+      if (!await _ensureRecordingPermissions()) return;
+      if (!mounted) return;
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              CameraPage(initialAlbumId: _selectedAlbumId, initialLens: _lens),
+        ),
+      );
+      await _loadPage();
+    } finally {
+      _isOpeningCamera = false;
+    }
+  }
+
+  void _showDailyClipLimitSnackBar() {
+    final messenger = ScaffoldMessenger.of(context);
+    messenger.clearSnackBars();
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text(
+          'You have reached the free limit of 24 clips in the last 24 hours. '
+          'Try again when a clip is over 24 hours old.',
+        ),
+        backgroundColor: AppColors.surface,
+        duration: Duration(seconds: 4),
       ),
     );
-    _loadPage();
   }
 
   Future<bool> _ensureRecordingPermissions() async {
