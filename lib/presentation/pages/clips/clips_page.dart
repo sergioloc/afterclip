@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -10,8 +11,11 @@ import '../../../../domain/entities/clip.dart';
 import '../../../../domain/usecases/get_all_clips_usecase.dart';
 import '../../../../domain/usecases/set_album_archived_usecase.dart';
 import '../../../../util/app_colors.dart';
+import '../../../../util/app_radius.dart';
 import '../../../../util/app_spacing.dart';
 import '../../widgets/page_title.dart';
+
+enum _ClipAction { download, delete }
 
 class ClipsPage extends StatefulWidget {
   const ClipsPage({super.key, this.albumId, this.title, this.archived = false});
@@ -28,6 +32,7 @@ class _ClipsPageState extends State<ClipsPage> {
   late final GetAllClipsUseCase _getAllClipsUseCase;
   List<Clip> _clips = [];
   bool _loading = true;
+  Timer? _availabilityTimer;
 
   @override
   void initState() {
@@ -47,7 +52,31 @@ class _ClipsPageState extends State<ClipsPage> {
         _clips = clips;
         _loading = false;
       });
+      _scheduleAvailabilityRefresh();
     }
+  }
+
+  void _scheduleAvailabilityRefresh() {
+    _availabilityTimer?.cancel();
+    final nextUnlock = _clips
+        .where((clip) => !clip.isAvailable)
+        .map((clip) => clip.createdAt.add(const Duration(hours: 24)))
+        .fold<DateTime?>(
+          null,
+          (earliest, unlock) => earliest == null || unlock.isBefore(earliest) ? unlock : earliest,
+        );
+
+    if (nextUnlock == null) return;
+
+    final delay = nextUnlock.difference(DateTime.now()) + const Duration(seconds: 1);
+    _availabilityTimer = Timer(
+      delay.isNegative ? const Duration(seconds: 1) : delay,
+      () {
+        if (!mounted) return;
+        setState(() {});
+        _scheduleAvailabilityRefresh();
+      },
+    );
   }
 
   void _playClip(Clip clip) {
@@ -160,6 +189,88 @@ class _ClipsPageState extends State<ClipsPage> {
     }
   }
 
+  Future<void> _showClipOptions(Clip clip) async {
+    final isBlocked = !clip.isAvailable;
+    final action = await showModalBottomSheet<_ClipAction>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.medium),
+        ),
+      ),
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.large,
+                vertical: AppSpacing.large,
+              ),
+              child: Text(
+                _formatDate(clip.createdAt),
+                style: TextStyle(
+                  color: AppColors.onBackground,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const Divider(color: AppColors.surface, height: 1),
+            const SizedBox(height: AppSpacing.small),
+            ListTile(
+              enabled: !isBlocked,
+              leading: Icon(
+                Icons.download_outlined,
+                color: isBlocked ? AppColors.surface : AppColors.onBackground,
+              ),
+              title: Text(
+                'Download',
+                style: TextStyle(
+                  color: isBlocked ? AppColors.surface : AppColors.onBackground,
+                ),
+              ),
+              subtitle: isBlocked
+                  ? Text(
+                      'Available in ${_formatCountdown(clip.timeUntilAvailable)}',
+                      style: const TextStyle(color: AppColors.outline),
+                    )
+                  : null,
+              onTap: isBlocked
+                  ? null
+                  : () => Navigator.pop(sheetContext, _ClipAction.download),
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete_outline, color: AppColors.error),
+              title: const Text(
+                'Delete',
+                style: TextStyle(color: AppColors.error),
+              ),
+              onTap: () => Navigator.pop(sheetContext, _ClipAction.delete),
+            ),
+            const SizedBox(height: AppSpacing.small),
+          ],
+        ),
+      ),
+    );
+
+    if (!mounted || action == null) return;
+    switch (action) {
+      case _ClipAction.download:
+        await _downloadClip(clip);
+        break;
+      case _ClipAction.delete:
+        await _deleteClip(clip);
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    _availabilityTimer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,13 +315,15 @@ class _ClipsPageState extends State<ClipsPage> {
                 return ListTile(
                   enabled: !isBlocked,
                   leading: Icon(
-                    Icons.movie,
-                    color: isBlocked ? AppColors.surface : AppColors.onBackground,
+                    isBlocked ? Icons.lock_outline : Icons.movie,
+                    color:
+                        isBlocked ? AppColors.onSurface : AppColors.primary,
                   ),
                   title: Text(
                     _formatDate(clip.createdAt),
                     style: TextStyle(
-                      color: isBlocked ? AppColors.surface : AppColors.onBackground,
+                      color:
+                          isBlocked ? AppColors.onSurface : AppColors.onBackground,
                     ),
                   ),
                   subtitle: clip.isAvailable
@@ -219,24 +332,18 @@ class _ClipsPageState extends State<ClipsPage> {
                           'Available in ${_formatCountdown(clip.timeUntilAvailable)}',
                           style: const TextStyle(color: AppColors.outline),
                         ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline,
-                            color: AppColors.onBackground),
-                        onPressed: () => _deleteClip(clip),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.download_outlined,
-                          color: isBlocked ? AppColors.surface : AppColors.onBackground,
+                  trailing: isBlocked
+                      ? null
+                      : IconButton(
+                          tooltip: 'Options',
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: isBlocked
+                                ? AppColors.onSurface
+                                : AppColors.onBackground,
+                          ),
+                          onPressed: isBlocked ? null : () => _showClipOptions(clip),
                         ),
-                        onPressed:
-                            isBlocked ? null : () => _downloadClip(clip),
-                      ),
-                    ],
-                  ),
                   onTap: isBlocked ? null : () => _playClip(clip),
                 );
               },
