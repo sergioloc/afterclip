@@ -145,38 +145,21 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future<void> _archiveAlbum(String? albumId) async {
-    if (albumId == null) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.background,
-        title: const Text(
-          'Archive album',
-          style: TextStyle(color: AppColors.onBackground),
-        ),
-        content: const Text(
-          'This album will be hidden from the home screen, but you can still access it from your gallery.',
-          style: TextStyle(color: AppColors.onBackground),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.outline)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Archive', style: TextStyle(color: AppColors.primary)),
-          ),
-        ],
-      ),
+  Future<void> _archiveAlbum(Album album) async {
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: 'Archive album',
+      message:
+          'Are you sure you want to archive "${album.name}"? It will be hidden from the home screen, but you can still access it in Albums.',
+      confirmLabel: 'Archive',
+      confirmColor: AppColors.primary,
     );
 
     if (confirmed != true || !mounted) return;
 
     await SetAlbumArchivedUseCase(
       AlbumRepositoryImpl(AlbumLocalDatasource()),
-    ).execute(albumId, true);
+    ).execute(album.id, true);
     _loadPage();
   }
 

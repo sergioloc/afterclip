@@ -40,7 +40,7 @@ class FullHomePage extends StatelessWidget {
   final VoidCallback onOpenCamera;
   final VoidCallback onOpenAlbums;
   final ValueChanged<Album> onOpenAlbum;
-  final ValueChanged<String?> onArchiveAlbum;
+  final ValueChanged<Album> onArchiveAlbum;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class FullHomePage extends StatelessWidget {
                     bottomInset: 168,
                     onArchive: albums.isEmpty || albums[index] == null
                         ? null
-                        : () => onArchiveAlbum(albums[index]!.id),
+                        : () => onArchiveAlbum(albums[index]!),
                     onTapClipCount: albums.isEmpty || albums[index] == null
                         ? null
                         : () => onOpenAlbum(albums[index]!),

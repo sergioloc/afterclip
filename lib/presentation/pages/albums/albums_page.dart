@@ -23,6 +23,8 @@ import '../../widgets/daily_clip_limit_indicator.dart';
 import '../../widgets/page_title.dart';
 import '../clips/clips_page.dart';
 
+enum _AlbumAction { toggleArchived, rename, delete }
+
 class AlbumsPage extends StatefulWidget {
   const AlbumsPage({super.key});
 
@@ -111,7 +113,22 @@ class _AlbumsPageState extends State<AlbumsPage> {
   }
 
   Future<void> _toggleArchived(Album album) async {
+    final isArchived = album.archived;
+    final actionLabel = isArchived ? 'Unarchive' : 'Archive';
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: '$actionLabel album',
+      message: isArchived
+          ? 'Are you sure you want to unarchive "${album.name}"? It will appear on the home screen again.'
+          : 'Are you sure you want to archive "${album.name}"? It will be hidden from the home screen, but you can still access it in Albums.',
+      confirmLabel: actionLabel,
+      confirmColor: AppColors.primary,
+    );
+
+    if (confirmed != true || !mounted) return;
+
     await _setAlbumArchivedUseCase.execute(album.id, !album.archived);
+    if (!mounted) return;
     setState(() => _loading = true);
     await _loadAlbums();
   }
@@ -209,11 +226,11 @@ class _AlbumsPageState extends State<AlbumsPage> {
   String _clipCountLabel(int count) =>
       '$count ${count == 1 ? 'clip' : 'clips'}';
 
-  void _showAlbumActions(Album album) {
-    showModalBottomSheet(
+  Future<void> _showAlbumActions(Album album) async {
+    final action = await showModalBottomSheet<_AlbumAction>(
       context: context,
       backgroundColor: AppColors.background,
-      builder: (context) => SafeArea(
+      builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -240,10 +257,10 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 album.archived ? 'Unarchive' : 'Archive',
                 style: const TextStyle(color: AppColors.onBackground),
               ),
-              onTap: () {
-                Navigator.pop(context);
-                _toggleArchived(album);
-              },
+              onTap: () => Navigator.pop(
+                sheetContext,
+                _AlbumAction.toggleArchived,
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.edit_outlined, color: AppColors.onBackground),
@@ -251,10 +268,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 'Rename',
                 style: TextStyle(color: AppColors.onBackground),
               ),
-              onTap: () {
-                Navigator.pop(context);
-                _renameAlbum(album);
-              },
+              onTap: () => Navigator.pop(sheetContext, _AlbumAction.rename),
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline, color: AppColors.error),
@@ -262,14 +276,25 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 'Delete',
                 style: TextStyle(color: AppColors.error),
               ),
-              onTap: () {
-                Navigator.pop(context);
-                _deleteAlbum(album);
-              },
+              onTap: () => Navigator.pop(sheetContext, _AlbumAction.delete),
             ),
           ],
         ),
       ),
     );
+
+    if (!mounted || action == null) return;
+
+    switch (action) {
+      case _AlbumAction.toggleArchived:
+        await _toggleArchived(album);
+        break;
+      case _AlbumAction.rename:
+        await _renameAlbum(album);
+        break;
+      case _AlbumAction.delete:
+        await _deleteAlbum(album);
+        break;
+    }
   }
 }

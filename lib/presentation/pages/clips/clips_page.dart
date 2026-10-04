@@ -18,7 +18,7 @@ import '../../widgets/confirmation_dialog.dart';
 import '../../widgets/page_title.dart';
 
 enum _ClipAction { download, delete }
-enum _AlbumAction { downloadAllClips, deleteAlbum }
+enum _AlbumAction { downloadAllClips, unarchiveAlbum, deleteAlbum }
 
 class ClipsPage extends StatefulWidget {
   const ClipsPage({super.key, this.albumId, this.title, this.archived = false});
@@ -95,29 +95,15 @@ class _ClipsPageState extends State<ClipsPage> {
   Future<void> _unarchiveAlbum() async {
     if (widget.albumId == null) return;
 
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.background,
-        title: const Text(
-          'Unarchive album',
-          style: TextStyle(color: AppColors.onBackground),
-        ),
-        content: const Text(
-          'This album will appear on the home screen again.',
-          style: TextStyle(color: AppColors.onBackground),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel', style: TextStyle(color: AppColors.outline)),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Unarchive', style: TextStyle(color: AppColors.primary)),
-          ),
-        ],
-      ),
+    final albumName = widget.title ?? 'this album';
+    final confirmed = await ConfirmationDialog.show(
+      context,
+      title: 'Unarchive album',
+      message:
+          'Are you sure you want to unarchive "$albumName"? It will appear '
+          'on the home screen again.',
+      confirmLabel: 'Unarchive',
+      confirmColor: AppColors.primary,
     );
 
     if (confirmed != true || !mounted) return;
@@ -310,6 +296,21 @@ class _ClipsPageState extends State<ClipsPage> {
                         _AlbumAction.downloadAllClips,
                       ),
             ),
+            if (widget.archived)
+              ListTile(
+                leading: const Icon(
+                  Icons.unarchive_outlined,
+                  color: AppColors.onBackground,
+                ),
+                title: const Text(
+                  'Unarchive album',
+                  style: TextStyle(color: AppColors.onBackground),
+                ),
+                onTap: () => Navigator.pop(
+                  sheetContext,
+                  _AlbumAction.unarchiveAlbum,
+                ),
+              ),
             ListTile(
               leading: const Icon(Icons.delete_outline, color: AppColors.error),
               title: const Text(
@@ -329,6 +330,9 @@ class _ClipsPageState extends State<ClipsPage> {
     switch (action) {
       case _AlbumAction.downloadAllClips:
         await _downloadAllClips();
+        break;
+      case _AlbumAction.unarchiveAlbum:
+        await _unarchiveAlbum();
         break;
       case _AlbumAction.deleteAlbum:
         await _confirmDeleteAlbum();
@@ -428,14 +432,6 @@ class _ClipsPageState extends State<ClipsPage> {
               ? PageTitle(widget.title!)
               : PageTitle("All clips"),
             const Spacer(),
-            if (widget.archived)
-              Padding(
-                padding: const EdgeInsets.only(right: AppSpacing.medium),
-                child: IconButton(
-                  icon: const Icon(Icons.unarchive, color: AppColors.onBackground),
-                  onPressed: _unarchiveAlbum,
-                ),
-              ),
             if (widget.albumId != null)
               Padding(
                 padding: const EdgeInsets.only(right: AppSpacing.small),
