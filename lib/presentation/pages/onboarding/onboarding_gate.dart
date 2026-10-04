@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../data/repositories/settings_repository.dart';
+import '../../../data/services/screenshot_demo_data_seeder.dart';
 import '../../../util/app_colors.dart';
 import '../home/home_page.dart';
 import 'onboarding_page.dart';
@@ -22,6 +23,7 @@ class _OnboardingGateState extends State<OnboardingGate> {
   }
 
   Future<void> _load() async {
+    await ScreenshotDemoDataSeeder.seedIfNeeded();
     final seen = await _settingsRepository.getHasSeenOnboarding();
     if (!mounted) return;
     setState(() => _showOnboarding = !seen);
