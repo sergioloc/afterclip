@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../data/repositories/settings_repository.dart';
 import '../../../domain/entities/energy_saving_mode.dart';
 import '../../../util/app_colors.dart';
+import '../../../util/app_flavor.dart';
 import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
@@ -95,47 +96,51 @@ class _SettingsPageState extends State<SettingsPage> {
           : ListView(
               padding: const EdgeInsets.all(AppSpacing.xLarge),
               children: [
-                /*_buildSectionHeader('Recording'),
-                const SizedBox(height: AppSpacing.large),
-                _buildSettingCard(
-                  title: 'Maximum clip duration',
-                  subtitle: 'Recording time limit for each clip',
-                  child: Row(
-                    children: [
-                      for (final seconds
-                          in SettingsRepository.maxClipDurationOptions) ...[
-                        if (seconds !=
-                            SettingsRepository.maxClipDurationOptions.first)
-                          const SizedBox(width: AppSpacing.small),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => _saveMaxClipDuration(seconds),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: AppSpacing.medium),
-                              decoration: BoxDecoration(
-                                color: _maxClipDuration == seconds
-                                    ? AppColors.primary
-                                    : AppColors.surface,
-                                borderRadius: BorderRadius.circular(AppRadius.small),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '${seconds}s',
-                                  style: AppTextStyles.metric.copyWith(
-                                    color: AppColors.onPrimary,
+                if (AppFlavorConfig.isPro) ...[
+                  _buildSectionHeader('Recording'),
+                  const SizedBox(height: AppSpacing.large),
+                  _buildSettingCard(
+                    title: 'Maximum clip duration',
+                    subtitle: 'Recording time limit for each clip',
+                    child: Row(
+                      children: [
+                        for (final seconds
+                            in SettingsRepository.maxClipDurationOptions) ...[
+                          if (seconds !=
+                              SettingsRepository.maxClipDurationOptions.first)
+                            const SizedBox(width: AppSpacing.small),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => _saveMaxClipDuration(seconds),
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 200),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: AppSpacing.medium,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _maxClipDuration == seconds
+                                      ? AppColors.primary
+                                      : AppColors.surface,
+                                  borderRadius:
+                                      BorderRadius.circular(AppRadius.small),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${seconds}s',
+                                    style: AppTextStyles.metric.copyWith(
+                                      color: AppColors.onPrimary,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.xxLarge),*/
+                  const SizedBox(height: AppSpacing.xxLarge),
+                ],
                 _buildSectionHeader('Energy'),
                 const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
