@@ -11,6 +11,7 @@ class PillButton extends StatelessWidget {
     required this.splashColor,
     required this.onPressed,
     this.backgroundColor,
+    this.borderColor,
     this.expand = false,
   });
 
@@ -19,6 +20,7 @@ class PillButton extends StatelessWidget {
   final Color splashColor;
   final VoidCallback? onPressed;
   final Color? backgroundColor;
+  final Color? borderColor;
   final bool expand;
 
   @override
@@ -34,7 +36,9 @@ class PillButton extends StatelessWidget {
       color: backgroundColor ?? Colors.transparent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.large),
-        side: BorderSide.none,
+        side: borderColor == null
+            ? BorderSide.none
+            : BorderSide(color: borderColor!),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(

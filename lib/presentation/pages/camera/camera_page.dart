@@ -18,6 +18,7 @@ import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 import '../../widgets/stop_recording_button.dart';
+import '../../widgets/pro_dialog.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key, this.initialAlbumId, this.initialLens});
@@ -147,7 +148,8 @@ class _CameraPageState extends State<CameraPage>
       if (!mounted) return;
       if (clipsRecorded >= DailyClipLimitRepository.maxClips) {
         _countdownTimer?.cancel();
-        Navigator.pop(context);
+        await ProDialog.show(context);
+        if (mounted) Navigator.pop(context);
         return;
       }
     }
