@@ -8,6 +8,7 @@ import '../../../util/app_radius.dart';
 import '../../../util/app_spacing.dart';
 import '../../../util/app_text_styles.dart';
 import '../../widgets/page_title.dart';
+import '../../widgets/pro_dialog.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -71,11 +72,19 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   void _saveEnergySavingMode(EnergySavingMode mode) {
+    if (!AppFlavorConfig.isPro && mode != EnergySavingMode.off) {
+      ProDialog.show(context);
+      return;
+    }
     setState(() => _energySavingMode = mode);
     _settingsRepository.setEnergySavingMode(mode);
   }
 
   void _saveMaxClipDuration(int seconds) {
+    if (!AppFlavorConfig.isPro) {
+      ProDialog.show(context);
+      return;
+    }
     setState(() => _maxClipDuration = seconds);
     _settingsRepository.setMaxClipDuration(seconds);
   }
@@ -96,51 +105,66 @@ class _SettingsPageState extends State<SettingsPage> {
           : ListView(
               padding: const EdgeInsets.all(AppSpacing.xLarge),
               children: [
-                if (AppFlavorConfig.isPro) ...[
-                  _buildSectionHeader('Recording'),
-                  const SizedBox(height: AppSpacing.large),
-                  _buildSettingCard(
-                    title: 'Maximum clip duration',
-                    subtitle: 'Recording time limit for each clip',
-                    child: Row(
-                      children: [
-                        for (final seconds
-                            in SettingsRepository.maxClipDurationOptions) ...[
-                          if (seconds !=
-                              SettingsRepository.maxClipDurationOptions.first)
-                            const SizedBox(width: AppSpacing.small),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => _saveMaxClipDuration(seconds),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: AppSpacing.medium,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: _maxClipDuration == seconds
-                                      ? AppColors.primary
-                                      : AppColors.surface,
-                                  borderRadius:
-                                      BorderRadius.circular(AppRadius.small),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '${seconds}s',
-                                    style: AppTextStyles.metric.copyWith(
-                                      color: AppColors.onPrimary,
+                _buildSectionHeader('Recording'),
+                const SizedBox(height: AppSpacing.large),
+                _buildSettingCard(
+                  title: 'Maximum clip duration',
+                  subtitle: 'Recording time limit for each clip',
+                  child: Row(
+                    children: [
+                      for (final seconds
+                          in SettingsRepository.maxClipDurationOptions) ...[
+                        if (seconds !=
+                            SettingsRepository.maxClipDurationOptions.first)
+                          const SizedBox(width: AppSpacing.small),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => _saveMaxClipDuration(seconds),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: AppSpacing.medium,
+                              ),
+                              decoration: BoxDecoration(
+                                color: _maxClipDuration == seconds
+                                    ? AppColors.primary
+                                    : AppColors.surface,
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.small),
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      '${seconds}s',
+                                      style: AppTextStyles.metric.copyWith(
+                                        color: AppColors.onPrimary,
+                                      ),
                                     ),
-                                  ),
+                                    if (!AppFlavorConfig.isPro &&
+                                        seconds !=
+                                            SettingsRepository
+                                                .maxClipDurationOptions
+                                                .first) ...[
+                                      const SizedBox(width: 4),
+                                      const Icon(
+                                        Icons.diamond,
+                                        size: 16,
+                                        color: AppColors.primary,
+                                      ),
+                                    ],
+                                  ],
                                 ),
                               ),
                             ),
                           ),
-                        ],
+                        ),
                       ],
-                    ),
+                    ],
                   ),
-                  const SizedBox(height: AppSpacing.xxLarge),
-                ],
+                ),
+                const SizedBox(height: AppSpacing.xxLarge),
                 _buildSectionHeader('Energy'),
                 const SizedBox(height: AppSpacing.large),
                 _buildSettingCard(
@@ -164,11 +188,26 @@ class _SettingsPageState extends State<SettingsPage> {
                                 borderRadius: BorderRadius.circular(AppRadius.small),
                               ),
                               child: Center(
-                                child: Text(
-                                  mode.label,
-                                  style: AppTextStyles.metric.copyWith(
-                                    color: AppColors.onPrimary,
-                                  ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      mode.label,
+                                      style: AppTextStyles.metric.copyWith(
+                                        color: AppColors.onPrimary,
+                                      ),
+                                    ),
+                                    if (!AppFlavorConfig.isPro &&
+                                        mode != EnergySavingMode.values
+                                            .first) ...[
+                                      const SizedBox(width: 4),
+                                      const Icon(
+                                        Icons.diamond,
+                                        size: 16,
+                                        color: AppColors.primary,
+                                      ),
+                                    ],
+                                  ],
                                 ),
                               ),
                             ),
