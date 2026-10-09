@@ -16,6 +16,7 @@ import '../../../util/app_colors.dart';
 import '../../../util/app_flavor.dart';
 import '../../widgets/camera_lens_toast.dart';
 import '../../widgets/confirmation_dialog.dart';
+import '../../widgets/daily_clip_limit_dialog.dart';
 import '../albums/albums_page.dart';
 import '../camera/camera_page.dart';
 import '../clips/clips_page.dart';
@@ -202,16 +203,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _showDailyClipLimitDialog() async {
-    await ConfirmationDialog.show(
-      context,
-      title: '24-hour limit reached',
-      message:
-          'The free version allows 24 clips in the last 24 hours. '
-          'You can record again when a clip is over 24 hours old.',
-      confirmLabel: 'OK',
-      confirmColor: AppColors.primary,
-      showCancelButton: false,
-    );
+    await DailyClipLimitDialog.show(context);
   }
 
   Future<bool> _ensureRecordingPermissions() async {

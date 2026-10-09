@@ -56,7 +56,7 @@ class ConfirmationDialog extends StatelessWidget {
         padding: const EdgeInsets.all(AppSpacing.xLarge),
         decoration: BoxDecoration(
           color: AppColors.background,
-          borderRadius: BorderRadius.circular(AppRadius.medium),
+          borderRadius: BorderRadius.circular(AppRadius.large),
           border: Border.all(color: AppColors.onBackground, width: 1),
         ),
         child: Column(
