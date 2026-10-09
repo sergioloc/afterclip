@@ -23,6 +23,15 @@ class DailyClipLimitDialog extends StatelessWidget {
     ),
   );
 
+  TextSpan _appTitle(String text) => TextSpan(
+    text: text,
+    style: const TextStyle(
+        color: AppColors.primary,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 2
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
     return ProUpgradeLayout(
@@ -43,7 +52,7 @@ class DailyClipLimitDialog extends StatelessWidget {
             _highlight('24 hours old'),
             const TextSpan(text: ', which frees up a slot.\n\n'),
             const TextSpan(text: '- Or download '),
-            _highlight('AfterClip Pro'),
+            _appTitle('AFTERCLIP PRO'),
             const TextSpan(text: ' for unlimited clips.'),
           ],
         ),
